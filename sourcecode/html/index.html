@@ -5,17 +5,59 @@
 <title>Put a real title soon</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 </head>
 <body>
   <div class="container-fluid">
     <h2>Data Fakifier Prototype</h2>
-    <p>content goes here</p>
+    <p>Enter a query into the text box below and hit submit to recieve a de-identified result.</p>
+    <div class="container">
+      <div class="row justify-content-md-center">
+        <div class="col-md-8">
+          <div class="row" style="height: 300px">
+            <pre id="editor" class="border rounded"></pre>
+          </div>
+          <div class="row justify-content-end">
+            <button id="submit" type="submit" class="btn btn-primary mr-2">Submit</button>
+            <button id="reset" type="button" class="btn btn-danger">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-md-center">
+        <div class="col-md-8">
+          <div class="row mt-5">
+            <div class="card" style="width: 100%">
+              <h5 class="card-header" aria-expanded="false" data-toggle="collapse" href="#metadata" role="button" aria-expanded="false" aria-controls="metadata">
+                Database Metadata <i id="m_indicator" class="fas fa-plus float-right"></i>
+              </h5>
+              <div class="collapse" id="metadata">
+                <div class="card-body">
+                  <p class="card-text">Some text here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="card" style="width: 100%">
+              <h5 class="card-header" aria-expanded="false" data-toggle="collapse" href="#query_results" role="button" aria-expanded="false" aria-controls="metquery_results">
+                Query Results <i id="qr_indicator" class="fas fa-plus float-right"></i>
+              </h5>
+              <div class="collapse" id="query_results">
+              <div class="card-body">
+                <p class="card-text">Some text here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- load scripts last -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-  <script src="js/site.js" />
+  <script src="js/ace-src-min/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/site.js"></script>
 </body>
 </html>
