@@ -40,7 +40,9 @@ $('#reset').click(function() {
 
 var editor = ace.edit("editor");
 var editor_default_text = '-- Type SQL Code here\n';
+editor.setTheme("ace/theme/crimson_editor");
 editor.session.setMode("ace/mode/sql");
+
 editor.setOptions({
   fontSize: "13px"
 });
