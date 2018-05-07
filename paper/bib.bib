@@ -30,3 +30,82 @@
     howpublished = {\url{https://www.ama-assn.org/practice-management/hipaa-violations-enforcement}},
     note = {Accessed: 2010-09-30}
 }
+
+@article{beaulieu-jones_privacy-preserving_2017,
+	title = {Privacy-preserving generative deep neural networks support clinical data sharing},
+	rights = {© 2017, Posted by Cold Spring Harbor Laboratory. This pre-print is available under a Creative Commons License (Attribution 4.0 International), {CC} {BY} 4.0, as described at http://creativecommons.org/licenses/by/4.0/},
+	url = {https://www.biorxiv.org/content/early/2017/11/15/159756},
+	doi = {10.1101/159756},
+	abstract = {Though it is widely recognized that data sharing enables faster scientific progress, the sensible need to protect participant privacy hampers this practice in medicine. We train deep neural networks that generate synthetic subjects closely resembling study participants. Using the {SPRINT} trial as an example, we show that machine-learning models built from simulated participants generalize to the original dataset. We incorporate differential privacy, which offers strong guarantees on the likelihood that a subject could be identified as a member of the trial. Investigators who have compiled a dataset can use our method to provide a freely accessible public version that enables other scientists to perform discovery-oriented analyses. Generated data can be released alongside analytical code to enable fully reproducible workflows, even when privacy is a concern. By addressing data sharing challenges, deep neural networks can facilitate the rigorous and reproducible investigation of clinical datasets.},
+	pages = {159756},
+	journaltitle = {{bioRxiv}},
+	author = {Beaulieu-Jones, Brett K. and Wu, Zhiwei Steven and Williams, Chris and Byrd, James Brian and Greene, Casey S.},
+	urldate = {2018-03-02},
+	date = {2017-11-15},
+	langid = {english},
+	file = {Full Text PDF:/Users/seth/Zotero/storage/9SZ9DAFQ/Beaulieu-Jones et al. - 2017 - Privacy-preserving generative deep neural networks.pdf:application/pdf;Snapshot:/Users/seth/Zotero/storage/LRILIJXS/159756.html:text/html}
+}
+
+@inproceedings{patki_synthetic_2016,
+	title = {The Synthetic Data Vault},
+	doi = {10.1109/DSAA.2016.49},
+	abstract = {The goal of this paper is to build a system that automatically creates synthetic data to enable data science endeavors. To achieve this, we present the Synthetic Data Vault ({SDV}), a system that builds generative models of relational databases. We are able to sample from the model and create synthetic data, hence the name {SDV}. When implementing the {SDV}, we also developed an algorithm that computes statistics at the intersection of related database tables. We then used a state-of-the-art multivariate modeling approach to model this data. The {SDV} iterates through all possible relations, ultimately creating a model for the entire database. Once this model is computed, the same relational information allows the {SDV} to synthesize data by sampling from any part of the database. After building the {SDV}, we used it to generate synthetic data for five different publicly available datasets. We then published these datasets, and asked data scientists to develop predictive models for them as part of a crowdsourced experiment. By analyzing the outcomes, we show that synthetic data can successfully replace original data for data science. Our analysis indicates that there is no significant difference in the work produced by data scientists who used synthetic data as opposed to real data. We conclude that the {SDV} is a viable solution for synthetic data generation.},
+	eventtitle = {2016 {IEEE} International Conference on Data Science and Advanced Analytics ({DSAA})},
+	pages = {399--410},
+	booktitle = {2016 {IEEE} International Conference on Data Science and Advanced Analytics ({DSAA})},
+	author = {Patki, N. and Wedge, R. and Veeramachaneni, K.},
+	date = {2016-10},
+	keywords = {Computational modeling, crowd sourcing, data analysis, Data models, data science, Databases, generative model, Hidden Markov models, multivariate modelling, Numerical models, predictive model, predictive modeling, Predictive models, relational database, relational databases, {SDV}, Synthetic data generation, synthetic data vault},
+	file = {IEEE Xplore Abstract Record:/Users/seth/Zotero/storage/HVBIX2NG/7796926.html:text/html;IEEE Xplore Full Text PDF:/Users/seth/Zotero/storage/VQERGNWM/Patki et al. - 2016 - The Synthetic Data Vault.pdf:application/pdf}
+}
+
+@article{choi_generating_2017,
+	title = {Generating Multi-label Discrete Patient Records using Generative Adversarial Networks},
+	url = {http://arxiv.org/abs/1703.06490},
+	abstract = {Access to electronic health record ({EHR}) data has motivated computational advances in medical research. However, various concerns, particularly over privacy, can limit access to and collaborative use of {EHR} data. Sharing synthetic {EHR} data could mitigate risk. In this paper, we propose a new approach, medical Generative Adversarial Network ({medGAN}), to generate realistic synthetic patient records. Based on input real patient records, {medGAN} can generate high-dimensional discrete variables (e.g., binary and count features) via a combination of an autoencoder and generative adversarial networks. We also propose minibatch averaging to efficiently avoid mode collapse, and increase the learning efficiency with batch normalization and shortcut connections. To demonstrate feasibility, we showed that {medGAN} generates synthetic patient records that achieve comparable performance to real data on many experiments including distribution statistics, predictive modeling tasks and a medical expert review. We also empirically observe a limited privacy risk in both identity and attribute disclosure using {medGAN}.},
+	journaltitle = {{arXiv}:1703.06490 [cs]},
+	author = {Choi, Edward and Biswal, Siddharth and Malin, Bradley and Duke, Jon and Stewart, Walter F. and Sun, Jimeng},
+	urldate = {2018-03-02},
+	date = {2017-03-19},
+	eprinttype = {arxiv},
+	eprint = {1703.06490},
+	keywords = {Computer Science - Learning, Computer Science - Neural and Evolutionary Computing},
+	file = {arXiv\:1703.06490 PDF:/Users/seth/Zotero/storage/DH6N6TEY/Choi et al. - 2017 - Generating Multi-label Discrete Patient Records us.pdf:application/pdf;arXiv.org Snapshot:/Users/seth/Zotero/storage/CM43RJTF/1703.html:text/html}
+}
+
+@article{miotto_deep_2016,
+	title = {Deep Patient: An Unsupervised Representation to Predict the Future of Patients from the Electronic Health Records},
+	volume = {6},
+	rights = {2016 Nature Publishing Group},
+	issn = {2045-2322},
+	url = {https://www.nature.com/articles/srep26094},
+	doi = {10.1038/srep26094},
+	shorttitle = {Deep Patient},
+	abstract = {Secondary use of electronic health records ({EHRs}) promises to advance clinical research and better inform clinical decision making. Challenges in summarizing and representing patient data prevent widespread practice of predictive modeling using {EHRs}. Here we present a novel unsupervised deep feature learning method to derive a general-purpose patient representation from {EHR} data that facilitates clinical predictive modeling. In particular, a three-layer stack of denoising autoencoders was used to capture hierarchical regularities and dependencies in the aggregated {EHRs} of about 700,000 patients from the Mount Sinai data warehouse. The result is a representation we name “deep patient”. We evaluated this representation as broadly predictive of health states by assessing the probability of patients to develop various diseases. We performed evaluation using 76,214 test patients comprising 78 diseases from diverse clinical domains and temporal windows. Our results significantly outperformed those achieved using representations based on raw {EHR} data and alternative feature learning strategies. Prediction performance for severe diabetes, schizophrenia, and various cancers were among the top performing. These findings indicate that deep learning applied to {EHRs} can derive patient representations that offer improved clinical predictions, and could provide a machine learning framework for augmenting clinical decision systems.},
+	pages = {26094},
+	journaltitle = {Scientific Reports},
+	author = {Miotto, Riccardo and Li, Li and Kidd, Brian A. and Dudley, Joel T.},
+	urldate = {2018-03-02},
+	date = {2016-05-17},
+	langid = {english},
+	file = {Full Text PDF:/Users/seth/Zotero/storage/AVAW6XU9/Miotto et al. - 2016 - Deep Patient An Unsupervised Representation to Pr.pdf:application/pdf;Snapshot:/Users/seth/Zotero/storage/SEJBDFSX/srep26094.html:text/html}
+}
+
+@article{walonoski_synthea:_2018,
+	title = {Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record},
+	volume = {25},
+	issn = {1067-5027},
+	url = {https://academic.oup.com/jamia/article/25/3/230/4098271},
+	doi = {10.1093/jamia/ocx079},
+	shorttitle = {Synthea},
+	abstract = {{ObjectiveOur} objective is to create a source of synthetic electronic health records that is readily available; suited to industrial, innovation, research, and educational uses; and free of legal, privacy, security, and intellectual property restrictions.Materials and {MethodsWe} developed Synthea, an open-source software package that simulates the lifespans of synthetic patients, modeling the 10 most frequent reasons for primary care encounters and the 10 chronic conditions with the highest morbidity in the United States.{ResultsSynthea} adheres to a previously developed conceptual framework, scales via open-source deployment on the Internet, and may be extended with additional disease and treatment modules developed by its user community. One million synthetic patient records are now freely available online, encoded in standard formats (eg, Health Level-7 [{HL}7] Fast Healthcare Interoperability Resources [{FHIR}] and Consolidated-Clinical Document Architecture), and accessible through an {HL}7 {FHIR} application program interface.{DiscussionHealth} care lags other industries in information technology, data exchange, and interoperability. The lack of freely distributable health records has long hindered innovation in health care. Approaches and tools are available to inexpensively generate synthetic health records at scale without accidental disclosure risk, lowering current barriers to entry for promising early-stage developments. By engaging a growing community of users, the synthetic data generated will become increasingly comprehensive, detailed, and realistic over time.{ConclusionSynthetic} patients can be simulated with models of disease progression and corresponding standards of care to produce risk-free realistic synthetic health care records at scale.},
+	pages = {230--238},
+	number = {3},
+	journaltitle = {Journal of the American Medical Informatics Association},
+	shortjournal = {J Am Med Inform Assoc},
+	author = {Walonoski, Jason and Kramer, Mark and Nichols, Joseph and Quina, Andre and Moesel, Chris and Hall, Dylan and Duffett, Carlton and Dube, Kudakwashe and Gallagher, Thomas and {McLachlan}, Scott},
+	urldate = {2018-03-02},
+	date = {2018-03-01},
+	langid = {english},
+	file = {Full Text PDF:/Users/seth/Zotero/storage/SD9XE2BJ/Walonoski et al. - 2018 - Synthea An approach, method, and software mechani.pdf:application/pdf;Snapshot:/Users/seth/Zotero/storage/TUEBKGB6/4098271.html:text/html}
+}
