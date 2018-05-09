@@ -1,8 +1,8 @@
 \documentclass{article}
 
 
-\usepackage{nips_2017}
-%\usepackage[final]{nips_2017}
+%\usepackage{nips_2017}
+\usepackage[final]{nips_2017}
 % to compile a camera-ready version, add the [final] option, e.g.:
 % \usepackage[final]{nips_2017}
 
@@ -50,12 +50,15 @@
 %   legal risk (carrying data in laptops, etc)
 %   Multiple comparison?
 %   Educational data sets
-
+%  Definition of :reproducibility 
+%       reproducibilty - everything same - code, data, result
+%       replicability - code same, new data, same result find Peng & Leek reference (also look at blog)
+%   unit testing...
 
 \maketitle
 
 \begin{abstract}
-A description of an end-to-end system for easily generating synthetic data which contains no Personal Health Information (PHI), allowing example data to be distributed for reproducibility testing.  
+A description of an end-to-end system for easily generating synthetic data which contains no Personal Health Information (PHI), allowing example data to be distributed for reproducibility testing and other purposes.  
 
 \end{abstract}
 
@@ -64,6 +67,11 @@ A description of an end-to-end system for easily generating synthetic data which
 \section{Introduction}
 
 Reproducing machine learning results in the field of health care is challenging. Many published research articles do not make code nor data available. Journals could require the inclusion of code in submissions, however most health care data is very strictly protected by law \cite{hippapro}.  
+
+Various approaches to building data sets which simultaneously have scientific utility and comply with privacy laws.  Broadly speaking, these methods fall into two categories: anonymization and synthesis.  Anonymization methods attempt to keep as much of the "real" data as possible, whilst ensuring that person-specific data 
+
+
+
 
 
 \section{Appendix: Legal References}
