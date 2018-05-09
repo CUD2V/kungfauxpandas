@@ -1,7 +1,8 @@
 \documentclass{article}
 
-%\usepackage{nips_2017}
-\usepackage[final]{nips_2017}
+
+\usepackage{nips_2017}
+%\usepackage[final]{nips_2017}
 % to compile a camera-ready version, add the [final] option, e.g.:
 % \usepackage[final]{nips_2017}
 
@@ -14,21 +15,29 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 
-
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+ 
+\urlstyle{same}
 \title{%
   Kung Faux Pandas \\
   \large Alternative Facts for 
     Privacy Preservation}
 
-%\author{James King \& Seth Russel}
+%\author{Seth Russel  \& James King}
 \author{
   James King \& Seth Russell\\
   Data Science to Patient Value (D2V)\\
   School of Medicine \\
   University of Colorado Anschutz Medical Campus\\
 %  Aurora, CO\\
-  \texttt{james.king@ucdenver.edu} \\ 
   \texttt{seth.russell@ucdenver.edu} \\
+  \texttt{james.king@ucdenver.edu} \\ 
   }
 
 \date{May 2018}
@@ -46,14 +55,22 @@
 \maketitle
 
 \begin{abstract}
+A description of an end-to-end system for easily generating synthetic data which contains no Personal Health Information (PHI), allowing example data to be distributed for reproducibility testing.  
 
 \end{abstract}
 
+
+
 \section{Introduction}
 
-The development and widespread use of literate programming tools such as RMarkdown and Jupyter Notebooks used in conjunction with public code archives like GitLab have enabled a giant leap forward in reproducible research.  It is now possible to write documents which contain source code, visualizations, analytical results, and narrative writing in a single package which can distributed to any interested person for essentially zero cost.
+Reproducing machine learning results in the field of health care is challenging. Many published research articles do not make code nor data available. Journals could require the inclusion of code in submissions, however most health care data is very strictly protected by law \cite{hippapro}.  
 
-While this pattern (workflow? combination?) makes it easy for readers to check source code for errors, it only enables reproducible research if the 
+
+\section{Appendix: Legal References}
+In the U.S., the primary law affecting health data privacy is the Health Insurance Portability and Accountability Act (\href{https://www.hhs.gov/hipaa/for-professionals/index.html}{HIPAA}). 
+
+
+Additionally, organizations desiring to perform biomedical and social, behavioral, and educational research are subject to Common Rule (\href{https://www.hhs.gov/ohrp/regulations-and-policy/regulations/45-cfr-46/index.html#subparta}{45 CFR 46, Subpart A}) and/or the U.S. Food and Drug Administration’s regulations (\href{https://www.ecfr.gov/cgi-bin/text-idx?SID=faa4b2b2900a70fbcac4a773c9da0f0f&mc=true&node=pt21.1.50&rgn=div5}{21 CFR 50} and \href{https://www.ecfr.gov/cgi-bin/text-idx?SID=faa4b2b2900a70fbcac4a773c9da0f0f&mc=true&node=pt21.1.56&rgn=div5}{56}). Furthermore, the Common Rule established Institutional Review Boards which are responsible and the institutional level of safe guarding human subjects in any research. 
 
 
 \bibliographystyle{unsrt}
