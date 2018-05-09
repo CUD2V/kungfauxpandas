@@ -38,6 +38,13 @@
     note = {Accessed: 2018-05-08}
 }
 
+@misc{natmethods,
+    author    = {2018 Macmillan Publishers Limited, part of Springer Nature},
+    title     = {Availability of data, material and methods},
+    howpublished = {\url{https://www.nature.com/authors/policies/availability.html}},
+    note = {Accessed: 2018-05-09}
+}
+
 @article{beaulieu-jones_privacy-preserving_2017,
 	title = {Privacy-preserving generative deep neural networks support clinical data sharing},
 	rights = {© 2017, Posted by Cold Spring Harbor Laboratory. This pre-print is available under a Creative Commons License (Attribution 4.0 International), {CC} {BY} 4.0, as described at http://creativecommons.org/licenses/by/4.0/},
@@ -115,4 +122,73 @@
 	date = {2018-03-01},
 	langid = {english},
 	file = {Full Text PDF:/Users/seth/Zotero/storage/SD9XE2BJ/Walonoski et al. - 2018 - Synthea An approach, method, and software mechani.pdf:application/pdf;Snapshot:/Users/seth/Zotero/storage/TUEBKGB6/4098271.html:text/html}
+}
+
+
+@inproceedings{gray_quickly_1994,
+	location = {New York, {NY}, {USA}},
+	title = {Quickly Generating Billion-record Synthetic Databases},
+	isbn = {978-0-89791-639-4},
+	url = {http://doi.acm.org/10.1145/191839.191886},
+	doi = {10.1145/191839.191886},
+	series = {{SIGMOD} '94},
+	abstract = {Evaluating database system performance often requires generating synthetic databases—ones having certain statistical properties but filled with dummy information. When evaluating different database designs, it is often necessary to generate several databases and evaluate each design. As database sizes grow to terabytes, generation often takes longer than evaluation. This paper presents several database generation techniques. In particular it discusses: (1) Parallelism to get generation speedup and scaleup. (2) Congruential generators to get dense unique uniform distributions. (3) Special-case discrete logarithms to generate indices concurrent to the base table generation. (4) Modification of (2) to get exponential, normal, and self-similar distributions.The discussion is in terms of generating billion-record {SQL} databases using C programs running on a shared-nothing computer system consisting of a hundred processors, with a thousand discs. The ideas apply to smaller databases, but large databases present the more difficult problems.},
+	pages = {243--252},
+	booktitle = {Proceedings of the 1994 {ACM} {SIGMOD} International Conference on Management of Data},
+	publisher = {{ACM}},
+	author = {Gray, Jim and Sundaresan, Prakash and Englert, Susanne and Baclawski, Ken and Weinberger, Peter J.},
+	urldate = {2018-05-09},
+	date = {1994},
+	file = {ACM Full Text PDF:/Users/seth/Zotero/storage/AGN33HBZ/Gray et al. - 1994 - Quickly Generating Billion-record Synthetic Databa.pdf:application/pdf}
+}
+
+@article{sweeney_2002,
+	title = {k-{ANONYMITY}: A {MODEL} {FOR} {PROTECTING} {PRIVACY}},
+	volume = {10},
+	issn = {0218-4885},
+	url = {https://www.worldscientific.com/doi/abs/10.1142/S0218488502001648},
+	doi = {10.1142/S0218488502001648},
+	shorttitle = {k-{ANONYMITY}},
+	abstract = {Consider a data holder, such as a hospital or a bank, that has a privately held  collection of person-specific, field structured data. Suppose the data holder  wants to share a version of the data with researchers. How can a data holder release  a version of its private data with scientific guarantees that the individuals who are  the subjects of the data cannot be re-identified while the data remain  practically useful? The solution provided in this paper includes a formal  protection model named k-anonymity and a set of accompanying policies  for deployment. A release provides k-anonymity protection if the  information for each person contained in the release cannot be distinguished from  at least k-1 individuals whose information also appears in the release.  This paper also examines re-identification attacks that can be realized on  releases that adhere to k-anonymity unless accompanying policies  are respected. The k-anonymity protection model is important because  it forms the basis on which the real-world systems known as Datafly,  μ-Argus and k-Similar provide guarantees of privacy  protection.},
+	pages = {557--570},
+	number = {5},
+	journaltitle = {International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems},
+	shortjournal = {Int. J. Unc. Fuzz. Knowl. Based Syst.},
+	author = {Sweeney, Latanya},
+	urldate = {2018-05-09},
+	date = {2002-10-01},
+	file = {Snapshot:/Users/seth/Zotero/storage/MGW5P3BG/S0218488502001648.html:text/html}
+}
+
+@article{gal_data_2014,
+	title = {A data recipient centered de-identification method to retain statistical attributes},
+	volume = {50},
+	issn = {1532-0464},
+	url = {https://www.sciencedirect.com/science/article/pii/S1532046414000021},
+	doi = {10.1016/j.jbi.2014.01.001},
+	abstract = {Privacy has always been a great concern of patients and medical service providers. As a result of the recent advances in information technology and th…},
+	pages = {32--45},
+	journaltitle = {Journal of Biomedical Informatics},
+	author = {{Tamas S.Gal} and {Thomas C.Tucker} and {Aryya Gangopadhyay} and {Zhiyuan Chen}},
+	urldate = {2018-05-07},
+	date = {2014-08-01},
+	langid = {english},
+	file = {2014 - A data recipient centered de-identification method.pdf:/Users/seth/Zotero/storage/88HPIE4B/2014 - A data recipient centered de-identification method.pdf:application/pdf}
+}
+
+@article{aggarwal_static_2008,
+	title = {On Static and Dynamic Methods for Condensation-based Privacy-preserving Data Mining},
+	volume = {33},
+	issn = {0362-5915},
+	url = {http://doi.acm.org/10.1145/1331904.1331906},
+	doi = {10.1145/1331904.1331906},
+	abstract = {In recent years, privacy-preserving data mining has become an important problem because of the large amount of personal data which is tracked by many business applications. In many cases, users are unwilling to provide personal information unless the privacy of sensitive information is guaranteed. In this paper, we propose a new framework for privacy-preserving data mining of multidimensional data. Previous work for privacy-preserving data mining uses a perturbation approach which reconstructs data distributions in order to perform the mining. Such an approach treats each dimension independently and therefore ignores the correlations between the different dimensions. In addition, it requires the development of a new distribution-based algorithm for each data mining problem, since it does not use the multidimensional records, but uses aggregate distributions of the data as input. This leads to a fundamental re-design of data mining algorithms. In this paper, we will develop a new and flexible approach for privacy-preserving data mining that does not require new problem-specific algorithms, since it maps the original data set into a new anonymized data set. These anonymized data closely match the characteristics of the original data including the correlations among the different dimensions. We will show how to extend the method to the case of data streams. We present empirical results illustrating the effectiveness of the method. We also show the efficiency of the method for data streams.},
+	pages = {2:1--2:39},
+	number = {1},
+	journaltitle = {{ACM} Trans. Database Syst.},
+	author = {Aggarwal, Charu C. and Yu, Philip S.},
+	urldate = {2018-05-09},
+	date = {2008-03},
+	keywords = {\textit{k}-anonymity, databases data mining, Privacy},
+	file = {ACM Full Text PDF:/Users/seth/Zotero/storage/25ACYH3L/Aggarwal and Yu - 2008 - On Static and Dynamic Methods for Condensation-bas.pdf:application/pdf}
 }
