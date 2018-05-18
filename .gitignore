@@ -102,3 +102,7 @@ ENV/
 
 # Ignore MacOS files
 .DS_Store
+
+# Plugins should be downloaded from respective repos
+plugins/*
+
