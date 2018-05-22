@@ -17,16 +17,18 @@ def process_data(request, response, resource):
 @hug.local()
 def synthesize_data(query: hug.types.text, method: hug.types.text):
     try:
-        print('line 20')
         df = kfpd.read_sql(query, db_conn, method)
-        print('line 22')
-        print(type(df))
-        print(df)
-        df.style.hide_index()
+        df_html = (
+            df.style
+            .hide_index()
+            .set_table_attributes("class='table table-hover'")
+            .render()
+        )
         return {
           'message': 'success',
           'query': '{0}'.format(query),
-          'response': df.to_html(classes='table')}
+          'response': df_html,
+          'csv': df.to_csv(index=False)}
     except Exception as e:
         print('Caught exception', str(e))
         return {

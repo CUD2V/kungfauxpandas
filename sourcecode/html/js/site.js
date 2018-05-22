@@ -63,6 +63,7 @@ $('#submit').click(function() {
       if (data.message === 'success'){
         $('#qr_indicator').parent().removeClass('alert-danger');
         $('#query_result_text').html('<pre>' + data.response + '</pre>');
+        $('thead').addClass('thead-light');
         // build link to download csv data
         // had to add event.stopPropagation() to prevent card from collapsing/expanding
         $('#download_link').append('<a href="data:text/csv;charset=utf-8,'
