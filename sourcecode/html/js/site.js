@@ -28,6 +28,21 @@ $('#metadata').on('shown.bs.collapse', function () {
 })
 
 $('#submit').click(function() {
+  // need to remove which ever is showing fa-plus or fa-minus
+  // then set back at the end
+  if ($('#qr_indicator').hasClass('fa-plus')) {
+    restore_class = 'fa-plus';
+    $('#qr_indicator').removeClass('fa-plus');
+  }
+  else {
+    restore_class = 'fa-minus';
+    $('#qr_indicator').removeClass('fa-minus');
+  }
+
+  $('#qr_indicator').addClass("fa-spinner fa-pulse");
+  $('#query_result_text').html('<p>Loading Results</p>');
+  $('#download_link').empty();
+
   var jqxhr_query = $.ajax({
     dataType: 'json',
     type: 'GET',
@@ -48,6 +63,11 @@ $('#submit').click(function() {
       if (data.message === 'success'){
         $('#qr_indicator').parent().removeClass('alert-danger');
         $('#query_result_text').html('<pre>' + data.response + '</pre>');
+        // build link to download csv data
+        // had to add event.stopPropagation() to prevent card from collapsing/expanding
+        $('#download_link').append('<a href="data:text/csv;charset=utf-8,'
+          + escape(data.csv)
+          + '" onclick="event.stopPropagation();" download="query_results.csv">query_results.csv</a>')
       }
       else{
         $('#qr_indicator').parent().addClass('alert-danger');
@@ -57,13 +77,16 @@ $('#submit').click(function() {
         $('#query_result_text').html(response);
         console.log(data.response);
       }
+      $('#qr_indicator').removeClass("fa-spinner fa-pulse");
+      $('#qr_indicator').addClass(restore_class);
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
       console.log('error encountered attempting to get synthetic data' + textStatus + errorThrown);
       $('#qr_indicator').parent().addClass('alert-danger');
       $('#query_result_text').html('Error encountered while attempting to get synthetic data. See browser console for additional details.');
+      $('#qr_indicator').removeClass("fa-spinner fa-pulse");
+      $('#qr_indicator').addClass(restore_class);
     });
-
 })
 
 $('#reset').click(function() {
@@ -73,6 +96,7 @@ $('#reset').click(function() {
   editor.gotoLine(n); //Go to end of document
   $('#qr_indicator').parent().removeClass('alert-danger');
   $('#query_result_text').html('Type a query and hit submit to see results here.');
+  $('#download_link').empty();
 })
 
 var editor = ace.edit('editor');
