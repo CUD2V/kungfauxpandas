@@ -8,9 +8,32 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 </head>
 <body>
+
+  <!-- REST Service Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header alert-danger">
+          <h5 class="modal-title" id="errorModalTitle">Server Error</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Could not connect to REST service, application will not function.</p>
+          <p>Error may be resolved by reloading page or checking status of REST service</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body of page -->
   <div class="container-fluid">
     <h2>KungFauxPandas Prototype UI</h2>
-    <p>Enter a query into the text box below and hit submit to recieve a de-identified result. Optionally, select the data synthesis method.</p>
+    <p>Enter a SELECT query into the text box below and hit submit to recieve a de-identified result. Optionally, select the data synthesis method.</p>
     <div class="container">
       <div class="row justify-content-md-center">
         <div class="col-md-8">
@@ -41,14 +64,7 @@
               </h5>
               <div class="collapse" id="metadata">
                 <div class="card-body">
-                  <span class="card-text">
-                    <h5>Encounters</h5>
-                      <ul>
-                        <li>Encounter_Id</li>
-                        <li>Person_Id</li>
-                        <li>Name</li>
-                        <li>DOB</li>
-                      </ul>
+                  <span class="card-text" id="metadata_text">
                   </span>
                 </div>
               </div>
@@ -61,7 +77,7 @@
               </h5>
               <div class="collapse" id="query_results">
                 <div class="card-body">
-                  <p class="card-text">Some text here.</p>
+                  <span class="card-text" id="query_result_text">Type a query and hit submit to see results here.</span>
                 </div>
               </div>
             </div>
@@ -70,6 +86,8 @@
       </div>
     </div>
   </div>
+  <br />
+  <br />
   <footer class="footer">
       <p class="text-muted text-center">Built by University of Colorado D2V Analytics Team</p>
   </footer>
