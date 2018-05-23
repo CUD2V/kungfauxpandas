@@ -28,6 +28,14 @@ $('#metadata').on('shown.bs.collapse', function () {
 })
 
 $('#submit').click(function() {
+  // check to make sure a query has been entered before submitting.
+  var filtered_input = $.trim(editor.getValue().replace(/-- Type SQL Code here/g,''));
+  if ((filtered_input.length <= 14) ||
+      (filtered_input === '-- Type SQL Code here')) {
+        return;
+  }
+
+  // reset query result area and show loading indicator
   // need to remove which ever is showing fa-plus or fa-minus
   // then set back at the end
   if ($('#qr_indicator').hasClass('fa-plus')) {
@@ -42,6 +50,7 @@ $('#submit').click(function() {
   $('#qr_indicator').addClass("fa-spinner fa-pulse");
   $('#query_result_text').html('<p>Loading Results</p>');
   $('#download_link').empty();
+  $('#qr_indicator').parent().removeClass('alert-danger');
 
   var jqxhr_query = $.ajax({
     dataType: 'json',
@@ -62,7 +71,7 @@ $('#submit').click(function() {
       }
       if (data.message === 'success'){
         $('#qr_indicator').parent().removeClass('alert-danger');
-        $('#query_result_text').html('<pre>' + data.response + '</pre>');
+        $('#query_result_text').html('<pre id="response_table">' + data.response + '</pre>');
         $('thead').addClass('thead-light');
         // build link to download csv data
         // had to add event.stopPropagation() to prevent card from collapsing/expanding
@@ -72,11 +81,11 @@ $('#submit').click(function() {
       }
       else{
         $('#qr_indicator').parent().addClass('alert-danger');
-        var response = '<p>Error encountered while attempting to get synthetic data. See browser console for additional details.</p>';
+        var response = '<p>Error encountered while attempting to get synthetic data.</p>';
+        response += '<pre class="alert alert-warning">' + data.response + '</pre>';
         response += '<p>Query submitted:</p>';
         response += '<pre>' + data.query + '</pre>';
         $('#query_result_text').html(response);
-        console.log(data.response);
       }
       $('#qr_indicator').removeClass("fa-spinner fa-pulse");
       $('#qr_indicator').addClass(restore_class);
