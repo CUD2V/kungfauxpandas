@@ -31,9 +31,12 @@ body {
 }
 #response_table {
   margin-top: -1rem;
-  margin-bottom: -0.5rem;
+
   overflow-x: scroll;
 }
 .table {
   margin-bottom: -1rem;
+}
+#executed_query {
+  margin-bottom: -0.5rem;
 }
