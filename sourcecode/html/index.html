@@ -2,29 +2,61 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Put a real title soon</title>
+<title>KungFauxPandas Prototype UI</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="css/style.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 </head>
 <body>
+
+  <!-- REST Service Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header alert-danger">
+          <h5 class="modal-title" id="errorModalTitle">Server Error</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Could not connect to REST service, application will not function.</p>
+          <p>Error may be resolved by reloading page or checking status of REST service</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body of page -->
   <div class="container-fluid">
-    <h2>Data Fakifier Prototype</h2>
-    <p>Enter a query into the text box below and hit submit to recieve a de-identified result.</p>
+    <h2>KungFauxPandas Prototype UI</h2>
+    <p>Enter a SELECT query into the text box below and hit submit to recieve a de-identified result. Optionally, select the data synthesis method.</p>
     <div class="container">
       <div class="row justify-content-md-center">
         <div class="col-md-8">
           <div class="row" style="height: 300px">
             <pre id="editor" class="border rounded"></pre>
           </div>
-          <div class="row justify-content-end">
-            <button id="submit" type="submit" class="btn btn-primary mr-2">Submit</button>
-            <button id="reset" type="button" class="btn btn-danger">Reset</button>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="d-flex justify-content-start" id="synthesis_methods">
+                <legend class="col-form-label">Data Synthesis Method:</legend>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex justify-content-end">
+                <button id="submit" type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button id="reset" type="button" class="btn btn-danger">Reset</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div class="row justify-content-md-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
           <div class="row mt-5">
             <div class="card" style="width: 100%">
               <h5 class="card-header" aria-expanded="false" data-toggle="collapse" href="#metadata" role="button" aria-expanded="false" aria-controls="metadata">
@@ -32,14 +64,7 @@
               </h5>
               <div class="collapse" id="metadata">
                 <div class="card-body">
-                  <span class="card-text">
-                    <h5>Encounters</h5>
-                      <ul>
-                        <li>Encounter_Id</li>
-                        <li>Person_Id</li>
-                        <li>Name</li>
-                        <li>DOB</li>
-                      </ul>
+                  <span class="card-text" id="metadata_text">
                   </span>
                 </div>
               </div>
@@ -47,12 +72,14 @@
           </div>
           <div class="row mt-2">
             <div class="card" style="width: 100%">
-              <h5 class="card-header" aria-expanded="false" data-toggle="collapse" href="#query_results" role="button" aria-expanded="false" aria-controls="metquery_results">
-                Query Results <i id="qr_indicator" class="fas fa-plus float-right"></i>
+              <h5 class="card-header" aria-expanded="false" data-toggle="collapse" href="#query_results" role="button" aria-expanded="false" aria-controls="query_results">
+                Query Results
+                <small id="download_link" class="text-muted"></small>
+                <i id="qr_indicator" class="fas fa-plus float-right"></i>
               </h5>
               <div class="collapse" id="query_results">
                 <div class="card-body">
-                  <p class="card-text">Some text here.</p>
+                  <span class="card-text" id="query_result_text">Type a query and hit submit to see results here.</span>
                 </div>
               </div>
             </div>
@@ -61,14 +88,16 @@
       </div>
     </div>
   </div>
+  <br />
+  <br />
   <footer class="footer">
       <p class="text-muted text-center">Built by University of Colorado D2V Analytics Team</p>
   </footer>
 
   <!-- load scripts last -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
   <script src="js/ace-src-min/ace.js" type="text/javascript" charset="utf-8"></script>
   <script src="js/site.js"></script>
 </body>
