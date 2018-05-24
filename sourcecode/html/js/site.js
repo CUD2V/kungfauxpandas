@@ -77,7 +77,12 @@ $('#submit').click(function() {
         // had to add event.stopPropagation() to prevent card from collapsing/expanding
         $('#download_link').append('<a href="data:text/csv;charset=utf-8,'
           + escape(data.csv)
-          + '" onclick="event.stopPropagation();" download="query_results.csv">query_results.csv</a>')
+          + '" onclick="event.stopPropagation();" download="query_results.csv">query_results.csv</a>');
+          console.log('appending exectued query');
+        $('#query_result_text').append('<div class="alert alert-info" id="executed_query">' +
+                                       '<p>Executed Query:</p>' +
+                                       '<pre>' + data.executed_query + '</pre>' +
+                                       '</div>');
       }
       else{
         $('#qr_indicator').parent().addClass('alert-danger');

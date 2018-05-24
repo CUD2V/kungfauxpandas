@@ -3,6 +3,7 @@ from seth_fakelite3 import KungFauxPandas
 import sqlite3
 import sys
 import re
+import sqlparse
 
 
 kfpd = KungFauxPandas()
@@ -19,12 +20,73 @@ def process_data(request, response, resource):
 def synthesize_data(query: hug.types.text, method: hug.types.text):
     if query_ok(query):
 
-        # if limit statement exists, either:
-        #   increase limit to minimum number
-        #   remove limit statement for query, but only return limit
+        parsed = sqlparse.parse(query)[0]
+
+        order_found = False
+        order_clauses = []
+        limit_found = False
+        if parsed.get_type() == 'SELECT':
+            for t in parsed.tokens:
+                if(t.is_whitespace):
+                    continue
+                if (t.is_keyword and t.normalized == 'ORDER'):
+                    order_found = True
+                    continue
+                if order_found:
+                    if t.is_keyword and t.normalized != 'BY':
+                        break
+                    elif isinstance(t, (sqlparse.sql.Identifier, sqlparse.sql.IdentifierList)):
+                        order_clauses.append(str(t))
+            for t in parsed.tokens:
+                if (t.is_keyword and t.normalized == 'LIMIT'):
+                    limit_found = True
+
+        # replace order by clauses with random()
+        # as order by doesn't do anything once synthesis occurs
+        fixed_query = query
+        if order_found:
+            i = query.rfind(order_clauses[0])
+            fixed_query = fixed_query[:i] + "random()" + fixed_query[i + len(order_clauses[0]):]
+
+            for o in order_clauses[1:]:
+                i = fixed_query.rfind(o)
+                fixed_query = fixed_query[:i] + fixed_query[i + len(o):]
+
+            # some cleanup
+            fixed_query = re.sub('random\(\),', 'random()', fixed_query, flags=re.M)
+            fixed_query = re.sub('^\s+,', '', fixed_query, flags=re.M)
+        # if no order by statement present, add it
+        else:
+            if limit_found:
+                i = fixed_query.lower().rfind('limit')
+                fixed_query = fixed_query[:i] + "\norder by random()\n" + fixed_query[i:]
+            else:
+                fixed_query += '\norder by random()'
 
         try:
-            df = kfpd.read_sql(query, db_conn, method)
+            df = kfpd.read_sql(fixed_query, db_conn, method)
+
+            # if any order by clauses were present, re-apply them
+            if len(order_clauses) > 0:
+                sort_by = []
+                asc_flags = []
+                orig_columns = df.columns
+                df.columns = df.columns.str.lower()
+
+                for o in order_clauses:
+                    sub_o = o.split(',')
+
+                    # If you don’t specify the ASC or DESC keyword, SQLite uses ASC or ascending order by default.
+                    for s in sub_o:
+                        if s.lower().find(' desc') != -1:
+                            asc_flags.append(False)
+                        else:
+                            asc_flags.append(True)
+                        sort_by.append(re.sub('\s+asc|\s+desc', '', s, flags=re.IGNORECASE).strip().lower())
+
+                df.sort_values(sort_by, ascending=asc_flags, inplace=True)
+                df.columns = orig_columns
+
             df_html = (
                 df.style
                 .hide_index()
@@ -40,6 +102,7 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
             return {
               'message': 'success',
               'query': '{0}'.format(query),
+              'executed_query': fixed_query,
               'response': df_html,
               'csv': df.to_csv(index=False)}
         except Exception as e:
