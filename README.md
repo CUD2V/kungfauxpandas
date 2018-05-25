@@ -72,3 +72,32 @@ source kungfauxpandas/bin/activate
 pip install cython numpy scipy pandas matplotlib jupyter hug
 pip freeze > requirements.txt
 ```
+
+## About the Docker image
+
+### Create the docker image
+
+Clone the git repo and from the base of the repo run the following:
+
+```
+cd sourcecode/scripts
+docker build -t kungfauxpandas .
+```
+
+If you want to run the docker image you just created:
+
+```
+docker run -p 8000:8000 -p 8080:8080 -it kungfauxpandas
+ ```
+
+### Make the docker image available via dockerhub
+
+```
+docker login --username=blackspot
+docker images
+# find image id and replace <imageid> with the actual id
+docker tag <imageid> blackspot/synthesis:latest
+docker push blackspot/synthesis:latest
+```
+
+
