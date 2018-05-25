@@ -1,7 +1,7 @@
 FROM python:3.6.5-alpine as base
 FROM base as builder
 
-RUN apk add --no-cache --update gcc gfortran freetype-dev libpng-dev build-base openblas-dev
+RUN apk add --no-cache --update gcc gfortran freetype-dev libpng-dev build-base openblas-dev python-dev
 RUN mkdir /app
 WORKDIR /app
 
