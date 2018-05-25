@@ -16,7 +16,8 @@ RUN wget https://github.com/CUD2V/kungfauxpandas/archive/master.zip; \
   cd kungfauxpandas-master/sourcecode/python; \
   pip install -r requirements.txt; \
   cd ../scripts ;\
-  chmod +x ./docker_startup.sh
+  chmod +x ./docker_startup.sh ;\
+  which python
 
 FROM base
 COPY --from=builder /app /app
