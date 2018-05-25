@@ -106,3 +106,10 @@ ENV/
 # Plugins should be downloaded from respective repos
 plugins/*
 
+# Don't commit data files
+*.csv
+*.tgz
+*.zip
+*.gz
+*.db
+*.html
