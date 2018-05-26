@@ -7,7 +7,17 @@ cd ../python
 
 #tail -f /app/web_service.log
 
-while :; do
-  sleep 100
-  echo -n "."
+cleanup ()
+{
+kill -s SIGTERM $!
+exit 0
+}
+
+trap cleanup SIGINT SIGTERM
+
+while [ 1 ]
+do
+    echo -n "."
+    sleep 10 &
+    wait $!
 done
