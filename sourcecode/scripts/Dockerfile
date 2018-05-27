@@ -6,24 +6,29 @@ FROM python:3.6.5 as base
 FROM base as builder
 
 #RUN apk add --no-cache --update gcc gfortran freetype-dev libpng-dev build-base openblas-dev python3-dev
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential gfortran libfreetype6-dev libpng-dev libopenblas-dev unzip
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential gfortran libfreetype6-dev libpng-dev libopenblas-dev unzip && apt-get clean
 
 RUN mkdir /app
 WORKDIR /app
 
 RUN wget https://github.com/CUD2V/kungfauxpandas/archive/master.zip; \
   unzip master.zip; \
+  rm master.zip; \
   cd kungfauxpandas-master/sourcecode/python; \
-  pip install virtualenv; \
-  virtualenv kungfauxpandas; \
-  source kungfauxpandas/bin/activate; \
-  pip install -r requirements.txt; \
+  pip --no-cache-dir install -r requirements.txt; \
   cd ../scripts ;\
   chmod +x ./docker_startup.sh
 
-FROM base
-COPY --from=builder /app /app
+#  pip install virtualenv; \
+#  virtualenv kungfauxpandas; \
+#  . kungfauxpandas/bin/activate; \
+
+
+#FROM base
+#COPY --from=builder /app /app
 WORKDIR /app/kungfauxpandas-master/sourcecode/scripts
+
+#RUN pip install virtualenv
 
 EXPOSE 8000 8080
 
