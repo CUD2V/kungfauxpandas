@@ -1,5 +1,5 @@
 import hug
-from seth_fakelite3 import KungFauxPandas
+from old_fakelite3 import KungFauxPandas
 import sqlite3
 import sys
 import re

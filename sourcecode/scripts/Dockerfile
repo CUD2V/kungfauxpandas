@@ -32,7 +32,7 @@ WORKDIR /app/kungfauxpandas-master/sourcecode/scripts
 
 EXPOSE 8000 8080
 
-CMD ["/bin/bash", "docker_startup.sh"]
+CMD ["/bin/bash", "docker_startup.sh >> /app/docker_startup.log 2>&1"]
 
 # https://busybox.net/downloads/BusyBox.html
 # docker build -t kungfauxpandas . && docker run -p 8000:8000 -p 8080:8080 -it kungfauxpandas

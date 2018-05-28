@@ -1,9 +1,4 @@
 #! /bin/bash
-
-pwd
-
-env
-
 cd ../html
 python -m http.server 8080 >> /app/http_server.log 2>&1
 
