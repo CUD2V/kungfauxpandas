@@ -1,6 +1,9 @@
+# Run the following line from the command line to build and start this image
+# docker build -t kungfauxpandas . && docker run -p 8000:8000 -p 8080:8080 -it kungfauxpandas
+#
 #FROM python:3.6.5-alpine as base
 # for some reason, alpine image takes 30min - 1h+ to build python packages
-# debian stretch base image takes like 5 minutes
+# debian stretch base image takes like 2 minutes
 # keeping old alpine stuff in case I figure it out or want to test further
 FROM python:3.6.5 as base
 FROM base as builder
@@ -19,21 +22,11 @@ RUN wget https://github.com/CUD2V/kungfauxpandas/archive/master.zip; \
   cd ../scripts ;\
   chmod +x ./docker_startup.sh
 
-#  pip install virtualenv; \
-#  virtualenv kungfauxpandas; \
-#  . kungfauxpandas/bin/activate; \
-
-
-#FROM base
-#COPY --from=builder /app /app
 WORKDIR /app/kungfauxpandas-master/sourcecode/scripts
-
-#RUN pip install virtualenv
 
 EXPOSE 8000 8080
 
-CMD ["/bin/bash", "docker_startup.sh >> /app/docker_startup.log 2>&1"]
+# in case I want to test without committing
+# ADD docker_startup.sh /app/kungfauxpandas-master/sourcecode/scripts/docker_startup.sh
 
-# https://busybox.net/downloads/BusyBox.html
-# docker build -t kungfauxpandas . && docker run -p 8000:8000 -p 8080:8080 -it kungfauxpandas
-# pip install -i https://pypi.fcio.net/simple/ -r requirements.txt
+CMD ["/bin/bash", "docker_startup.sh", ">>", "/app/docker_startup.log", "2>&1"]
