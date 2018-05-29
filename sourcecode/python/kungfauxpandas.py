@@ -143,7 +143,7 @@ class KDEPlugin(PandaPlugin):
 
     def fauxify(self, df_in=None, *args, **kwargs):
 
-        self.df = df_in
+        self.df_in = df_in
 
         self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
         self.determine_factors = True

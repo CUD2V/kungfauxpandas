@@ -67,9 +67,7 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
             if method is not None:
                 for m in kfpd.synthesis_methods:
                     if method.lower() == m.lower():
-                        method = m
-                print(globals()[method + 'Plugin'])
-
+                        kfpd.plugin = globals()[m + 'Plugin']()
             df = kfpd.read_sql(fixed_query, db_conn)
 
             # if any order by clauses were present, re-apply them

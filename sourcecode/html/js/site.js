@@ -58,7 +58,7 @@ $('#submit').click(function() {
     url: 'http://' + HOST + ':' + PORT + '/synthesize_data',
     data: {
       query: editor.getValue(),
-      method: 'kde'
+      method: $('input[name=selected_method]:checked').val()
     }
   })
     .done(function(data) {
