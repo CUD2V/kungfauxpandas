@@ -1,6 +1,6 @@
 # faker-prototype
 
-This data synthesis process was created using Python. In order to make it easier for others to replicate the environment, a Conda environment export has been provided as well as a virtualenv requirements file.
+This data synthesis process was created using Python. In order to make it easier for others to replicate the environment, a Conda environment export has been provided as well as a virtualenv requirements file. Alternatively, a docker image with the latest code has been made available.
 
 ## Python Setup
 To run the software, download/clone this repository and then run the appropriate command below based on your Python distribution:
@@ -75,7 +75,13 @@ pip freeze > requirements.txt
 
 ## About the Docker image
 
-### Create the docker image
+Use the provided docker image by executing the following:
+
+```
+docker pull blackspot/synthesis
+```
+
+### How to (re)create the docker image
 
 Clone the git repo and from the base of the repo run the following:
 
@@ -90,7 +96,7 @@ If you want to run the docker image you just created:
 docker run -p 8000:8000 -p 8080:8080 -it kungfauxpandas
  ```
 
-### Make the docker image available via dockerhub
+### How we make the docker image available via dockerhub
 
 ```
 docker login --username=blackspot
@@ -99,5 +105,3 @@ docker images
 docker tag <imageid> blackspot/synthesis:latest
 docker push blackspot/synthesis:latest
 ```
-
-

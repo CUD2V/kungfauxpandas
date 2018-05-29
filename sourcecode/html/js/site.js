@@ -140,7 +140,7 @@ $( document ).ready(function() {
             console.log(m);
           var html_to_append = '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="selected_method" id="'
           html_to_append += 'selected_method' + index + '"';
-          if (m === 'kde')
+          if (m === 'KDE')
             html_to_append += 'value="' + m + '" checked>';
           else {
             html_to_append += 'value="' + m + '">';

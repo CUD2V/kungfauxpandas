@@ -3,11 +3,13 @@ import pandas as pd
 import numpy as np
 import scipy.stats as stats
 import sys
+import warnings
 
-library_location = '../../plugins/DataSynthesizer/DataSynthesizer'
+library_location = '../../plugins/DataSynthesizer'
 sys.path.append(library_location)
 
 from DataSynthesizer.DataDescriber import DataDescriber
+
 ####################################################################################################################################
 ####################################################################################################################################
 
@@ -35,11 +37,10 @@ class TrivialPlugin(PandaPlugin):
 
 
     def fauxify(self, df_in=None):
-        if df_in:
+        if df_in is not None:
             self.df_in = df_in
-        else:
-            self.df_out = self.df_in
 
+        self.df_out = self.df_in
 
         return self.df_out
 
@@ -47,7 +48,7 @@ class TrivialPlugin(PandaPlugin):
 class DataSynthesizerPlugin(PandaPlugin):
     """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
 
-    def __init__(self, df_in,
+    def __init__(self, df_in=None,
             mode = 'correlated_attribute_mode',
             threshold_value = 0.1,
             categorical_attributes = {},
@@ -58,8 +59,6 @@ class DataSynthesizerPlugin(PandaPlugin):
 
         PandaPlugin.__init__(self)
 
-        self.library_location = '../../plugins/DataSynthesizer/DataSynthesizer'
-        sys.path.append(self.library_location)
         self.mode = mode
 
         # An attribute is categorical if its domain size is less than this threshold.
@@ -81,7 +80,7 @@ class DataSynthesizerPlugin(PandaPlugin):
 
         # The maximum number of parents in Bayesian network, i.e., the maximum number of incoming edges.
         # self.degree_of_bayesian_network = 2
-        self.degree_of_bayesian_network = degree_of_baysian_network
+        self.degree_of_bayesian_network = degree_of_bayesian_network
 
         # Number of tuples generated in synthetic dataset.
         # self.num_tuples_to_generate = 10000 # Can be set to any integer.
@@ -97,23 +96,23 @@ class DataSynthesizerPlugin(PandaPlugin):
         from DataSynthesizer.DataGenerator import DataGenerator
         from DataSynthesizer.ModelInspector import ModelInspector
         from DataSynthesizer.lib.utils import read_json_file, display_bayesian_network
-        import warnings
 
-        if df_in == None:
+        if df_in is None:
             warn_text = 'Input data frame is None.  This will cause the data describer to roll back to the '
-            warn_text += 'file name in input_data.'
-
+            warn_text += 'file name in input_dataset.'
             warnings.warn(warn_text)
+        else:
+            self.df_in = df_in
 
 
         # Below copied from example file
-        self.description_file = './out/{}/description.txt'.format(mode)
-        self.synthetic_data = './out/{}/sythetic_data.csv'.format(mode)
+        self.description_file = './out/{}/description.txt'.format(self.mode)
+        self.synthetic_data = './out/{}/sythetic_data.csv'.format(self.mode)
 
-        describer = KFP_DataDescriber(df_in=df_in, threshold_of_categorical_variable=threshold_value)
+        describer = KFP_DataDescriber(df_in=self.df_in, threshold_of_categorical_variable=self.threshold_value)
 
         describer.describe_dataset_in_correlated_attribute_mode(
-                self.input_data,
+                describer.input_dataset,
                 epsilon = self.epsilon,
                 k = self.degree_of_bayesian_network,
                 attribute_to_is_categorical = self.categorical_attributes,
@@ -136,8 +135,8 @@ class DataSynthesizerPlugin(PandaPlugin):
 class KDEPlugin(PandaPlugin):
     """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
 
-    def __init__(self):
-
+    def __init__(self, verbose=True):
+        self.verbose = verbose
         PandaPlugin.__init__(self)
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -149,7 +148,7 @@ class KDEPlugin(PandaPlugin):
         self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
         self.determine_factors = True
 
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
 
             if key == "factor_threshold":
                 self.factor_threshold = value
@@ -159,8 +158,9 @@ class KDEPlugin(PandaPlugin):
 
             else:
                 if self.verbose:
-                    print('Keyword argument', key, 'not used')
+                    warnings.warn('Keyword argument', key, 'not used')
 
+        # sets self.df_out
         self.column_kde()
 
         return self.df_out
@@ -173,38 +173,38 @@ class KDEPlugin(PandaPlugin):
 
         out_dict = dict()
 
-        for col in self.df.columns:
-            thistype = self.df[col].dtype
+        for col in self.df_in.columns:
+            thistype = self.df_in[col].dtype
 
-            if len(set(self.df[col]))/len(self.df[col]) < self.factor_threshold and self.determine_factors:
+            if len(set(self.df_in[col]))/len(self.df_in[col]) < self.factor_threshold and self.determine_factors:
                 thistype = 'object'
 
             if thistype == 'int64':
                 if self.verbose:
                     print('Processing column ' + col + ' as a ' + str(thistype))
-                kd = stats.gaussian_kde(self.df[col], bw_method='silverman')
+                kd = stats.gaussian_kde(self.df_in[col], bw_method='silverman')
                 out_dict[col] = np.int64(kd.resample().ravel())
 
             elif thistype =='float64':
                 if self.verbose:
                     print('Processing column ' + col + ' as a ' + str(thistype))
-                kd = stats.gaussian_kde(self.df[col], bw_method='silverman')
+                kd = stats.gaussian_kde(self.df_in[col], bw_method='silverman')
                 out_dict[col] = kd.resample().ravel()
 
             else:
                 if self.verbose:
                     print('Processing column ' + col + ' as a ' + str(thistype))
 
-                colfact = self.df[col].factorize()
+                colfact = self.df_in[col].factorize()
                 cc=Counter(colfact[0])
 
                 # convert from counts to proportions
                 for key in cc:
-                    cc[key] = cc[key] / len(self.df)
+                    cc[key] = cc[key] / len(self.df_in)
 
                 elements = list(cc.keys())
                 weights = list(cc.values())
-                fakes = choice(elements,p=weights, replace=True, size=len(self.df))
+                fakes = choice(elements,p=weights, replace=True, size=len(self.df_in))
                 out_dict[col] = [colfact[1][xx] for xx in fakes]
 
         self.out_dict = out_dict
@@ -215,7 +215,7 @@ class KDEPlugin(PandaPlugin):
 ####################################################################################################################################
 ####################################################################################################################################
 
-class KungFauxPanda(object):
+class KungFauxPandas(object):
 
     # To do:  Check to see if a column is unique (i.e. index) and recreate with unique < maybe use sample without replacement?>
 
@@ -223,14 +223,19 @@ class KungFauxPanda(object):
 
         self.verbose = verbose
         self.seed = 10293510
+        self.plugin = plugin
+        self.synthesis_methods = ('Trivial', 'KDE', 'DataSynthesizer')
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     def read_sql(self, sql, conn):
 
         self.sql = sql
         self.conn = conn
-        self.df = pd.read_sql(self.sql, self.conn)
+        self.df_in = pd.read_sql(self.sql, self.conn)
 
+        self.df_out = self.plugin.fauxify(self.df_in)
+        return self.df_out
+        '''
         if self.density_depth == 'column':
             self.column_kde()
             return self.fdf
@@ -239,6 +244,7 @@ class KungFauxPanda(object):
             #d0 = df.iloc[:,[0,1,2,3,4]].transpose()
             kd = stats.gaussian_kde(self.df, bw_method='silverman')
             dnew = dict(zip(self.df.columns, kd.resample()))
+        '''
 
 
 ####################################################################################################################################
@@ -304,5 +310,3 @@ def main():
          GROUP BY "flow_edss"."EncounterId"
          ORDER BY NumLoggedScores DESC
     """
-
-
