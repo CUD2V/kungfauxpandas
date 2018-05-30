@@ -18,7 +18,7 @@ class PandaPlugin(object):
     def __init__(self, df_in = None):
         self.df_in = df_in
 
-    def fauxify(self, df_in=None):
+    def fauxify(self, df_in=None, **kwargs):
         """All plugins need to overload this fauxify method which takes a pandas data frame
         and returns a faux-data data frame."""
 
@@ -49,13 +49,14 @@ class DataSynthesizerPlugin(PandaPlugin):
     """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
 
     def __init__(self, df_in=None,
-            mode = 'correlated_attribute_mode',
-            threshold_value = 0.1,
+            mode = 'independent_attribute_mode',
+            threshold_value = 20,
             categorical_attributes = {},
             candidate_keys = {},
             epsilon = 0.1,
             degree_of_bayesian_network = 2,
-            num_tuples_to_generate = 1000):
+            num_tuples_to_generate = None,
+            save_faux_data_to_file = False):
 
         PandaPlugin.__init__(self)
 
@@ -69,24 +70,26 @@ class DataSynthesizerPlugin(PandaPlugin):
         #self.categorical_attributes = {'education': True}
         self.categorical_attributes = categorical_attributes
 
-        # specify which attributes are candidate keys of input dataset.
+        # specify which attributes are candidate keys (or not keys) for input dataset.
         #self.candidate_keys = {'ssn': True}
+        #self.candidate_keys = {'age': False}
         self.candidate_keys = candidate_keys
 
-        # A parameter in differential privacy.
-        # It roughtly means that removing one tuple will change the probability of any output by  at most exp(epsilon).
-        # Set epsilon=0 to turn off differential privacy.
-        self.epsilon = epsilon
+        if mode == "correlated_attribute_mode":
+            # A parameter in differential privacy.
+            # It roughtly means that removing one tuple will change the probability of any output by  at most exp(epsilon).
+            # Set epsilon=0 to turn off differential privacy.
+            self.epsilon = epsilon
 
-        # The maximum number of parents in Bayesian network, i.e., the maximum number of incoming edges.
-        # self.degree_of_bayesian_network = 2
-        self.degree_of_bayesian_network = degree_of_bayesian_network
+            # The maximum number of parents in Bayesian network, i.e., the maximum number of incoming edges.
+            # self.degree_of_bayesian_network = 2
+            self.degree_of_bayesian_network = degree_of_bayesian_network
 
         # Number of tuples generated in synthetic dataset.
         # self.num_tuples_to_generate = 10000 # Can be set to any integer.
-        self.num_tuples_to_generate = num_tuples_to_generate# Can be set to any integer.
+        self.num_tuples_to_generate = num_tuples_to_generate # Can be set to any integer.
 
-
+        self.save_faux_data_to_file = save_faux_data_to_file
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -104,29 +107,55 @@ class DataSynthesizerPlugin(PandaPlugin):
         else:
             self.df_in = df_in
 
+        for key, value in kwargs.items():
+            if   key == "mode":
+                self.mode = value
+            elif key == "threshold_value":
+                self.threshold_value = value
+            elif key == "categorical_attributes":
+                self.categorical_attributes = value
+            elif key == "candidate_keys":
+                self.candidate_keys = value
+            elif key == "num_tuples_to_generate":
+                self.num_tuples_to_generate = value
+            elif key == "save_faux_data_to_file":
+                self.save_faux_data_to_file = vale
+            else:
+                if self.verbose:
+                    warnings.warn('Keyword argument', key, 'not used')
+
+        if self.num_tuples_to_generate is None and self.df_in is not None:
+            self.num_tuples_to_generate = len(self.df_in)
 
         # Below copied from example file
         self.description_file = './out/{}/description.txt'.format(self.mode)
         self.synthetic_data = './out/{}/sythetic_data.csv'.format(self.mode)
 
         describer = KFP_DataDescriber(df_in=self.df_in, threshold_of_categorical_variable=self.threshold_value)
-
-        describer.describe_dataset_in_correlated_attribute_mode(
-                describer.input_dataset,
-                epsilon = self.epsilon,
-                k = self.degree_of_bayesian_network,
-                attribute_to_is_categorical = self.categorical_attributes,
-                attribute_to_is_candidate_key = self.candidate_keys)
-
-        describer.save_dataset_description_to_file(self.description_file)
-
         generator = DataGenerator()
-        generator.generate_dataset_in_correlated_attribute_mode(self.num_tuples_to_generate, self.description_file)
+
+        # currently can't get correlated_attribute_mode to work, but leaving it here for now
+        if self.mode == "correlated_attribute_mode":
+            describer.describe_dataset_in_correlated_attribute_mode(
+                 describer.input_dataset,
+                 epsilon = self.epsilon,
+                 k = self.degree_of_bayesian_network,
+                 attribute_to_is_categorical = self.categorical_attributes,
+                 attribute_to_is_candidate_key = self.candidate_keys)
+            describer.save_dataset_description_to_file(self.description_file)
+            generator.generate_dataset_in_correlated_attribute_mode(self.num_tuples_to_generate, self.description_file)
+        elif self.mode == "independent_attribute_mode":
+            describer.describe_dataset_in_independent_attribute_mode(
+                    describer.input_dataset,
+                    attribute_to_is_categorical = self.categorical_attributes,
+                    attribute_to_is_candidate_key = self.candidate_keys)
+            describer.save_dataset_description_to_file(self.description_file)
+            generator.generate_dataset_in_independent_mode(self.num_tuples_to_generate, self.description_file)
 
         if self.save_faux_data_to_file:
             generator.save_synthetic_data(self.synthetic_data)
 
-        return self.synthetic_data
+        return generator.synthetic_dataset
 
 
 ####################################################################################################################################
