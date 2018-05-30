@@ -29,13 +29,6 @@
 #
 ###############################################################################
 
+__all__=['PandaPlugin','TrivialPlugin','KDEPlugin','DataSynthesizerPlugin', 'faux_read_sql']
 
-import mysql.connector as mariadb
-mariadb_connection = mariadb.connect(user='python_user', password='some_pass', database='employees')
-cursor = mariadb_connection.cursor()
-
-def __init__(self):
-
-    self.request_query = ''
-
-
+#from KungFauxPandas import *
