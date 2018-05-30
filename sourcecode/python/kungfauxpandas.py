@@ -227,12 +227,11 @@ class KungFauxPandas(object):
         self.synthesis_methods = ('Trivial', 'KDE', 'DataSynthesizer')
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    def read_sql(self, sql, conn):
+    def read_sql(self, sql, conn, **kwargs):
 
         self.sql = sql
         self.conn = conn
-        self.df_in = pd.read_sql(self.sql, self.conn)
-
+        self.df_in = pd.read_sql(self.sql, self.conn, **kwargs)
         self.df_out = self.plugin.fauxify(self.df_in)
         return self.df_out
         '''
