@@ -1,10 +1,21 @@
 \documentclass{article}
 
+% if you need to pass options to natbib, use, e.g.:
+% \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading nips_2018
 
-%\usepackage{nips_2017}
-\usepackage[final]{nips_2017}
+% ready for submission
+%\usepackage{nips_2018}
+
+% to compile a preprint version, e.g., for submission to arXiv, add
+% add the [preprint] option:
+\usepackage[preprint]{nips_2018}
+
 % to compile a camera-ready version, add the [final] option, e.g.:
-% \usepackage[final]{nips_2017}
+% \usepackage[final]{nips_2018}
+
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2018}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -36,10 +47,10 @@
 \author{
   James King, Seth Russell, Tellen D. Bennett, Debashis Ghosh\\
   Data Science to Patient Value (D2V)\\
-  School of Medicine \\
+  School of Medicine\\
   University of Colorado Anschutz Medical Campus\\
   Aurora, CO\\
-  \texttt{james.king@ucdenver.edu}, \texttt{seth.russell@ucdenver.edu},\\ \texttt{tell.bennett@ucdenver.edu} \texttt{debashis.ghosh@ucdenver.edu}
+  \texttt{\{james.king, seth.russell, tell.bennett, debashis.ghosh\}@ucdenver.edu}
   }
 
 \date{May 2018}
@@ -71,7 +82,7 @@
 \maketitle
 
 \begin{abstract}
-A description of an end-to-end system for easily generating faux-data which is statistically similar to given real data but does not contain sensitive personal information.  This system makes enables data to be distributed for reproducibility testing and other purposes while in full compliance with HIPAA and GDPR.
+A description of an end-to-end system for easily generating faux-data which is statistically similar to given real data but does not contain sensitive personal information.  This system, which is publicly available \footnote{\url{https://github.com/CUD2V/kungfauxpandas}}, enables data to be distributed for reproducibility testing and other purposes while in full compliance with HIPAA and GDPR.
 \end{abstract}
 
 
@@ -79,7 +90,7 @@ A description of an end-to-end system for easily generating faux-data which is s
 
 The ability of independent investigators to verify results is perhaps \emph{the} most fundamental feature that separates science from other forms intellectual inquiry.  Unfortunately, the mechanisms of communicating scientific results have changed little since the age of enlightenment and are inadequate enabling reproducibility for some modern scientific endeavors such as machine learning.  Perhaps the most important impediment to reproducibility is the need to share data.  This has long been difficult in health care fields, but will presently become difficult for just about everyone.
 
-There is a large body of published literature detailing methods for overcoming this difficulty via ``anonymizing'' and ``synthesising'' data \cite{	patki_synthetic_2016, choi_generating_2017}, however at present a mechanism to routinely \emph{use} these techniques has not been forthcoming.
+There is a large body of published literature detailing methods for overcoming this difficulty via ``anonymizing'' and ``synthesising'' data \cite{patki_synthetic_2016, choi_generating_2017}, however at present a mechanism to routinely \emph{use} these techniques has not been forthcoming.
 
 This paper details an open source software library called \emph{Kung Faux Pandas (KFP)} which integrates \emph{any} of these data security methods into the popular Python Pandas data science library. For those who prefer other tools, KFP also provides Structured Query Language (SQL) interface which enables users to arbitrarily query any data within a database, returning to the user a data set which either does not contain any personal information (synthesized) or has been anonymized by standard methods.
 
