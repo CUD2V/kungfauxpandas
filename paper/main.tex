@@ -30,6 +30,7 @@
 \usepackage{graphicx}       % added by seth - image support
 \graphicspath{ {./images/} }
 \usepackage{soul}           % added by seth - remove before submission, provides highlighting support
+\usepackage{wrapfig}        % added by seth for placing images in-line with text
 
 \usepackage{hyperref}
 \hypersetup{
@@ -82,7 +83,8 @@ The ability of independent investigators to verify results is perhaps \emph{the}
 
 There is a large body of published literature detailing methods for overcoming this difficulty via ``anonymizing'' and ``synthesising'' data \cite{patki_synthetic_2016, choi_generating_2017}, however at present a mechanism to routinely \emph{use} these techniques has not been forthcoming.
 
-This paper details an open source software library called \emph{Kung Faux Pandas (KFP)} which integrates \emph{any} of these data security methods into the popular Python Pandas data science library. For those who prefer other tools, KFP also provides Structured Query Language (SQL) interface which enables users to arbitrarily query any data within a database, returning to the user a data set which either does not contain any personal information (synthesized) or has been anonymized by standard methods.
+% explain faux here? faux data - similar to faux fur or faux leather - ethically more appealing, less expensive to produce or use
+This paper details an open source software library called \emph{Kung Faux Pandas (KFP)} which allows for the modular use of data security methods into the popular Python Pandas data science library. For those who prefer other tools, KFP also provides Structured Query Language (SQL) interface which enables users to arbitrarily query any data within a database, returning to the user a data set which either does not contain any personal information (synthesized) or has been anonymized by standard methods.
 
 \section{Background}
 
@@ -103,7 +105,7 @@ This faux-data can be prodded, poked, plotted, and posted for the world to see, 
 
 \section{System Details}
 
-Many methods of generating the faux-data exist in the literature, many of which have software implementations freely available.   KFP provides a standard mechanism for ``wrapping'' any method into a ``plug-in'' which integrates the method with the Pandas data frame model.  Three of these plug-ins are provided with full documentation for creating other plug-ins.
+Many methods of generating faux-data exist in the literature, many of which have software implementations freely available.   KFP provides a standard mechanism for ``wrapping'' any method into a ``plug-in'' which integrates the method with the Pandas data frame model.  Three of these plug-ins are provided with full documentation for creating other plug-ins.
 
 
 \subsection{Included Methods}
@@ -135,7 +137,7 @@ Describe the SQL interface
 
 Diagrams - not sure if we need both of these. Should we include a screenshot of the UI (saved to /images)?
 
-The ideal environment for a machine learning developer to develop, test, or validate a model is to have unfettered access to all data in the problem domain they are working in. However, as discussed previously, legal limitations and data protection processes are slow. Figure ~\ref{fig:architecture}
+The ideal environment for a machine learning developer to develop, test, or validate a model is to have unfettered access to all data in the problem domain they are working in. However, as discussed previously, legal limitations and data protection processes are slow. Figure ~\ref{fig:architecture} depicts a basic architecture of an alternative to direct data access: data access through an intermediary that can synthesize data on-demand.
 
 \begin{figure}[ht]
   \centering
@@ -143,6 +145,15 @@ The ideal environment for a machine learning developer to develop, test, or vali
   \caption{System Architecture.}
   \label{fig:architecture}
 \end{figure}
+
+\begin{wrapfigure}[15]{r}{0.5\textwidth} %this figure will be at the right
+  \centering
+  \includegraphics[width=0.5\textwidth]{ui_screenshot2}
+  \caption{User Interface.}
+  \label{fig:ui}
+\end{wrapfigure}
+
+KFP provides multiple methods by which a machine learning developer could request on-demand synthetic data. A web we currently have a web based user interface and a REST interface that takes a SQL query, executes it, runs the data through a synthesis process Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 \begin{figure}[ht]
   \centering
