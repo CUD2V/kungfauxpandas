@@ -69,16 +69,6 @@
 %   unit testing...
 %   Proof of privacy guarantees?
 
-\makeatletter
-
-\newenvironment{chapquote}[2][2em]
-  {\setlength{\@tempdima}{#1}%
-   \def\chapquote@author{#2}%
-   \parshape 1 \@tempdima \dimexpr\textwidth-2\@tempdima\relax%
-   \itshape}
-  {\par\normalfont\hfill--\ \chapquote@author\hspace*{\@tempdima}\par\bigskip}
-\makeatother
-
 \maketitle
 
 \begin{abstract}
@@ -98,7 +88,7 @@ This paper details an open source software library called \emph{Kung Faux Pandas
 
 In the United States, there's been a long-standing regulation described in the Health Insurance Portability and Accountability Act (HIPAA), which mandates strong security on data related to health care and is backed by significant fines and possible criminal charges \cite{hippaviol}.  Thus, even institutions which share data face a steep institutional risk. This makes it virtually impossible to enable independent verification of machine learning (ML) models which often require enormous amounts of training data.
 
-Perhaps more ominously for researchers, on May 25 , 2018, the European Union's (EU) General Data Protection Regulation (GDPR) has come into full effect \cite{<get the text of the rules cited>}, establishing a new paradigm in data ``ownership'' for that jurisdiction.   In short, this set of rules defines the ``owners'' of data to be people from whom it was collected and obliges anyone possessing  that data to  honor the owners' preferences about how the data is kept and used, including a requirement to deletion of any data at the request of its owner at any time in the future.
+Perhaps more ominously for researchers, on May 25 , 2018, the European Union's (EU) General Data Protection Regulation (GDPR) has come into full effect \cite{gdpr}, establishing a new paradigm in data ``ownership'' for that jurisdiction.   In short, this set of rules defines the ``owners'' of data to be people from whom it was collected and obliges anyone possessing  that data to  honor the owners' preferences about how the data is kept and used, including a requirement to deletion of any data at the request of its owner at any time in the future.
 
 These rules are ultimately good for citizens, but they create a pickle for scientists studying humans as it's very difficult to follow normal processes in scientific rigor while complying with privacy protection rules.
 
@@ -124,11 +114,11 @@ Many methods of generating the faux-data exist in the literature, many of which 
 Method & Source & Plug-In Name & Notes \\ 
 \hline 
 
-Kernel Density Estimator & scipy.stats.gaussian\_kde & KDEPlugin & Useful for inter-related  ordinal and ratio data \\ 
+Kernel Density\\Estimator & scipy.stats.gaussian\_kde & KDEPlugin & Useful for inter-related  ordinal and ratio data \\ 
 
-DataSynthesizer &  <authors> & DataSynthesizerPlugin & Generates a Baysean tree to capture some column relationships \\ 
+DataSynthesizer & Ping et al. & DataSynthesizerPlugin & Generates a Bayesian tree to capture column relationships \\ 
 
-\hl{CMF?}  & <authors>  & Can't Remember & Fast \\ 
+Synthetic dataset\\Generation Framework & Bindschaedler et al.  & SGFPlugin & Fast \\ 
 
 \hline 
 \end{tabular} 
