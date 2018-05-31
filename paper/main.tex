@@ -105,8 +105,51 @@ This faux-data can be prodded, poked, plotted, and posted for the world to see, 
 
 \section{System Details}
 
+% some text about goal to make our research reproducible/replicable - provide source code, pip/conda environment files, docker container
+
 Many methods of generating faux-data exist in the literature, many of which have software implementations freely available.   KFP provides a standard mechanism for ``wrapping'' any method into a ``plug-in'' which integrates the method with the Pandas data frame model.  Three of these plug-ins are provided with full documentation for creating other plug-ins.
 
+\subsection{System Structure}
+KFP provides a class
+
+Describe KFP's structure, including the ``plugin'' mechanism.
+
+Describe the SQL interface
+
+The ideal environment for a machine learning developer to develop, test, or validate a model is to have unfettered access to all data in the problem domain they are working in. However, as discussed previously, legal limitations and data protection processes are slow. Figure~\ref{fig:architecture} depicts a basic architecture of an alternative to direct data access: data access through an intermediary that can synthesize data on-demand.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{prototype_architecture}
+  \caption{System Architecture.}
+  \label{fig:architecture}
+\end{figure}
+
+Figure~\ref{fig:synthesis_process} provides a detailed look at the automated faux data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, machine learning developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
+
+Query pre-processor and synthesis process could optionally require a minimu source data size...
+
+%* Minimum group/result set size depends on several factors such as re-identification risk, number of attributes available (see picture at end)
+%* Individual states have adopted minimum group size reporting rules, with the minimum number of students ranging from 5 to 30 and a modal category of 10 (used by 39 states) https://nces.ed.gov/pubs2011/2011603.pdf
+%* 62 https://nces.ed.gov/nationsreportcard/tdw/analysis/summary_rules_minimum.aspx
+%* 30; describes techniques to determine size - https://nces.ed.gov/pubs2017/2017147.pdf
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=120mm]{data_synthesis_process}
+  \caption{Data synthesis process.}
+  \label{fig:synthesis_process}
+\end{figure}
+
+
+% figure out how to adjust padding
+\begin{wrapfigure}{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
+  \centering
+  \includegraphics[width=0.5\textwidth]{ui_screenshot3}
+  \caption{User Interface.}
+  \label{fig:ui}
+\end{wrapfigure}
+KFP provides multiple methods by which a machine learning developer can access on-demand synthetic data. Multiple methods of requesting and receiving faux data are provided. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux data according to the selected synthesis method. Data can either be viewed directly in browser or downloaded in csv format for use in a machine learning process. Alternatively, an http REST service (utilized by the SPA) allows for cross language compatible requesting and receiving of faux data, again via SQL query. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
 
 \subsection{Included Methods}
 
@@ -126,41 +169,6 @@ Some text about Table~\ref{included-methods}% Not sure where this table should g
     \bottomrule
   \end{tabular}
 \end{table}
-
-
-\subsection{System Structure}
-KFP provides a class
-
-Describe KFP's structure, including the ``plugin'' mechanism.
-
-Describe the SQL interface
-
-The ideal environment for a machine learning developer to develop, test, or validate a model is to have unfettered access to all data in the problem domain they are working in. However, as discussed previously, legal limitations and data protection processes are slow. Figure~\ref{fig:architecture} depicts a basic architecture of an alternative to direct data access: data access through an intermediary that can synthesize data on-demand.
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=\textwidth]{prototype_architecture}
-  \caption{System Architecture.}
-  \label{fig:architecture}
-\end{figure}
-
-Figure~\ref{fig:synthesis_process} provides a detailed look at the automated faux data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process; "ORDER BY" clauses are re-applied to the faux data before results are returned to the user. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, machine learning developers or data warehouse owners can insert their own custom method or modify existing methods. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=120mm]{data_synthesis_process}
-  \caption{Data synthesis process.}
-  \label{fig:synthesis_process}
-\end{figure}
-
-\begin{wrapfigure}{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
-  \centering
-  \includegraphics[width=0.5\textwidth]{ui_screenshot2}
-  \caption{User Interface.}
-  \label{fig:ui}
-\end{wrapfigure}
-KFP provides multiple methods by which a machine learning developer can access on-demand synthetic data. Multiple methods of requesting and receiving faux data are provided. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux data according to the selected synthesis method. Data can either be viewed directly in browser or downloaded in csv format for use in a machine learning process. Alternatively, an http REST service (utilized by the SPA) allows for cross language compatible requesting and receiving of faux data, again via SQL query. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
-
 
 
 \section{Conclusion}
