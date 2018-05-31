@@ -108,20 +108,40 @@ Many methods of generating the faux-data exist in the literature, many of which 
 
 \subsection{Included Methods}
 
-\begin{tabular}{c c c p{10em}}
+\begin{tabular}{c c c p{7em}}
 
 
 Method & Source & Plug-In Name & Notes \\ 
 \hline 
 
-Kernel Density\\Estimator & scipy.stats.gaussian\_kde & KDEPlugin & Useful for inter-related  ordinal and ratio data \\ 
+Kernel Density\\Estimator & scipy.stats.gaussian\_kde & KDEPlugin & Useful for inter-related ordinal and ratio data \\ 
 
 DataSynthesizer & Ping et al. & DataSynthesizerPlugin & Generates a Bayesian tree to capture column relationships \\ 
 
 Synthetic dataset\\Generation Framework & Bindschaedler et al.  & SGFPlugin & Fast \\ 
 
 \hline 
-\end{tabular} 
+\end{tabular}
+
+Some text~\ref{included-methods}
+
+\begin{table}
+  \caption{Kung Faux Pandas Data Synthesis Methods}
+  \label{included-methods}
+  \centering
+  \begin{tabular}{llll}
+    \toprule
+    Method                                 & Source                    & Notes \\
+    \midrule
+    Kernel Density Estimator               & scipy.stats.gaussian\_kde & Inter-related ordinal and ratio data\\
+    DataSynthesizer                        & Ping et al.               & Bayesian modeling of column relationships\\
+    Synthetic dataset Generation\\Framework & Bindschaedler et al.     &  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+After table
+
 
 \subsection{System Structure}
 KFP provides a class
@@ -140,7 +160,7 @@ Diagrams - not sure if we need both of these. Should we include a screenshot of 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{data_synthesis_process}
+  \includegraphics[width=115mm]{data_synthesis_process}
   \caption{Data synthesis process.}
 \end{figure}
 
