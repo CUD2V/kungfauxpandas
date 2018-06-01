@@ -149,7 +149,10 @@ KFP provides multiple methods by which a machine learning developer can access o
 
 \subsection{Included Methods}
 
-Some text about Table~\ref{included-methods} including why we built the KDE method, why DataSynthesizer, and why SGF% Not sure where this table should go....
+KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented three plugins that use different techniques for data synthesis, as shown in Table~\ref{included-methods}. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. Lastly, the Synthetic dataset Generation Framework by Bindschaedler et al. \cite{Bindschaedler2017} has ma
+
+Bindschaedler - shows synthetic data are close enough that models built with synthetic data are simlar to model built with real data.
+? Ping?
 
 \begin{table}
   \caption{Kung Faux Pandas data synthesis methods}
