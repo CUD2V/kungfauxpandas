@@ -43,7 +43,7 @@
 \urlstyle{same}
 \title{%
   Kung Faux Pandas \\
-  \large Alternative Facts for Privacy Protection %Simplifying Privacy Protection?
+  \large Simplifying Privacy Protection
   }
 
 \author{
@@ -85,6 +85,7 @@ The ability of independent investigators to verify results is perhaps \emph{the}
 There is a large body of published literature detailing methods for overcoming this difficulty via ``anonymizing'' and ``synthesising'' data \cite{patki_synthetic_2016, choi_generating_2017}, however at present a mechanism to routinely \emph{use} these techniques has not been forthcoming.
 
 % explain faux here? faux data - similar to faux fur or faux leather - ethically more appealing, less expensive to produce or use
+% faux data is a broader term that encompasses any data privacy protection method - synthesis, anonymization, grouping, perturbation, etc.
 This paper details an open source software library called \emph{Kung Faux Pandas (KFP)} which allows for the modular use of data security methods into the popular Python Pandas data science library. For those who prefer other tools, KFP also provides Structured Query Language (SQL) interface which enables users to arbitrarily query any data within a database, returning to the user a data set which either does not contain any personal information (synthesized) or has been anonymized by standard methods.
 
 \section{Background}
@@ -128,12 +129,6 @@ The ideal environment for a machine learning developer to develop, test, or vali
 
 Figure~\ref{fig:synthesis_process} provides a detailed look at the automated faux data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, machine learning developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
 
-Query pre-processor and synthesis process could optionally require a minimu source data size...
-
-%* Minimum group/result set size depends on several factors such as re-identification risk, number of attributes available (see picture at end)
-%* Individual states have adopted minimum group size reporting rules, with the minimum number of students ranging from 5 to 30 and a modal category of 10 (used by 39 states) https://nces.ed.gov/pubs2011/2011603.pdf
-%* 62 https://nces.ed.gov/nationsreportcard/tdw/analysis/summary_rules_minimum.aspx
-%* 30; describes techniques to determine size - https://nces.ed.gov/pubs2017/2017147.pdf
 
 \begin{figure}[ht]
   \centering
@@ -150,7 +145,7 @@ Query pre-processor and synthesis process could optionally require a minimu sour
   \caption{User Interface.}
   \label{fig:ui}
 \end{wrapfigure}
-KFP provides multiple methods by which a machine learning developer can access on-demand synthetic data. Multiple methods of requesting and receiving faux data are provided. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux data according to the selected synthesis method. Data can either be viewed directly in browser or downloaded in csv format for use in a machine learning process. Alternatively, an http REST service (utilized by the SPA) allows for cross language compatible requesting and receiving of faux data, again via SQL query. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
+KFP provides multiple methods by which a machine learning developer can access on-demand faux data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux data according to the selected generation method. Data can either be viewed directly in browser or downloaded in csv format for use in a machine learning process. Alternatively, an http REST service (utilized by the SPA) allows for cross language compatible requesting and receiving of faux data, again via SQL query. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
 
 \subsection{Included Methods}
 
@@ -173,15 +168,18 @@ Some text about Table~\ref{included-methods} including why we built the KDE meth
 
 \section{Discussion}
 
-Limitations, areas for further research:
+Limitations, areas for further research - convert this to paragraph format:
 
 \begin{itemize}
     \item Python module
-    \item Currently don't impose any kind of result set minimum size
+    \item Currently don't impose any kind of result set minimum size. Query pre-processor and synthesis process could optionally require a minimum source data size to improve privacy protection...
     \item Use in production
 \end{itemize}
 
-
+%* Minimum group/result set size depends on several factors such as re-identification risk, number of attributes available (see picture at end)
+%* Individual states have adopted minimum group size reporting rules, with the minimum number of students ranging from 5 to 30 and a modal category of 10 (used by 39 states) https://nces.ed.gov/pubs2011/2011603.pdf
+%* 62 https://nces.ed.gov/nationsreportcard/tdw/analysis/summary_rules_minimum.aspx
+%* 30; describes techniques to determine size - https://nces.ed.gov/pubs2017/2017147.pdf
 
 \section{Conclusion}
 
