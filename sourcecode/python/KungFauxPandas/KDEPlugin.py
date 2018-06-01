@@ -3,9 +3,10 @@
 ####################################################################################################################################
 
 #from KungFauxPandas import *
-from KungFauxPandas import PandaPlugin 
+#from KungFauxPandas import PandaPlugin 
+from KungFauxPandas.PandaPlugin import PandaPlugin as PandaPlug 
 
-class KDEPlugin(PandaPlugin):
+class KDEPlugin(PandaPlug):
     """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
     
     import pandas as pd

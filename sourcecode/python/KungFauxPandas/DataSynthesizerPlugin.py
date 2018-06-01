@@ -14,13 +14,13 @@ except Exception as e:
     warnings.warn('DataSynthesizer source code appears to be absent.  This module will not function')
 
 
-from KungFauxPandas import PandaPlugin
-
+#from KungFauxPandas import PandaPlugin
+from KungFauxPandas.PandaPlugin import PandaPlugin as PandaPlug 
 
 ####################################################################################################################################
 ####################################################################################################################################
 
-class DataSynthesizerPlugin(PandaPlugin):
+class DataSynthesizerPlugin(PandaPlug):
     """ uses methods from <authors>'s Data Synthsizer to fauxify data """
 
     def __init__(self, df_in=None,

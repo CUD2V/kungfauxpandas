@@ -2,15 +2,16 @@
 ####################################################################################################################################
 ####################################################################################################################################
 
-from KungFauxPandas import PandaPlugin 
+from KungFauxPandas.PandaPlugin import PandaPlugin as PandaPlug 
 
-class TrivialPlugin(PandaPlugin):
+class TrivialPlugin(PandaPlug):
     """ Returns the input as output. 
 	
 	Shows a basic example to build your own plugin"""
 
     def __init__(self):
-        PandaPlugin.__init__(self)
+        #PandaPlugin.__init__(self)
+        super(PandaPlugin,self).__init__()
 
 
     def fauxify(self, df_in=None):
