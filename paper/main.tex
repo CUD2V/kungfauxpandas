@@ -112,11 +112,6 @@ This faux-data can be prodded, poked, plotted, and posted for the world to see, 
 Many methods of generating faux-data exist in the literature, many of which have software implementations freely available.   KFP provides a standard mechanism for ``wrapping'' any method into a ``plug-in'' which integrates the method with the Pandas data frame model.  Three of these plug-ins are provided with full documentation for creating other plug-ins.
 
 \subsection{System Structure}
-KFP provides a class
-
-Describe KFP's structure, including the ``plugin'' mechanism.
-
-Describe the SQL interface
 
 The ideal environment for a machine learning developer to develop, test, or validate a model is to have unfettered access to all data in the problem domain they are working in. However, as discussed previously, legal limitations and data protection processes are slow. Figure~\ref{fig:architecture} depicts a basic architecture of an alternative to direct data access: data access through an intermediary that can synthesize data on-demand.
 
@@ -138,21 +133,17 @@ Figure~\ref{fig:synthesis_process} provides a detailed look at the automated fau
 \end{figure}
 
 
-% figure out how to adjust padding
-\begin{wrapfigure}{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
+\begin{wrapfigure}[15]{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
   \centering
   \includegraphics[width=0.5\textwidth]{ui_screenshot3}
   \caption{User Interface.}
   \label{fig:ui}
 \end{wrapfigure}
-KFP provides multiple methods by which a machine learning developer can access on-demand faux data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux data according to the selected generation method. Data can either be viewed directly in browser or downloaded in csv format for use in a machine learning process. Alternatively, an http REST service (utilized by the SPA) allows for cross language compatible requesting and receiving of faux data, again via SQL query. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
+KFP provides multiple methods by which a machine learning developer can access on-demand faux data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux data according to the selected generation method. Data can either be viewed directly in browser or downloaded in csv format for use in a machine learning process. Alternatively, an http REST service (utilized by the SPA) allows for cross language compatible requesting and receiving of faux data, again via SQL query. In order to facilitate querying and understanding of the data model, the database metadata is presented to the user in a collapsible section. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
 
 \subsection{Included Methods}
 
-KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented three plugins that use different techniques for data synthesis, as shown in Table~\ref{included-methods}. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. Lastly, the Synthetic dataset Generation Framework by Bindschaedler et al. \cite{Bindschaedler2017} has ma
-
-Bindschaedler - shows synthetic data are close enough that models built with synthetic data are simlar to model built with real data.
-? Ping?
+KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented three plugins that use different techniques for data synthesis, as shown in Table~\ref{included-methods}. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. Lastly, the Synthetic dataset Generation Framework (SGF) by Bindschaedler et al. \cite{Bindschaedler2017} "generates differentially private synthetic data" using a novel criterion called plausible deniability that is applied to a dataset before it is deemed safe to release. For SGF and DataSynthesizer, their authors show that the synthetic data generated preserves privacy while still being useful enough for actual data analysis (see also \cite{howe_synthetic_2017}). In the case of SGF, several models are built with both real and synthetic data and compared against a gold standard. Their author's analysis showed that the models from synthetic data are close to the same accuracy as models built with real data.
 
 \begin{table}
   \caption{Kung Faux Pandas data synthesis methods}
