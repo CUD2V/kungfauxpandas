@@ -1,6 +1,6 @@
-# faker-prototype
+# Kung Faux Pandas: Data Synthesis Tool
 
-This data synthesis process was created using Python. In order to make it easier for others to replicate the environment, a Conda environment export has been provided as well as a virtualenv requirements file. Alternatively, a docker image with the latest code has been made available.
+This data synthesis process was created using Python. In order to make it easier for others to replicate the environment, a Conda environment export has been provided as well as a virtualenv requirements file. Additionally, a docker image with the latest code has been made available.
 
 ## Python Setup
 To run the software, download/clone this repository and then run the appropriate command below based on your Python distribution:
@@ -12,6 +12,7 @@ From the base directory of the repository:
 ```
 cd sourcecode/python/
 conda env create -f environment.yml
+conda activate kungfauxpandas
 ```
 
 ### Virtualenv users
@@ -23,6 +24,19 @@ cd sourcecode/python/
 virtualenv kungfauxpandas
 source kungfauxpandas/bin/activate
 pip install -r requirements.txt
+```
+
+### Install plugin(s)
+
+This software provides a method for adding new plugins for data synthesis. The only method fully included with this repository is a kernel density estimation method based on scipy's gaussian KDE (see
+  [scipy.stats.gaussian_kde](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gaussian_kde.html)). We have developed plugins for [DataSynthesis](https://github.com/DataResponsibly/DataSynthesizer) and are currently working on one for [Synthetic dataset Generation Framework](https://vbinds.ch/projects/sgf/index.html). In order to use a plugin, you must download additional software.
+
+#### DataSynthesis
+From the base directory of the repository:
+
+```
+cd plugins/
+git clone https://github.com/DataResponsibly/DataSynthesizer.git
 ```
 
 ## Running the software
@@ -59,7 +73,6 @@ conda install cython pandas numpy scipy jupyter matplotlib
 pip install hug
 conda env export -n kungfauxpandas | grep -v "^prefix: " > environment.yml
 ```
-
 
 ### Steps to create the virtualenv
 
