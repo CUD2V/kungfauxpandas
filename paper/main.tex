@@ -43,7 +43,7 @@
 \urlstyle{same}
 \title{%
   Kung Faux Pandas \\
-  \large Simplifying Privacy Protection
+  \large Simplifying privacy protection
   }
 
 \author{
@@ -73,6 +73,7 @@
 
 \maketitle
 
+% this tool simplfies data sharing, simplifies data exploration within organizations
 \begin{abstract}
 A description of an end-to-end system for easily generating faux-data which is statistically similar to given real data but does not contain sensitive personal information.  This system, which is publicly available \footnote{\url{https://github.com/CUD2V/kungfauxpandas}}, enables data to be distributed for reproducibility testing and other purposes while in full compliance with HIPAA and GDPR.
 \end{abstract}
@@ -133,6 +134,8 @@ The ideal environment for a machine learning developer to develop, test, or vali
 
 Figure~\ref{fig:synthesis_process} provides a detailed look at the automated faux data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, machine learning developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
 
+% somewhere - here? Explain that the environment has been provided with a randomly generated dataset similar to one researchers have worked with during anlysis of a Sepsis prediction model.
+
 
 \begin{figure}[ht]
   \centering
@@ -171,24 +174,19 @@ KFP provides a framework by which any number of methods for data privacy can be 
 
 \section{Discussion}
 
-Limitations, areas for further research - convert this to paragraph format:
+KFP provides a unique contirbution to the space of reproducible machine learning. Through providing ad-hoc faux data, machine learning researchers can have lower barriers to accessing private data as well as reduced barriers to sharing faux data derived from private data. However, there are several areas that could be improved or researched further: improved code sharing, addressing minimum dataset size issues, and evaluation of this system in a machine learning workflow.
 
-\begin{itemize}
-    \item Python module
-    \item Currently don't impose any kind of result set minimum size. Query pre-processor and synthesis process could optionally require a minimum source data size to improve privacy protection...
-    \item Use in production
-\end{itemize}
+While we have provided software code and a description of our methods in our GitHub repository, we believe that computational reproducibility should go beyond just making source code available. Peng recommends  making code available in any form as an excellent first step towards reproducible research; the next step is to make code available "in a durable non-proprietary format" \cite{peng_reproducible_2011}. This is a level of code sharing rarely achieved in machine learning research. Currently there is no standard long term format that works for all computational environments. For the Python ecosystem however, the standard for sharing code is via a package on Python Package Index (PyPI). We intend to continue this resesarch to make KFP available as a Python package.
 
-% Some information about minimum group size
-%* Minimum group/result set size depends on several factors such as re-identification risk, number of attributes available (see picture at end)
-%* Individual states have adopted minimum group size reporting rules, with the minimum number of students ranging from 5 to 30 and a modal category of 10 (used by 39 states) https://nces.ed.gov/pubs2011/2011603.pdf
-%* 62 https://nces.ed.gov/nationsreportcard/tdw/analysis/summary_rules_minimum.aspx
-%* 30; describes techniques to determine size - https://nces.ed.gov/pubs2017/2017147.pdf
+Another area that is open for further research is that of privacy protection through use of minimum dataset size. In the field of education, statistical methods for calculating sample size based on probability of detecting a specific effect size are commonly used \cite{naep_2009}. However, it is not clear that these methods are approiate for use machine learning in general or the specific domain of health care. Futhermore, effect size and probability to detect specific effects may vary by use case. Thus, in this work, no attempt has been made to constrain data set sizes or results returned. KFP could be modified to return no results if a minimum threshold is not met based on the risk profile of the data owner or, alternatively, data boosting techniques in combination with data synthesis could be used.
+
+The last area recommended for further research is to deploy and observe the use of KFP in an active machine learning environment where researchers are working with sensitive datasets. A key limitation that may be identified is that of performance characteristics, particularly in a multi-user setting against a large relational database store. Additionally, as no private data was distributed via this system, actual review by security and compliance groups or IRBs may uncover additional requirements to reduce risk of data exposure that could require signicficant rework or futher study.
 
 \section{Conclusion}
 
-Basically need to put abstract here...
+It is proposed that this method will remove barriers to data access through ad-hoc non-protected genrated data sets. Additionally, we surmise that this tool will improve data exploration, allow researchers to develop data cleaning techniques without access to source data, and reduce dependency on complex processes required for data access.
 
+... other text from abstract or body of paper?...
 
 \bibliographystyle{unsrt}
 
