@@ -81,9 +81,9 @@ A description of an end-to-end system for easily generating faux-data which is s
 \section{Introduction}
 
 
-
 The ability of independent investigators to verify results is perhaps \emph{the} most fundamental feature that separates science from other forms intellectual inquiry.  Unfortunately, the mechanisms of communicating scientific results have changed little since the age of enlightenment and are inadequate enabling reproducibility for some modern scientific endeavors such as machine learning.  Perhaps the most important impediment to reproducibility is the need to share data.  This has long been difficult in health care fields, but will presently become difficult for just about everyone.
 
+% two references don't seem to represent a large body of published literature. Change wording? Include more references?
 There is a large body of published literature detailing methods for overcoming this difficulty via ``anonymizing'' and ``synthesising'' data \cite{patki_synthetic_2016, choi_generating_2017}, however at present a mechanism to routinely \emph{use} these techniques has not been forthcoming.
 
 % explain faux here? faux data - similar to faux fur or faux leather - ethically more appealing, less expensive to produce or use
@@ -92,24 +92,31 @@ This paper details an open source software library called \emph{Kung Faux Pandas
 
 \section{Background}
 
+ Over the past 18 years, there has been several significant papers clarifying the definition and importance of reproducibility along with the closely related term replicability. Leek and Peng have defined reproducibility as the "ability to recompute data analytic results given an observed dataset and knowledge of the data analysis pipeline," and replicability as "the chance that an independent experiment targeting the same scientific question will produce a consistent result" \cite{leek_opinion_2015}; others such as Drummond use the terms in a reverse fashion \cite{drummond_replicability_2009}. Despite the semantic disagreement, both groups agree that an independent experiment with confirmatory results is the strongest support of any experiment. One early influential paper on the topic of reproducibility in scientific computing details key factors in reproducibility as having: data, input parameters, documentation, software code, and an environment capable of running the provided software code; items that cannot easily nor clearly be communicated by the traditional research paper \cite{schwab_making_2000}. The previously mentioned authors propose that reproducibility should be treated as a minimum required standard that all published research should meet \cite{peng_reproducible_2006}. Specifically in the context of machine learning, this means including details to a level someone else could create the same environment including hardware configuration, data used for all experiments, source code, documentation on data and how to run/configure software, and tests that verify the software runs correctly. Once a result can be reproduced, new researchers can then build upon the methods, gather new data for testing/validation, or discover alternative methods to replicate a result.
+
+% clarify this section; how does HIPAA allow data to be shared? BAA or De-identification are main methods
 In the United States, there's been a long-standing regulation described in the Health Insurance Portability and Accountability Act (HIPAA), which mandates strong security on data related to health care and is backed by significant fines and possible criminal charges \cite{hippaviol}.  Thus, even institutions which share data face a steep institutional risk. This makes it virtually impossible to enable independent verification of machine learning (ML) models which often require enormous amounts of training data.
 
 Perhaps more ominously for researchers, on May 25 , 2018, the European Union's (EU) General Data Protection Regulation (GDPR) has come into full effect \cite{gdpr}, establishing a new paradigm in data ``ownership'' for that jurisdiction.   In short, this set of rules defines the ``owners'' of data to be people from whom it was collected and obliges anyone possessing  that data to  honor the owners' preferences about how the data is kept and used, including a requirement to deletion of any data at the request of its owner at any time in the future.
 
 These rules are ultimately good for citizens, but they create a pickle for scientists studying humans as it's very difficult to follow normal processes in scientific rigor while complying with privacy protection rules.
 
+% Logical step our work is taking. 
 One obvious way around this pickle is to separate data and analysis in such a way that the analysis can be performed on data without the \emph{analyst} having access to the data.   This is fairly straight-forward to implement.   Essentially, the analyst, with only a description of the sensitive data, composes analytical code which is handed off to the data custodian.  The custodian then runs it and returns the results to the researcher.
 
 This has been technologically possible for some time, but it's awkward in practice because activities such as data cleaning, exploration, and plotting are interactive and iterative processes which would become impractical with a mediator.
 
+% What is our major contribution to the area of reproducibility in machine learning?
 Kung Faux Pandas sidesteps this problem by generating \emph{faux-data} that is ``statistically similar'' to the real data but does not itself contain any sensitive data.
 
+% this is a key unique feature of this work and should likely be repeated in conclusion. Perhaps also include in abstract
 This faux-data can be prodded, poked, plotted, and posted for the world to see, enabling analysts to develop their code using whatever means they prefer.   When the analytical code is ready, it can then be sent to the data custodian to run on the real data.
 
 
 \section{System Details}
 
 % some text about goal to make our research reproducible/replicable - provide source code, pip/conda environment files, docker container
+% where to put this text? "Unit testing is important but often overlooked - unit tests can show how a researcher validated their code was giving expected results which can often lead to insights not normally communicated in a results section of a journal article."
 
 Many methods of generating faux-data exist in the literature, many of which have software implementations freely available.   KFP provides a standard mechanism for ``wrapping'' any method into a ``plug-in'' which integrates the method with the Pandas data frame model.  Three of these plug-ins are provided with full documentation for creating other plug-ins.
 
@@ -172,6 +179,7 @@ Limitations, areas for further research - convert this to paragraph format:
     \item Use in production
 \end{itemize}
 
+% Some information about minimum group size
 %* Minimum group/result set size depends on several factors such as re-identification risk, number of attributes available (see picture at end)
 %* Individual states have adopted minimum group size reporting rules, with the minimum number of students ranging from 5 to 30 and a modal category of 10 (used by 39 states) https://nces.ed.gov/pubs2011/2011603.pdf
 %* 62 https://nces.ed.gov/nationsreportcard/tdw/analysis/summary_rules_minimum.aspx
