@@ -95,7 +95,7 @@ In the context of machine learning (ML), sufficient detail is required such that
 
 In the health care domain in the United States the key law governing health data is the Health Insurance Portability and Accountability Act (HIPAA). HIPAA is backed by significant civil penalties as well as specifics about security and what can and cannot be done with protected health information \cite{hippaviol}. There are two primary methods by which data can be shared or made public: de-identifcation, the removal of specific identifiers or summarization to a level at which individual identification is minimized, and through strict legal relationships called a business associate agreement. Even institutions which share data within the confines of the laws face a steep institutional risk. These legal barriers makes it difficult to enable independent verification of machine learning (ML) models which often require enormous amounts of training data.
 
-Perhaps more ominously and broadly relevant for researchers, on May 25 , 2018 the European Union's (EU) General Data Protection Regulation (GDPR) has come into full effect \cite{gdpr}. This law establishes a new paradigm in data ``ownership'' for that jurisdiction. This set of rules defines the ``owners'' of data to be people from whom it was collected and obliges anyone possessing that data to honor the owners' preferences about how the data is kept and used, including a requirement to deletion of any data at the request of its owner at any time in the future.
+Perhaps more ominously and broadly relevant for researchers, on May 25, 2018 the European Union's (EU) General Data Protection Regulation (GDPR) has come into full effect \cite{gdpr}. This law establishes a new paradigm in data ``ownership'' for that jurisdiction. This set of rules defines the ``owners'' of data to be people from whom it was collected and obliges anyone possessing that data to honor the owners' preferences about how the data is kept and used, including a requirement to deletion of any data at the request of its owner at any time in the future.
 
 % continue re-writing from here
 These rules are ultimately good for citizens, but they create a pickle for scientists studying humans as it's very difficult to follow normal processes in scientific rigor while complying with privacy protection rules.
@@ -114,16 +114,16 @@ This has been technologically possible for some time, but it's awkward in practi
 % where to put this text? "Unit testing is important but often overlooked - unit tests can show how a researcher validated their code was giving expected results which can often lead to insights not normally communicated in a results section of a journal article."
 
 % What is our major contribution to the area of reproducibility in machine learning?
-KFP sidesteps this problem by generating \emph{faux-data} that is ``statistically similar'' to the real data but does not itself contain any sensitive data. We collectively refer to de-identified data and synthetic data as \emph{faux data}. Faux in it's standard sense of artificial or fake, but more specifically as it is used in the fashion sense of the word: the use of man made materials that look and feel like real leather, fur, etc., but wihout the problematic derivation from live animals and reliance upon limited resources.
+KFP sidesteps this problem by generating \emph{faux data} that is ``statistically similar'' to the real data but does not itself contain any sensitive data. We collectively refer to de-identified data and synthetic data as \emph{faux data}. We use the word faux in its standard sense of artificial or fake, but more specifically as it is used in fashion: man-made materials that look and feel like real leather, fur, etc., but wihout the problematic derivation from live animals and reliance upon limited resources.
 
 % this is a key unique feature of this work and should likely be repeated in conclusion. Perhaps also include in abstract
 This faux-data can be prodded, poked, plotted, and posted for the world to see, enabling analysts to develop their code using whatever means they prefer. When the analytical code is ready, it can then be sent to the data custodian to run on the real data.
 
-Many methods of generating faux-data exist in the literature, many of which have software implementations freely available. KFP provides a standard mechanism for ``wrapping'' any method into a ``plug-in'' which integrates the method with the Pandas data frame model. Three of these plug-ins are provided with full documentation for creating other plug-ins.
+Many methods of generating faux data exist, some with freely available software implementations. KFP provides a standard mechanism for ``wrapping'' any method into a ``plug-in'' which integrates the method with the Pandas data frame model. Three of these plug-ins are provided with full documentation for creating other plug-ins.
 
 \subsection{System Architecture}
 
-The ideal environment for a machine learning developer to develop, test, or validate a model is to have unfettered access to all data in the problem domain they are working in. However, as discussed previously, legal limitations and data protection processes are slow. Figure~\ref{fig:architecture} depicts a basic architecture of an alternative to direct data access: data access through an intermediary that can synthesize data on-demand.
+Ideally, a computational investigator can develop, test, and validate models using all available data. However, as discussed previously, regulatory limitations may prevent data access. Even with regulatory approvals, data access processes can be slow. Figure~\ref{fig:architecture} shows the novel architecture of KFP: data access through an intermediary that can synthesize data on-demand.
 
 \begin{figure}[ht]
   \centering
@@ -132,7 +132,7 @@ The ideal environment for a machine learning developer to develop, test, or vali
   \label{fig:architecture}
 \end{figure}
 
-Figure~\ref{fig:synthesis_process} provides a detailed look at the automated faux data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, machine learning developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
+Figure~\ref{fig:synthesis_process} shows the automated faux data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, ML developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
 
 % somewhere - here? Explain that the environment has been provided with a randomly generated dataset similar to one researchers have worked with during anlysis of a Sepsis prediction model.
 
@@ -151,7 +151,7 @@ Figure~\ref{fig:synthesis_process} provides a detailed look at the automated fau
   \caption{User Interface.}
   \label{fig:ui}
 \end{wrapfigure}
-KFP provides multiple methods by which a machine learning developer can access on-demand faux data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux data according to the selected generation method. Data can either be viewed directly in browser or downloaded in csv format for use in a machine learning process. Alternatively, an http REST service (utilized by the SPA) allows for cross language compatible requesting and receiving of faux data, again via SQL query. In order to facilitate querying and understanding of the data model, the database metadata is presented to the user in a collapsible section. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
+KFP provides multiple methods by which a ML developer can access on-demand faux data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux data according to the selected generation method. Data can either be viewed directly in browser or downloaded in csv format for use in a ML process. Alternatively, an http REST service (utilized by the SPA) allows for cross language compatible requesting and receiving of faux data, again via SQL query. In order to facilitate querying and understanding of the data model, the database metadata is presented to the user in a collapsible section. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
 
 \subsection{Included Synthesis Methods}
 
@@ -163,18 +163,18 @@ KFP provides a framework by which any number of methods for data privacy can be 
   \centering
   \begin{tabular}{p{12em} l p{14em}}
     \toprule
-    Method                                 & Source                    & Notes \\
+    Method                                                 & Notes \\
     \midrule
-    Kernel Density Estimator               & scipy.stats.gaussian\_kde & Inter-related ordinal and ratio data\\
-    DataSynthesizer                        & Ping et al.               & Bayesian modeling of column relationships\\
-    Synthetic dataset Generation Framework & Bindschaedler et al.      & "Plausible Deniability" probabilistic modeling\\
+    Kernel Density Estimator\cite{silverman_density_1986}              & Inter-related ordinal and ratio data\\
+    DataSynthesizer\cite{ping17datasynthesizer}                                 & Bayesian modeling of column relationships\\
+    Synthetic Generation Framework\cite{Bindschaedler2017}      & Probabilistic modeling\\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \section{Discussion}
 
-KFP provides a unique contirbution to the space of reproducible machine learning. Through providing ad-hoc faux data, machine learning researchers can have lower barriers to accessing private data as well as reduced barriers to sharing faux data derived from private data. However, there are several areas that could be improved or researched further: improved code sharing, addressing minimum dataset size issues, and evaluation of this system in a machine learning workflow.
+KFP provides a unique contribution to the space of reproducible ML. Through providing ad-hoc faux data, machine learning researchers can have lower barriers to accessing private data as well as reduced barriers to sharing faux data derived from private data. However, there are several areas that could be improved or researched further: improved code sharing, addressing minimum dataset size issues, and evaluation of this system in a machine learning workflow.
 
 While we have provided software code and a description of our methods in our GitHub repository, we believe that computational reproducibility should go beyond just making source code available. Peng recommends making code available in any form as an excellent first step towards reproducible research; the next step is to make code available "in a durable non-proprietary format" \cite{peng_reproducible_2011}. This is a level of code sharing rarely achieved in machine learning research. Currently there is no standard long term format that works for all computational environments. For the Python ecosystem however, the standard for sharing code is via a package on Python Package Index (PyPI). We intend to continue this resesarch to make KFP available as a Python package.
 
