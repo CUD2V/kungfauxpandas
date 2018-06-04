@@ -83,7 +83,7 @@ A description of an end-to-end system for easily generating faux-data which is s
 
 The ability of independent investigators to verify results is perhaps \emph{the} most fundamental feature that separates science from other forms intellectual inquiry. Unfortunately, the mechanisms of communicating scientific results have changed little since the age of enlightenment and are inadequate for enabling reproducibility in some modern scientific endeavors such as machine learning. Perhaps the most important impediment to reproducibility is the need to share and have access to data. This has long been difficult in health care fields, but will presently become difficult for just about everyone.
 
-There is a large body of published literature detailing methods for overcoming this difficulty related to data via de-identification (removing key identifiers from data, grouping individuals, and similar anonymization techniques \cite{hippapro}) and synthesizing data (creating data through algorithmic means, population level statistics, randomization, and ideally preserving inter-relationships between records \cite{walonoski_synthea_2018, patki_synthetic_2016, choi_generating_2017}), however at present a mechanism to routinely \emph{use} these techniques has not been forthcoming.
+There is a large body of published literature detailing methods for overcoming this difficulty related to data via de-identification (removing key identifiers, grouping individuals, and related anonymization techniques \cite{hippapro}) and synthesizing data (creating data through algorithmic means, population level statistics, randomization, and ideally preserving inter-relationships between records \cite{walonoski_synthea_2018, patki_synthetic_2016, choi_generating_2017}), however at present a mechanism to routinely \emph{use} these techniques has not been forthcoming.
 
 This paper details an open source software library called \emph{Kung Faux Pandas (KFP)} which allows for the modular combination of published privacy protection methods with the popular Python Pandas data science library\cite{mckinney-proc-scipy-2010}. KFP also provides a Structured Query Language (SQL) interface which enables users to arbitrarily query any data within a database, returning to the user a data set which either does not contain any personal information though synthetic means or anonymization. We collectively refer to de-identified data and synthetic data as \emph{faux data}. Faux in it's standard sense of artificial or fake, but more specifically as it is used in the fashion sense of the word: the use of man made materials that look and feel like real leather, fur, etc., but wihout the problematic derivation from live animals and reliance upon limited resources.
 
@@ -104,10 +104,12 @@ One obvious way around this pickle is to separate data and analysis in such a wa
 
 This has been technologically possible for some time, but it's awkward in practice because activities such as data cleaning, exploration, and plotting are interactive and iterative processes which would become impractical with a mediator.
 
+% previously had some information about various data anonymization and synthesis techniques. Put that back?
+
 \section{System Details}
 
 % some text about goal to make our research reproducible/replicable - provide source code, pip/conda environment files, docker container
-% why not full synthesize a full dataset? limited to sql query where relevant data is brought together, easier to model 1 table than lots of separate tables. Modelling lots of separate tables requires extensive meta data configuration and a significant amount of computing power to generate...
+% explain why not full synthesize a full dataset. better to limit to sql query where relevant data is brought together; easier to model 1 table than lots of separate tables. Modelling lots of separate tables requires extensive meta data configuration and a significant amount of computing power to generate...
 % where to put this text? "Unit testing is important but often overlooked - unit tests can show how a researcher validated their code was giving expected results which can often lead to insights not normally communicated in a results section of a journal article."
 
 % What is our major contribution to the area of reproducibility in machine learning?
