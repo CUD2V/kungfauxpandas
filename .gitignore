@@ -94,6 +94,9 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# RStudio project files because TB compiles Latex using RStudio
+*.Rproj
+
 # mkdocs documentation
 /site
 
@@ -102,6 +105,8 @@ ENV/
 
 # Ignore MacOS files
 .DS_Store
+
+
 
 # Plugins should be downloaded from respective repos
 plugins/*
@@ -113,3 +118,4 @@ plugins/*
 *.gz
 *.db
 *.html
+.Rproj.user
