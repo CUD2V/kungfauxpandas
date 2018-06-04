@@ -75,7 +75,7 @@
 
 % this tool simplfies data sharing, simplifies data exploration within organizations
 \begin{abstract}
-A description of an end-to-end system for easily generating faux-data which is statistically similar to given real data but does not contain sensitive personal information. This system, which is publicly available \footnote{\url{https://github.com/CUD2V/kungfauxpandas}}, enables data to be distributed for reproducibility testing and other purposes while in full compliance with HIPAA and GDPR.
+There are many barriers to data access in data sharing, especially in the domain of machine learning on health care data. Legal constraints such as HIPAA protect patient privacy but slow access to data and limit reproducibility. We provide a description of an end-to-end system called \emph{Kung Faux Pandas} for easily generating de-identified or synthetic data which is statistically similar to given real data but does not contain sensitive health information. This system focuses on data synthesis and de-identification narrowed to a specific research question to allow for self-service data access without the complexities required to generate an entire population of data that is not needed for a given research project. Kung Faux Pandas is open source and publicly available\footnote{\url{https://github.com/CUD2V/kungfauxpandas}}.
 \end{abstract}
 
 \section{Introduction}
@@ -119,8 +119,6 @@ The ideal environment for a machine learning developer to develop, test, or vali
   \label{fig:architecture}
 \end{figure}
 
-Figure~\ref{fig:synthesis_process} provides a detailed look at the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, machine learning developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
-
 \begin{figure}[ht]
   \centering
   \includegraphics[width=120mm]{data_synthesis_process}
@@ -128,6 +126,7 @@ Figure~\ref{fig:synthesis_process} provides a detailed look at the automated fau
   \label{fig:synthesis_process}
 \end{figure}
 
+Figure~\ref{fig:synthesis_process} provides a detailed look at the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, machine learning developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
 
 \begin{wrapfigure}[15]{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
   \centering
@@ -168,11 +167,9 @@ The last area recommended for further research is to deploy and observe the use 
 
 \section{Conclusion}
 
-It is proposed that this method will remove barriers to data access through ad-hoc non-protected genrated data sets. Additionally, we surmise that this tool will improve data exploration, allow researchers to develop data cleaning techniques without access to source data, and reduce dependency on complex processes required for data access.
+KFP removes barriers to data access and data sharing via self-service faux-data generation. Users of KFP do not need to have access to a protected dataset nor does a human have to be involved in translating researchers data needs into a non-protected dataset. This self-service data can be differentially private or meet other privacy needs based on plugin capabilities. With faux-data, researchers can publicly share data upon which their research relies without organizational fear of privacy breaches. KFP also facilitates a process by which evaluation, analysis, or model building is first performed with faux-data followed by repetition upon private data. 
 
-Rather than the big step of full EHR synthesis or anonymization, KFP takes a small step in being a more usable small data generation tool. Big steps are harder to adopt...
-
-... other text from abstract or body of paper?...
+Finally, instead of taking the computational and labor intensive step of full EHR de-identification or synthesis, KFP takes the smaller and more easily implemented step of just-in-time data de-identification or synthesis. We surmise that this tool will improve data exploration and reduce dependency on complex processes required for data access. The result of this system will be improved reproducibility in machine learning.
 
 \bibliographystyle{unsrt}
 
