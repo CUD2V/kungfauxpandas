@@ -32,8 +32,9 @@
 
   <!-- Body of page -->
   <div class="container-fluid">
-    <h2>KungFauxPandas Prototype UI</h2>
-    <p>Enter a SELECT query into the text box below and hit submit to recieve a de-identified result. Optionally, select the data synthesis method.</p>
+    <h2>KungFauxPandas</h2>
+    <p>Enter a SELECT query into the text box below and hit submit to recieve a de-identified result. Optionally, select the data generation method.</p>
+    <p><em>Note:</em> Currently DataSynthesizer doesn't work with columns containing text that looks like a timestamp</p>
     <div class="container">
       <div class="row justify-content-md-center">
         <div class="col-md-8">
@@ -43,7 +44,7 @@
           <div class="row">
             <div class="col-md-8">
               <div class="d-flex justify-content-start" id="synthesis_methods">
-                <legend class="col-form-label">Data Synthesis Method:</legend>
+                <legend class="col-form-label">Data Generation Method: </legend>
               </div>
             </div>
             <div class="col-md-4">

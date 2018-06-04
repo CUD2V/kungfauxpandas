@@ -110,7 +110,7 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
               'response': df_html,
               'csv': df.to_csv(index=False)}
         except Exception as e:
-            print('Caught exception', str(e))
+            print('web-service.synthesize_data() caught exception', str(e))
             return {
                 'message': 'error',
                 'query': '{0}'.format(query),

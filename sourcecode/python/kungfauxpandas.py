@@ -4,6 +4,8 @@ import numpy as np
 import scipy.stats as stats
 import sys
 import warnings
+import datetime
+import sqlite3
 
 library_location = '../../plugins/DataSynthesizer'
 sys.path.append(library_location)
@@ -247,33 +249,70 @@ class KDEPlugin(PandaPlugin):
 class KungFauxPandas(object):
 
     # To do:  Check to see if a column is unique (i.e. index) and recreate with unique < maybe use sample without replacement?>
-
-    def __init__(self, plugin=TrivialPlugin(), verbose=True):
+    # if enabling logging, make sure database and required log table has been
+    #   properly created - see create_logging_db.py
+    def __init__(self, plugin=TrivialPlugin(), verbose=True, logging=True, db_file=None):
 
         self.verbose = verbose
         self.seed = 10293510
         self.plugin = plugin
         self.synthesis_methods = ('Trivial', 'KDE', 'DataSynthesizer')
+        if db_file is None:
+            self.db_file = '../../data/kfp_log.db'
+        self.logging = logging
+
+        if self.logging:
+            self.logging_conn = sqlite3.connect(self.db_file)
+            self.logging_cur = self.logging_conn.cursor()
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     def read_sql(self, sql, conn, **kwargs):
 
         self.sql = sql
         self.conn = conn
+
+        if(self.logging):
+            query_start = datetime.datetime.now()
         self.df_in = pd.read_sql(self.sql, self.conn, **kwargs)
-        self.df_out = self.plugin.fauxify(self.df_in)
+        if(self.logging):
+            query_end = datetime.datetime.now()
+        try:
+            self.df_out = self.plugin.fauxify(self.df_in)
+        except Exception as e:
+            print('kungfauxpandas.read_sql() exception while attempting to fauxify data:', e)
+            raise
+        if(self.logging):
+            fauxify_end = datetime.datetime.now()
+
+            try:
+                sql = '''
+                    INSERT INTO kfp_log(
+                        query,
+                        query_start,
+                        query_end,
+                        query_result,
+                        faux_method,
+                        fauxify_start,
+                        fauxify_end,
+                        faux_result
+                        )
+                    VALUES(?,?,?,?,?,?,?,?)
+                    '''
+                self.logging_cur.execute(sql, (
+                    self.sql,
+                    query_start,
+                    query_end,
+                    self.df_in.to_json(),
+                    type(self.plugin).__name__,
+                    query_end,
+                    fauxify_end,
+                    self.df_out.to_json()
+                ))
+                self.logging_conn.commit()
+            except Exception as e:
+                print('kungfauxpandas.py read_sql Exception:', e)
+
         return self.df_out
-        '''
-        if self.density_depth == 'column':
-            self.column_kde()
-            return self.fdf
-
-        elif self.type == 'KDE':
-            #d0 = df.iloc[:,[0,1,2,3,4]].transpose()
-            kd = stats.gaussian_kde(self.df, bw_method='silverman')
-            dnew = dict(zip(self.df.columns, kd.resample()))
-        '''
-
 
 ####################################################################################################################################
 ####################################################################################################################################
