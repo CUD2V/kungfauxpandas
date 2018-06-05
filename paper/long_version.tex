@@ -135,6 +135,19 @@ KFP provides multiple methods by which a ML developer can access on-demand faux-
 
 KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented two plugins that use different techniques for data synthesis. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. In DataSynthesizer, the authors show that the synthetic data generated preserves privacy while still being useful enough for actual data analysis (see also \cite{howe_synthetic_2017}).
 
+\section{Experiments}
+Tested this on a Ubuntu 16.04 Linux virtual machine running on Virtual Box with 12 CPUs and 64GB of RAM allocated from the host system.
+
+Running the query shown in the UI screenshot 
+
+rows: query time: method: fauxify time:
+1k
+10k
+100k
+1000k
+
+hmm, that's interesting
+
 \section{Discussion}
 
 KFP provides a unique contribution to the space of reproducible ML. Through providing ad-hoc faux-data, ML researchers can have lower barriers to accessing private data as well as reduced barriers to sharing faux-data derived from private data. However, there are several areas that could be improved or researched further: improved code sharing, addressing institutional specific privacy issues, and evaluation of this system in a ML workflow.

@@ -49,8 +49,7 @@
   James King, Seth Russell, Tellen D. Bennett, Debashis Ghosh\\
   Data Science to Patient Value (D2V), School of Medicine\\
   University of Colorado Anschutz Medical Campus, Aurora, CO\\
-  \texttt{\{james.king, seth.russell, tell.bennett, debashis.ghosh\}@ucdenver.edu}
-  }
+  \texttt{\{james.king, seth.russell, tell.bennett, debashis.ghosh\}@ucdenver.edu}}
 
 \date{May 2018}
 
@@ -90,7 +89,7 @@ In the context of ML, sufficient detail is required such that an independent inv
 
 Many domains in which ML investigators work have legal barriers that make it difficult to enable independent verification of ML models which frequently require enormous amounts of training data. As an example, in the health care domain in the United States, a key law governing health data is the Health Insurance Portability and Accountability Act (HIPAA). HIPAA is backed by significant civil penalties as well as specifics about data security and what can and cannot be done with protected health information \cite{hippaviol}. While there are other domain specific data privacy laws, there are also some broad rules that affect entire countries such as the European Union's General Data Protection Regulation (GDPR). The GDPR puts in place new rules about data ownership and control in an attempt to give individuals more control over their information.
 
-The current legal environment creates a difficult situation for scientists in the health care domain. Early examples of re-identification attacks \cite{sweeney_2002} have have created apprehension on the part of businesses and legal experts in data sharing \cite{ohm_broken_2009}. Getting access to source health care data is slow and isn't always granted \cite{hodge_legal_1999, committee_hipaa_privacy_rule_2009}. More recently, research in the data sharing/privacy protection space has focused more on synthesis techniques such as in the case of the Synthea system, a tool to generate an entire outpatient Electronic Health Record (EHR) based on population statistics \cite{walonoski_synthea_2018}. Current solutions are not without their drawbacks however as they frequently require significant configuration of metadata before they can generate data or they attempt to solve the entire solution space and consequently are very slow to run.
+The current legal environment creates a difficult situation for scientists in the health care domain. Early examples of re-identification attacks \cite{sweeney_2002} have have created apprehension on the part of businesses and legal experts in data sharing \cite{ohm_broken_2009}. Getting access to source health care data is slow and isn't always granted \cite{hodge_legal_1999, committee_hipaa_privacy_rule_2009}. More recently, research in the data sharing/privacy protection space has focused more on synthesis techniques such as in the case of the Synthea system \cite{walonoski_synthea_2018}. Current solutions are not without their drawbacks however as they frequently require significant configuration of metadata before they can generate data or they attempt to solve the entire solution space and consequently are very slow to run.
 
 \section{System Details}
 
@@ -100,7 +99,7 @@ KFP addresses the issue of data access by generating data that is ``statisticall
 
 As the data generated through KFP has no protected component, it can be shared along with code or methods to improve reproducibility as well as aid in replicability. To further the aim of reproducibility we have provided our code and a sample of a randomly generated dataset for testing purposes through our GitHub repository in a range of formats: Python environment files (conda and pip) to allow others to start with the same software libraries and specific versions that we used, a Docker container with code and sample data installed and already configured, and all source code along with version history so others can follow our development process.
 
-KFP focuses on generating faux-data narrowed to a specific subset that a researcher is interested in rather than attempting to generate an entire population of data such as an entire EHR or longitudinal patient record. By focusing on just the data needed, performance is improved, the need for extensive modeling or metadata configuration is reduced, and the amount of faux-data generated and stored is minimized. Although the plugable methods included for faux-data generation have been shown to effectively replace source data for analysis, KFP facilitates a more through process that includes an initial exploration with faux-data followed by a repetition of methods on original source data through query logging and thereby aiding in replication.
+KFP focuses on generating faux-data narrowed to a specific subset that a researcher is interested in rather than attempting to generate an entire population of data such as an entire EHR. By focusing on just the data needed, performance is improved, the need for extensive modeling or metadata configuration is reduced, and the amount of faux-data generated and stored is minimized. Although the plugable methods included for faux-data generation have been shown to effectively replace source data for analysis, KFP facilitates a more through process that includes an initial exploration with faux-data followed by a repetition of methods on original source data through query logging and thereby aiding in replication.
 
 \subsection{System Architecture}
 
@@ -114,12 +113,14 @@ Ideally a ML investigator should develop, test, and validate models using all av
 \end{figure}
 
 Figure~\ref{fig:synthesis_process} shows the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, ML developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
+
 \begin{wrapfigure}[16]{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
   \centering
   \includegraphics[width=0.5\textwidth]{ui_screenshot3}
   \caption{User Interface.}
   \label{fig:ui}
 \end{wrapfigure}
+
 KFP provides multiple methods by which a ML developer can access on-demand faux-data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux-data according to the selected generation method. Data can either be viewed directly in browser or downloaded in csv format for use in a ML process. Alternatively, a Hypertext Transfer Protocol (HTTP) Representational State Transfer (REST) service \cite{w3c_working_group_webservices}, utilized by the SPA, allows for cross language compatible requesting and receiving of faux-data, again via SQL query. In order to facilitate querying and understanding of the data model, the database metadata is presented to the user in a collapsible section. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
 
 \subsection{Included Synthesis Methods}
