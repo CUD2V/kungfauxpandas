@@ -94,7 +94,6 @@ The current legal environment creates a difficult situation for scientists in th
 
 \section{System Details}
 
-% where to put this text? "Unit testing is important but often overlooked - unit tests can show how a researcher validated their code was giving expected results which can often lead to insights not normally communicated in a results section of a journal article."
 One way around the difficulties of source data access is to separate the dependency between data and analysis in such a way that analysis can be performed without the analyst having access to the source data. Such a process can be possible if a sufficiently detailed description of the sensitive data is provided. Appropriate models can be developed and initially validated before either being handed off to a data custodian who then runs the processes on protected data and returns the results to the researcher or access to the protected data has been granted directly to the researcher. Solutions of this form have been possible for some time, but are awkward in practice because activities such as data cleaning, exploration, and model building are interactive and iterative processes that require more than just descriptions of data.
 
 KFP addresses the issue of data access by generating data that is ``statistically similar'' to the real data but does not itself contain any sensitive data. We collectively refer to de-identified data and synthetic data as \emph{faux-data}. We use the term faux as it is used in the fashion sense of the word: the use of man made materials that look and feel like real leather, fur, etc., but without the problematic derivation from live animals and reliance upon limited resources. This faux-data can be analyzed, cleaned, feature-engineered, etc. as if it were the actual source data. KFP provides a standard mechanism for wrapping a privacy protection method into a plug-in which integrates the method with the Pandas DataFrame model. Two of these plug-ins are provided with full documentation for creating other plug-ins.
@@ -105,14 +104,8 @@ KFP focuses on generating faux-data narrowed to a specific subset that a researc
 
 \subsection{System Architecture}
 
-Ideally a ML investigator should develop, test, and validate models using all available data. This is most easily accomplished when they have unfettered access to all data in the problem domain they are working in. Figure~\ref{fig:architecture} shows the novel architecture of KFP: data access through an intermediary that can synthesize data on-demand.
+Ideally a ML investigator should develop, test, and validate models using all available data. This is most easily accomplished when they have unfettered access to all data in the problem domain they are working in. The novel architecture of KFP is that direct data access is provided through an intermediary that can synthesize data on-demand.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=\textwidth]{prototype_architecture}
-  \caption{System Architecture.}
-  \label{fig:architecture}
-\end{figure}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=120mm]{data_synthesis_process}
@@ -120,15 +113,13 @@ Ideally a ML investigator should develop, test, and validate models using all av
   \label{fig:synthesis_process}
 \end{figure}
 
-Figure~\ref{fig:synthesis_process} shows the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed
-\begin{wrapfigure}[15]{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
+Figure~\ref{fig:synthesis_process} shows the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, ML developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
+\begin{wrapfigure}[16]{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
   \centering
   \includegraphics[width=0.5\textwidth]{ui_screenshot3}
   \caption{User Interface.}
   \label{fig:ui}
 \end{wrapfigure}
-against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, ML developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
-
 KFP provides multiple methods by which a ML developer can access on-demand faux-data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux-data according to the selected generation method. Data can either be viewed directly in browser or downloaded in csv format for use in a ML process. Alternatively, a Hypertext Transfer Protocol (HTTP) Representational State Transfer (REST) service \cite{w3c_working_group_webservices}, utilized by the SPA, allows for cross language compatible requesting and receiving of faux-data, again via SQL query. In order to facilitate querying and understanding of the data model, the database metadata is presented to the user in a collapsible section. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
 
 \subsection{Included Synthesis Methods}
@@ -144,8 +135,6 @@ While we have provided software code and a description of our methods, we believ
 Another area that is open for further research is that of domain and institution specific data privacy needs. In the field of education, statistical methods for calculating sample size based on probability of detecting a specific effect size are commonly used \cite{naep_2009} as the key method for privacy protection. However, it is not clear that these methods are appropriate for use in ML in general or domains other than education. Thus, in this work, no attempt has been made to constrain data set sizes nor provide additional proofs of data protection. KFP could be modified to return no results if a minimum threshold is not met or, alternatively, data boosting techniques in combination with data synthesis could be used based on the risk profile of the data owner(s).
 
 The last area recommended for further research is to deploy and observe the use of KFP in an active ML environment where researchers are working with sensitive datasets. A key limitation that may be identified is that of performance characteristics, particularly in a multi-user setting against a large relational database store. Additionally, as no private data was distributed via this system, actual review by security and compliance groups or institutional review boards may uncover additional requirements to reduce risk of data exposure that could require significant rework or further study.
-% include some of this? 
-% Lastly, the Synthetic dataset Generation Framework (SGF) by Bindschaedler et al. \cite{Bindschaedler2017} "generates differentially private synthetic data" using a novel criterion called plausible deniability that is applied to a dataset before it is deemed safe to release.  In the case of SGF, several models are built with both real and synthetic data and compared against a gold standard. Their author's analysis showed that the models from synthetic data are close to the same accuracy as models built with real data.
 
 \section{Conclusion}
 
