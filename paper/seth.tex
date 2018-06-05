@@ -36,3 +36,18 @@ Reproducing machine learning results in the field of health care is challenging.
  %* 62 https://nces.ed.gov/nationsreportcard/tdw/analysis/summary_rules_minimum.aspx
  %* 30; describes techniques to determine size - https://nces.ed.gov/pubs2017/2017147.pdf
  
+ % removed since we never got SGF working
+ \begin{table}
+  \caption{Kung Faux Pandas data synthesis methods}
+  \label{included-methods}
+  \centering
+  \begin{tabular}{p{12em} l p{14em}}
+    \toprule
+    Method                                 & Source                    & Notes \\
+    \midrule
+    Kernel Density Estimator               & scipy.stats.gaussian\_kde & Inter-related ordinal and ratio data\\
+    DataSynthesizer                        & Ping et al.               & Bayesian modeling of column relationships\\
+    Synthetic dataset Generation Framework & Bindschaedler et al.      & "Plausible Deniability" probabilistic modeling\\
+    \bottomrule
+  \end{tabular}
+\end{table}
