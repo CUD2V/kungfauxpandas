@@ -29,7 +29,6 @@
 
 \usepackage{graphicx}       % added by seth - image support
 \graphicspath{ {./images/} }
-\usepackage{wrapfig}        % added by seth for placing images in-line with text
 
 \usepackage{hyperref}
 \hypersetup{
@@ -120,20 +119,34 @@ Ideally a ML investigator should develop, test, and validate models using all av
   \label{fig:synthesis_process}
 \end{figure}
 
-Figure~\ref{fig:synthesis_process} shows the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed
-\begin{wrapfigure}[15]{r}{0.5\textwidth}%optionally place [15] after {wrapfigure} to control how many lines to wrap around figure
-  \centering
-  \includegraphics[width=0.5\textwidth]{ui_screenshot3}
-  \caption{User Interface.}
-  \label{fig:ui}
-\end{wrapfigure}
-against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, ML developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
+Figure~\ref{fig:synthesis_process} shows the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, ML developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
 
 KFP provides multiple methods by which a ML developer can access on-demand faux-data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux-data according to the selected generation method. Data can either be viewed directly in browser or downloaded in csv format for use in a ML process. Alternatively, a Hypertext Transfer Protocol (HTTP) Representational State Transfer (REST) service \cite{w3c_working_group_webservices}, utilized by the SPA, allows for cross language compatible requesting and receiving of faux-data, again via SQL query. In order to facilitate querying and understanding of the data model, the database metadata is presented to the user in a collapsible section. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{ui_screenshot3}
+  \caption{User Interface.}
+  \label{fig:ui}
+\end{figure}
+
 
 \subsection{Included Synthesis Methods}
 
 KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented two plugins that use different techniques for data synthesis. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. In DataSynthesizer, the authors show that the synthetic data generated preserves privacy while still being useful enough for actual data analysis (see also \cite{howe_synthetic_2017}).
+
+\section{Experiments}
+Tested this on a Ubuntu 16.04 Linux virtual machine running on Virtual Box with 12 CPUs and 64GB of RAM allocated from the host system.
+
+Running the query shown in the UI screenshot 
+
+rows: query time: method: fauxify time:
+1k
+10k
+100k
+1000k
+
+hmm, that's interesting
 
 \section{Discussion}
 
