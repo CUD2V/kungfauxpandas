@@ -71,7 +71,7 @@ From the base directory of the repository:
 cd sourcecode/python/
 conda create -n kungfauxpandas python=3.6
 conda activate kungfauxpandas
-conda install cython pandas numpy scipy jupyter matplotlib
+conda install cython pandas numpy scipy jupyter matplotlib scikit-learn seaborn django
 pip install hug
 conda env export -n kungfauxpandas | grep -v "^prefix: " > environment.yml
 ```
@@ -84,7 +84,7 @@ From the base directory of the repository:
 cd sourcecode/python/
 virtualenv kungfauxpandas
 source kungfauxpandas/bin/activate
-pip install cython numpy scipy pandas matplotlib jupyter hug
+pip install cython numpy scipy pandas matplotlib jupyter hug scikit-learn seaborn django
 pip freeze > requirements.txt
 ```
 

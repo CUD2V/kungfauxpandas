@@ -22,6 +22,12 @@ RUN wget https://github.com/CUD2V/kungfauxpandas/archive/master.zip; \
   cd ../scripts ;\
   chmod +x ./docker_startup.sh
 
+WORKDIR /app/kungfauxpandas-master/plugins
+RUN wget https://github.com/DataResponsibly/DataSynthesizer/archive/master.zip; \
+  unzip master.zip; \
+  rm master.zip; \
+  mv DataSynthesizer-master DataSynthesizer
+
 WORKDIR /app/kungfauxpandas-master/sourcecode/scripts
 
 EXPOSE 8000 8080
