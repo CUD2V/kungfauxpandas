@@ -1,6 +1,8 @@
-# Kung Faux Pandas: Data Synthesis Tool
+# Kung Faux Pandas: Simplifying privacy protection
 
-This data synthesis process was created using Python. In order to make it easier for others to replicate the environment, a Conda environment export has been provided as well as a virtualenv requirements file. Additionally, a docker image with the latest code has been made available.
+There are many barriers to data access and data sharing, especially in the domain of machine learning on health care data. Legal constraints such as HIPAA protect patient privacy but slow access to data and limit reproducibility. This repository contains an end-to-end system called *Kung Faux Pandas* for easily generating de-identified or synthetic data which is statistically similar to given real data but lacks sensitive information. This system focuses on data synthesis and de-identification narrowed to a specific research question to allow for self-service data access without the complexities required to generate an entire population of data that is not needed for a given research project. Kung Faux Pandas is an open source publicly available system that lowers barriers to HIPAA- and GDPR-compliant data sharing for enabling reproducibility and other purposes.
+
+This data synthesis process was created using Python. In order to make it easier for others to replicate the environment, a range of environments are supported: Conda environment export, virtualenv requirements file, and a docker image with the latest code.
 
 ## Python Setup
 To run the software, download/clone this repository and then run the appropriate command below based on your Python distribution:
