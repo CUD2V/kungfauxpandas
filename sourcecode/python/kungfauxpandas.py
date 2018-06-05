@@ -51,7 +51,7 @@ class DataSynthesizerPlugin(PandaPlugin):
     """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
 
     def __init__(self, df_in=None,
-            mode = 'independent_attribute_mode',
+            mode = 'correlated_attribute_mode',
             threshold_value = 20,
             categorical_attributes = {},
             candidate_keys = {},
