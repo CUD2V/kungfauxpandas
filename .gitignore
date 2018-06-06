@@ -113,3 +113,7 @@ plugins/*
 *.gz
 *.db
 *.html
+
+# ignore plugin temp files
+sourcecode/python/out/correlated_attribute_mode/description.txt
+sourcecode/python/out/independent_attribute_mode/description.txt
