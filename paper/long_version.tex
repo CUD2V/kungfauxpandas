@@ -163,10 +163,27 @@ Data from notebook performance\_tests.ipynb
   \end{tabular}
 \end{table}
 
-Brief explaination of each method.
+\begin{table}
+  \caption{Kung Faux Pandas data synthesis plugin timings (seconds)}
+  \label{timing_results}
+  \centering
+    \begin{tabular}{l c c c c c}
+    	\toprule 
+    	Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\ 
+    	\midrule 
+    	Trivial & x.y (1.04) & x.y (1.04) &  &  &  \\ 
+    	KDE & x.y (1.04) &  & x.y (1.04) &  &  \\ 
+    	DS Correlated & x.y (1.04) &  &  & x.y (1.04) &  \\ 
+    	DS Correlated w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\ 
+    	DS Independent & x.y (1.04) &  &  &  &  \\ 
+    	DS Independent w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\
+    	\midrule
+    \end{tabular}
+\end{table}
 
+Brief explanation of each method.
 
-hmm, that's interesting
+hmm, that's interesting. Describe what this means...
 
 \section{Discussion}
 
