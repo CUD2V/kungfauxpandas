@@ -146,6 +146,26 @@ rows: query time: method: fauxify time:
 100k
 1000k
 
+Data from notebook performance\_tests.ipynb
+
+\begin{table}
+  \caption{Kung Faux Pandas data synthesis method timings}
+  \label{included-methods}
+  \centering
+  \begin{tabular}{p{12em} l p{14em}}
+    \toprule
+    Method                                 & Source                    & Notes \\
+    \midrule
+    Kernel Density Estimator               & scipy.stats.gaussian\_kde & Inter-related ordinal and ratio data\\
+    DataSynthesizer                        & Ping et al.               & Bayesian modeling of column relationships\\
+    Synthetic dataset Generation Framework & Bindschaedler et al.      & "Plausible Deniability" probabilistic modeling\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Brief explaination of each method.
+
+
 hmm, that's interesting
 
 \section{Discussion}
