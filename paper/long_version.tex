@@ -133,55 +133,33 @@ KFP provides multiple methods by which a ML developer can access on-demand faux-
 
 \subsection{Included Synthesis Methods}
 
-KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented two plugins that use different techniques for data synthesis. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. In DataSynthesizer, the authors show that the synthetic data generated preserves privacy while still being useful enough for actual data analysis (see also \cite{howe_synthetic_2017}).
+KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented two plugins that use different techniques for data synthesis. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. As a result of their methods, the DataSynthezier offers a unique contribution to the space: it can work with no configuration other than input data, or can be configured to provide more custom results. In DataSynthesizer, the authors show that the synthetic data generated preserves privacy while still being useful enough for actual data analysis (see also \cite{howe_synthetic_2017}).
 
 \section{Experiments}
-Tested this on a Ubuntu 16.04 Linux virtual machine running on Virtual Box with 12 CPUs and 64GB of RAM allocated from the host system.
 
-Running the query shown in the UI screenshot 
+In this section we evaluate the performance of the KFP plugins to see how closely the methods meet the stated goals of ease of use, similarity to input data, and total time to run. Hardware for these performance and evaluation tests were on a 2017 MacBook Pro, 3.1 GHz Intel Core i7, 16GB 2133 MHz LPDDR3 with macOS 10.12.6. KFP software is written in Python 3.6; all packages and dependencies can be installed with identifical versions using the provided requirements.txt, environment.yml file, or Docker container. Database queries were run against the relational database PostgreSQL version 9.6.9. Data was generated using the notebook test\_data\_generator.ipynb available in our GitHub repository. The sample data are composed of 100,000 patient encounters with various dimensions spread across several tables, the largest of which contains 10,539,550 rows of data.
 
-rows: query time: method: fauxify time:
-1k
-10k
-100k
-1000k
+\subsection{Timing}
 
-Data from notebook performance\_tests.ipynb
+Table~\ref{timing_results} documents results obtained from running the various plugins. Source code for running performance tests are available in the Jupyter notebook performance\_tests.ipynb. The "Trivial" method provides a baseline comparison for evaluating the overhead of Pandas and correct performance of the plugin class and function overloading mechanism as returns the input data frame unmodified. The KDE method is the custom developed method that acts as an example of how to create plugins. A couple of DataSynthesizer (abbreviated DS in the table) modes are used to demonstrate performance differences as well as generated synthetic data differences. Independent mode generates synthetic data with each attribute being modeled independently from the others. Correlated attribute mode finds inter-column relationships to more accurately generate synthetic data. Both DataSynthesizer modes are run with no configuration and "w/Config" by passing in some column-wise dataset specific configuration.
 
 \begin{table}
-  \caption{Kung Faux Pandas data synthesis method timings}
-  \label{included-methods}
-  \centering
-  \begin{tabular}{p{12em} l p{14em}}
-    \toprule
-    Method                                 & Source                    & Notes \\
-    \midrule
-    Kernel Density Estimator               & scipy.stats.gaussian\_kde & Inter-related ordinal and ratio data\\
-    DataSynthesizer                        & Ping et al.               & Bayesian modeling of column relationships\\
-    Synthetic dataset Generation Framework & Bindschaedler et al.      & "Plausible Deniability" probabilistic modeling\\
-    \bottomrule
-  \end{tabular}
+	\caption{Kung Faux Pandas data synthesis plugin timings (seconds)}
+	\label{timing_results}
+	\centering
+	\begin{tabular}{l c c c c c}
+		\toprule 
+		Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\ 
+		\midrule 
+		Trivial & x.y (1.04) & x.y (1.04) &  &  &  \\ 
+		KDE & x.y (1.04) &  & x.y (1.04) &  &  \\ 
+		DS Correlated & x.y (1.04) &  &  & x.y (1.04) &  \\ 
+		DS Correlated w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\ 
+		DS Independent & x.y (1.04) &  &  &  &  \\ 
+		DS Independent w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\
+		\midrule
+	\end{tabular}
 \end{table}
-
-\begin{table}
-  \caption{Kung Faux Pandas data synthesis plugin timings (seconds)}
-  \label{timing_results}
-  \centering
-    \begin{tabular}{l c c c c c}
-    	\toprule 
-    	Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\ 
-    	\midrule 
-    	Trivial & x.y (1.04) & x.y (1.04) &  &  &  \\ 
-    	KDE & x.y (1.04) &  & x.y (1.04) &  &  \\ 
-    	DS Correlated & x.y (1.04) &  &  & x.y (1.04) &  \\ 
-    	DS Correlated w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\ 
-    	DS Independent & x.y (1.04) &  &  &  &  \\ 
-    	DS Independent w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\
-    	\midrule
-    \end{tabular}
-\end{table}
-
-Brief explanation of each method.
 
 hmm, that's interesting. Describe what this means...
 
