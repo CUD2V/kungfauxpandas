@@ -137,7 +137,7 @@ KFP provides a framework by which any number of methods for data privacy can be 
 
 \section{Experiments}
 
-In this section we evaluate the performance of the KFP plugins to see how closely the methods meet the stated goals of ease of use, similarity to input data, and total time to run. Hardware for these performance and evaluation tests were on a 2017 MacBook Pro, 3.1 GHz Intel Core i7, 16GB 2133 MHz LPDDR3 with macOS 10.12.6. KFP software is written in Python 3.6; all packages and dependencies can be installed with identifical versions using the provided requirements.txt, environment.yml file, or Docker container. Database queries were run against the relational database PostgreSQL version 9.6.9. Data was generated using the notebook test\_data\_generator.ipynb available in our GitHub repository. The sample data are composed of 100,000 patient encounters with various dimensions spread across several tables, the largest of which contains 10,539,550 rows of data.
+In this section we evaluate the performance of the KFP plugins to see how closely the methods meet the stated goals of ease of use, similarity to input data, and total time to run. Hardware for these performance and evaluation tests were on a 2017 MacBook Pro, 3.1 GHz Intel Core i7, 16GB 2133 MHz LPDDR3 with macOS 10.12.6. KFP software is written in Python 3.6; all packages and dependencies can be installed with identifical versions using the provided requirements.txt, environment.yml file, or Docker container. Database queries were run against the relational database PostgreSQL version 9.6.9. Data was generated using the notebook test\_data\_generator.ipynb available in our GitHub repository. The sample data are composed of 100,000 patient encounters with various dimensions spread across several tables, the largest of which contains 10,539,549 rows of data.
 
 \subsection{Timing}
 
@@ -151,7 +151,7 @@ Table~\ref{timing_results} documents results obtained from running the various p
 		\toprule 
 		Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\ 
 		\midrule 
-		Trivial & x.y (1.04) & x.y (1.04) &  &  &  \\ 
+		Trivial & 2.5e-06 & 2.25e-06 & 2.27e-06 & 2.23e-06 & 2.16e06 \\ 
 		KDE & x.y (1.04) &  & x.y (1.04) &  &  \\ 
 		DS Correlated & x.y (1.04) &  &  & x.y (1.04) &  \\ 
 		DS Correlated w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\ 
