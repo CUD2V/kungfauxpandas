@@ -144,7 +144,7 @@ In this section we evaluate the performance of the KFP plugins to see how closel
 Table~\ref{timing_results} documents results obtained from running the various plugins. Source code for running performance tests are available in the Jupyter notebook performance\_tests.ipynb. The "Trivial" method provides a baseline comparison for evaluating the overhead of Pandas and correct performance of the plugin class and function overloading mechanism as returns the input data frame unmodified. The KDE method is the custom developed method that acts as an example of how to create plugins. A couple of DataSynthesizer (abbreviated DS in the table) modes are used to demonstrate performance differences as well as generated synthetic data differences. Independent mode generates synthetic data with each attribute being modeled independently from the others. Correlated attribute mode finds inter-column relationships to more accurately generate synthetic data. Both DataSynthesizer modes are run with no configuration and "w/Config" by passing in some column-wise dataset specific configuration.
 
 \begin{table}
-	\caption{Kung Faux Pandas data synthesis plugin timings (seconds)}
+	\caption{Kung Faux Pandas data synthesis plugin timings (mean seconds)}
 	\label{timing_results}
 	\centering
 	\begin{tabular}{l c c c c c}
@@ -152,7 +152,7 @@ Table~\ref{timing_results} documents results obtained from running the various p
 		Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\ 
 		\midrule 
 		Trivial & 2.5e-06 & 2.25e-06 & 2.27e-06 & 2.23e-06 & 2.16e06 \\ 
-		KDE & x.y (1.04) &  & x.y (1.04) &  &  \\ 
+		KDE & 0.086 & 0.079 & 0.074 & 0.074 & 0.122 \\ 
 		DS Correlated & x.y (1.04) &  &  & x.y (1.04) &  \\ 
 		DS Correlated w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\ 
 		DS Independent & x.y (1.04) &  &  &  &  \\ 
