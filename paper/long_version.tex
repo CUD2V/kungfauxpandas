@@ -46,8 +46,10 @@
 
 \author{
   James King, Seth Russell, Tellen D. Bennett, Debashis Ghosh\\
-  Data Science to Patient Value (D2V), School of Medicine\\
-  University of Colorado Anschutz Medical Campus, Aurora, CO\\
+  Data Science to Patient Value (D2V)\\
+  School of Medicine\\
+  University of Colorado Anschutz Medical Campus\\
+  Aurora, CO\\
   \texttt{\{james.king, seth.russell, tell.bennett, debashis.ghosh\}@ucdenver.edu}
   }
 
@@ -83,7 +85,7 @@ We have created an open source software library called \emph{Kung Faux Pandas (K
 
 \section{Background}
 
-Recent work has clarified the definition and importance of reproducibility and a closely related concept, replicability. Leek and Peng have defined reproducibility as the "ability to recompute data analytic results given an observed dataset and knowledge of the data analysis pipeline," and replicability as "the chance that an independent experiment targeting the same scientific question will produce a consistent result."\cite{leek_opinion_2015,peng_reproducible_2006} Others have used the terms in a reverse fashion\cite{drummond_replicability_2009}. Despite the semantic differences, there is broad agreement that an independent experiment with confirmatory results is the strongest support of any experiment. One early influential paper on the topic of reproducibility in scientific computing lists the key factors in reproducibility as available data, input parameters, documentation, software code, and an environment capable of running the provided software code. These items are difficult to completely convey in a traditional research paper \cite{schwab_making_2000}.
+Recent work has clarified the definition and importance of reproducibility and a closely related concept, replicability. Leek and Peng have defined reproducibility as the "ability to recompute data analytic results given an observed dataset and knowledge of the data analysis pipeline," and replicability as "the chance that an independent experiment targeting the same scientific question will produce a consistent result."\cite{leek_opinion_2015,peng_reproducible_2006} Others have used the terms in a reverse fashion\cite{drummond_replicability_2009}. Despite the semantic differences, there is broad agreement that an independent experiment with confirmatory results is the strongest support of any experiment. One early influential paper on the topic of reproducibility in scientific computing lists the key factors in reproducibility as: available data, input parameters, documentation, software code, and an environment capable of running the provided software code. These items are difficult to completely convey in a traditional research paper \cite{schwab_making_2000}.
 
 In the context of ML, sufficient detail is required such that an independent investigator could create the same hardware and software configuration, data used for all experiments, source code, documentation on data and how to run/configure software, and tests that verify the software runs correctly. Once a result can be reproduced, new researchers can then build upon the methods, gather new data for testing/validation, or discover alternative methods to replicate a result.
 
@@ -137,11 +139,11 @@ KFP provides a framework by which any number of methods for data privacy can be 
 
 \section{Experiments}
 
-In this section we evaluate the performance of the KFP plugins to see how closely the methods meet the stated goals of ease of use, similarity to input data, and total time to run. Hardware for these performance and evaluation tests were from a 2017 MacBook Pro, 3.1 GHz Intel Core i7, 16GB 2133 MHz LPDDR3 with macOS 10.12.6. KFP software is written in Python 3.6; all packages and dependencies can be installed with identifical versions using the provided requirements.txt, environment.yml file, or Docker container. Database queries were run against the relational database PostgreSQL version 9.6.9. Data was generated using the notebook test\_data\_generator.ipynb available in our GitHub repository. The sample data population is composed of 100,000 patient encounters with various dimensions spread across several tables, the largest of which contains 10,539,549 rows of data. The sample query generating the "real" input data is composed of 8 total columns composed of IDs, categorical variables, and floating point numbers.
+In this section we evaluate the performance of the KFP plugins to see how closely the methods meet the stated goals of ease of use, similarity to input data, and total time to run. Hardware for these performance and evaluation tests was a 2017 MacBook Pro, 3.1 GHz Intel Core i7, 16GB 2133 MHz LPDDR3 with macOS 10.12.6. KFP software is written in Python 3.6; all packages and dependencies can be installed with identical versions using the provided requirements.txt, environment.yml file, or Docker container. Database queries were run against the relational database PostgreSQL version 9.6.9. Data was generated using the notebook test\_data\_generator.ipynb available in our GitHub repository. The sample data population is composed of 100,000 patient encounters with various dimensions spread across several tables, the largest of which contains 10,539,549 rows of data. The sample query generating the "real" input data is composed of 8 total columns composed of IDs, categorical variables, and floating point numbers.
 
-\subsection{Timing}
+\subsection{Timing Method}
 
-Table~\ref{timing_results} documents results obtained from running the various plugins. Source code for running performance tests are available in the Jupyter notebook performance\_tests.ipynb. The "Trivial" method provides a baseline comparison for evaluating the overhead of Pandas and correct performance of the plugin class and function overloading mechanism as returns the input data frame unmodified. The KDE method is the custom developed method that acts as an example of how to create plugins. A couple of DataSynthesizer (abbreviated DS in the table) modes are used to demonstrate performance differences as well as generated synthetic data differences. Independent mode generates synthetic data with each attribute being modeled independently from the others. Correlated attribute mode finds inter-column relationships to more accurately generate synthetic data. Both DataSynthesizer modes are run with no configuration and "w/Config" by passing in some column-wise dataset specific configuration.
+Table~\ref{timing_results} documents results obtained from running the various plugins. Source code for running these performance tests are available in the Jupyter notebook performance\_tests.ipynb. The "Trivial" method provides a baseline comparison for evaluating the overhead of Pandas and correct input/output of the plugin class and function overloading mechanism; it returns the input data frame unmodified. The KDE method is the custom method that acts as an example of how to create plugins. A couple of DataSynthesizer (abbreviated DS in the table) modes are used to demonstrate performance differences as well as generated synthetic data differences. "Independent" mode generates synthetic data with each attribute being modeled independently from the others. "Correlated" attribute mode finds inter-column relationships to more accurately generate synthetic data. Both DataSynthesizer modes are run with no configuration and again "w/Config" by passing in some column-wise dataset specific configuration.
 
 \begin{table}
 	\caption{Kung Faux Pandas data synthesis plugin timings (mean seconds)}
@@ -151,26 +153,40 @@ Table~\ref{timing_results} documents results obtained from running the various p
 		\toprule 
 		Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\ 
 		\midrule 
-		Trivial & 2.5e-06 & 2.25e-06 & 2.27e-06 & 2.23e-06 & 2.16e-06 \\ 
+		Trivial & 2.5e-06 & 2.3e-06 & 2.3e-06 & 2.2e-06 & 2.2e-06 \\ 
 		KDE & 0.086 & 0.079 & 0.074 & 0.074 & 0.122 \\ 
-		DS Correlated & 0.188 & 1.419 & 3.460 & 16.66 & 159.9 \\ 
-		DS Correlated w/Config & 0.172 & 0.627 & 1.393 & 342.7 &  \\ 
 		DS Independent & 0.044 & 0.050 & 0.103 & 0.268 & 2.608 \\ 
-		DS Independent w/Config &  &  &  &  &  \\
+		DS Independent w/Config & 0.045 & 0.040 & 0.064 & 0.120 & 0.799 \\
+		DS Correlated & 0.188 & 1.419 & 3.460 & 16.66 & 159.9 \\ 
+		DS Correlated w/Config & 0.172 & 0.627 & 1.393 & 342.7 & 2124 \\ 
 		\midrule
 	\end{tabular}
 \end{table}
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=120mm]{sample_source_data}
+  \caption{Sample of source data}
+  \label{fig:sample_source_data}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=120mm]{sample_synthetic_data}
+  \caption{Sample of synthetic data}
+  \label{fig:sample_synthetic_data}
+\end{figure}
+
 \subsection{Insights}
 
-Based on the results from this experiment, it is clear that some methods are much faster than others. Fast generation of synthetic data is important in a self-service setting where researchers can generate their own data as needed. While KDE is a simple method, it quickly generates data that looks similar to the input data. DataSynthesizer in "Independent" mode is quick for a range of dataset sizes, but without configuration, it doesn't generate results that closely match the input dataset; e.g. the "Code" column should contain valid International Statistical Classification of Diseases and Related Health Problems, Tenth Revision (ICD-10) codes, but instead has random strings that are similar in length to actual ICD-10 codes.
+Figure~\ref{fig:sample_source_data} provides a few rows of the source data for the synthetic plugins. Figure~\ref{fig:sample_synthetic_data} provides a few rows of the synthetic data generated by DataSynthesizer in "Independent" mode.
 
-In all cases, synthetic data generation is a CPU intensive task; no parallization has been implemented by either KFP nor the plugins used. While memory usage does increase as data size increases, at the 100000 rows seen here, memory usage peaked at around 2GB for the Python process.
+Fast generation of synthetic data is important in a self-service setting where researchers can generate their own data as needed. As shown in the results, some methods are significantly faster than others as dataset size increases. Additionally, the other key constraint is having synthetic data be as close as possible to real data without reducing privacy.  While the KDE plugin is a simple method, it quickly generates data that looks similar to the input data and works well for the range of data types used. DataSynthesizer in "Independent" mode is quick for the tested range of dataset sizes, but without additional configuration, it doesn't generate results that closely match the input dataset. As an example the "Code" column should contain valid International Statistical Classification of Diseases and Related Health Problems, Tenth Revision (ICD-10) codes, but instead has random strings that are similar in length to actual ICD-10 codes that do not line up with values in other columns. The DataSynthesizer "Correlated" attribute mode generates very realistic synthetic data, but has a significant computational burden when generating synthetic data from larger dataset sizes.
 
+In all cases, synthetic data generation is a CPU intensive task; no parallelization has been implemented by either KFP nor the plugins used. While memory usage does increase as data size increases, at the 100000 rows seen here, memory usage peaked at around 2GB for the Python process.
 
 \section{Discussion}
 
-KFP provides a unique contribution to the space of reproducible ML. Through providing ad-hoc faux-data, ML researchers can have lower barriers to accessing private data as well as reduced barriers to sharing faux-data derived from private data. However, there are several areas that could be improved or researched further: improved code sharing, addressing institutional specific privacy issues, and evaluation of this system in a ML workflow.
+KFP provides a unique contribution to the space of reproducible ML. Through providing ad-hoc faux-data, ML researchers can have lower barriers to accessing private data as well as reduced barriers to sharing faux-data derived from private data. Although one clear area for further research would be to develop plugins for additional faux-data methods, there are several areas that go beyond this simple step that could be researched further: improved code sharing of KFP, addressing institutional specific privacy issues, and evaluation of this system in a ML workflow.
 
 While we have provided software code and a description of our methods, we believe that ML reproducibility should go beyond just making source code available. Peng recommends making code available in any form as an excellent first step towards reproducible research; the next step is to make code available "in a durable non-proprietary format" \cite{peng_reproducible_2011}. This is a level of code sharing rarely achieved in ML research. Currently there is no standard long term format that works for all computational environments. For the Python ecosystem however, the standard for sharing code is via a package on Python Package Index (PyPI). We intend to continue this research to make KFP available as a Python package.
 
@@ -184,7 +200,7 @@ The last area recommended for further research is to deploy and observe the use 
 
 KFP removes barriers to data access and data sharing via self-service faux-data generation. Users of KFP do not need to have access to a protected dataset nor does a human have to be involved in translating researchers data needs into a non-protected dataset. This self-service data can be differentially private or meet other privacy needs based on plugin capabilities. With faux-data, researchers can publicly share data upon which their research relies without organizational fear of privacy breaches. KFP also facilitates a process by which evaluation, analysis, or model building is first performed with faux-data followed by repetition upon private data. 
 
-Finally, instead of taking the computational and labor intensive step of full EHR de-identification or synthesis, KFP takes the smaller and more easily implemented step of just-in-time data de-identification or synthesis. We surmise that this tool will improve data exploration and reduce dependency on complex processes required for data access. The result of this system will be improved reproducibility in ML.
+Finally, instead of taking the computational and labor intensive step of full EHR de-identification or synthesis, KFP takes the smaller and more easily implemented step of just-in-time data de-identification or synthesis. As shown in our experiments, if the proper method is selected, data can be quickly generated based on real data that the requester need not have direct access to. We surmise that this tool will improve data exploration and reduce dependency on complex processes required for data access. The result of this system will be improved reproducibility in ML.
 
 \bibliographystyle{unsrt}
 
