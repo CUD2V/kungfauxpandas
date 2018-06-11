@@ -70,7 +70,7 @@
 \maketitle
 
 \begin{abstract}
-There are many barriers to data access and data sharing, especially in the domain of machine learning on health care data. Legal constraints such as HIPAA protect patient privacy but slow access to data and limit reproducibility. We provide a description of an end-to-end system called \emph{Kung Faux Pandas} for easily generating de-identified or synthetic data which is statistically similar to real data but lacks sensitive information. This system focuses on data synthesis and de-identification narrowed to a specific research question to allow for self-service data access without the complexities required to generate an entire population of data that is not needed for a given research project. Kung Faux Pandas is an open source publicly available\footnote{\url{https://github.com/CUD2V/kungfauxpandas}} system that lowers barriers to HIPAA- and GDPR-compliant data sharing for enabling reproducibility and other purposes.
+There are many barriers to data access and data sharing, especially in the domain of machine learning on health care data. Legal constraints, such as HIPAA, protect patient privacy but slow access to data and limit reproducibility. We provide a description of an end-to-end system called \emph{Kung Faux Pandas} for easily generating de-identified or synthetic data which is statistically similar to real data but lacks sensitive information. This system focuses on data synthesis and de-identification narrowed to a specific research question to allow for self-service data access without the complexities required to generate an entire population of data that is not needed for a given research project. Kung Faux Pandas is an open source publicly available\footnote{\url{https://github.com/CUD2V/kungfauxpandas}} system that lowers barriers to HIPAA- and GDPR-compliant data sharing for enabling reproducibility and other purposes.
 \end{abstract}
 
 \section{Introduction}
@@ -137,7 +137,7 @@ KFP provides a framework by which any number of methods for data privacy can be 
 
 \section{Experiments}
 
-In this section we evaluate the performance of the KFP plugins to see how closely the methods meet the stated goals of ease of use, similarity to input data, and total time to run. Hardware for these performance and evaluation tests were on a 2017 MacBook Pro, 3.1 GHz Intel Core i7, 16GB 2133 MHz LPDDR3 with macOS 10.12.6. KFP software is written in Python 3.6; all packages and dependencies can be installed with identifical versions using the provided requirements.txt, environment.yml file, or Docker container. Database queries were run against the relational database PostgreSQL version 9.6.9. Data was generated using the notebook test\_data\_generator.ipynb available in our GitHub repository. The sample data are composed of 100,000 patient encounters with various dimensions spread across several tables, the largest of which contains 10,539,549 rows of data.
+In this section we evaluate the performance of the KFP plugins to see how closely the methods meet the stated goals of ease of use, similarity to input data, and total time to run. Hardware for these performance and evaluation tests were from a 2017 MacBook Pro, 3.1 GHz Intel Core i7, 16GB 2133 MHz LPDDR3 with macOS 10.12.6. KFP software is written in Python 3.6; all packages and dependencies can be installed with identifical versions using the provided requirements.txt, environment.yml file, or Docker container. Database queries were run against the relational database PostgreSQL version 9.6.9. Data was generated using the notebook test\_data\_generator.ipynb available in our GitHub repository. The sample data population is composed of 100,000 patient encounters with various dimensions spread across several tables, the largest of which contains 10,539,549 rows of data. The sample query generating the "real" input data is composed of 8 total columns composed of IDs, categorical variables, and floating point numbers.
 
 \subsection{Timing}
 
@@ -151,17 +151,22 @@ Table~\ref{timing_results} documents results obtained from running the various p
 		\toprule 
 		Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\ 
 		\midrule 
-		Trivial & 2.5e-06 & 2.25e-06 & 2.27e-06 & 2.23e-06 & 2.16e06 \\ 
+		Trivial & 2.5e-06 & 2.25e-06 & 2.27e-06 & 2.23e-06 & 2.16e-06 \\ 
 		KDE & 0.086 & 0.079 & 0.074 & 0.074 & 0.122 \\ 
-		DS Correlated & x.y (1.04) &  &  & x.y (1.04) &  \\ 
-		DS Correlated w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\ 
-		DS Independent & x.y (1.04) &  &  &  &  \\ 
-		DS Independent w/Config & x.y (1.04) &  &  &  & x.y (1.04) \\
+		DS Correlated & 0.188 & 1.419 & 3.460 & 16.66 & 159.9 \\ 
+		DS Correlated w/Config & 0.172 & 0.627 & 1.393 & 342.7 &  \\ 
+		DS Independent & 0.044 & 0.050 & 0.103 & 0.268 & 2.608 \\ 
+		DS Independent w/Config &  &  &  &  &  \\
 		\midrule
 	\end{tabular}
 \end{table}
 
-hmm, that's interesting. Describe what this means...
+\subsection{Insights}
+
+Based on the results from this experiment, it is clear that some methods are much faster than others. Fast generation of synthetic data is important in a self-service setting where researchers can generate their own data as needed. While KDE is a simple method, it quickly generates data that looks similar to the input data. DataSynthesizer in "Independent" mode is quick for a range of dataset sizes, but without configuration, it doesn't generate results that closely match the input dataset; e.g. the "Code" column should contain valid International Statistical Classification of Diseases and Related Health Problems, Tenth Revision (ICD-10) codes, but instead has random strings that are similar in length to actual ICD-10 codes.
+
+In all cases, synthetic data generation is a CPU intensive task; no parallization has been implemented by either KFP nor the plugins used. While memory usage does increase as data size increases, at the 100000 rows seen here, memory usage peaked at around 2GB for the Python process.
+
 
 \section{Discussion}
 
