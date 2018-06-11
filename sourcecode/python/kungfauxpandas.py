@@ -126,8 +126,8 @@ class DataSynthesizerPlugin(PandaPlugin):
                 if self.verbose:
                     warnings.warn('Keyword argument', key, 'not used')
 
-        if self.num_tuples_to_generate is None and self.df_in is not None:
-            self.num_tuples_to_generate = len(self.df_in)
+        # for now, override tuples generated to be same as input dataframe
+        self.num_tuples_to_generate = len(self.df_in)
 
         # Below copied from example file
         self.description_file = './out/{}/description.txt'.format(self.mode)
