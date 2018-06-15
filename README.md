@@ -28,6 +28,8 @@ source kungfauxpandas/bin/activate
 pip install -r requirements.txt
 ```
 
+For macOS users, you may see errors with a message like *"Python is not installed as a framework. The Mac OS X backend will not be able to function correctly if Python is not installed as a framework..."* If you have this problem, see Stack Overflow posts [matplotlib: RuntimeError: Python is not installed as a framework](https://stackoverflow.com/questions/34977388/matplotlib-runtimeerror-python-is-not-installed-as-a-framework) or [Unable to “import matplotlib.pyplot as plt” in virtualenv](https://stackoverflow.com/questions/29433824/unable-to-import-matplotlib-pyplot-as-plt-in-virtualenv#comment86369743_35107136) for solutions.
+
 ### Install plugin(s)
 
 This software provides a method for adding new plugins for data synthesis. The only method fully included with this repository is a kernel density estimation method based on scipy's gaussian KDE (see
@@ -71,7 +73,7 @@ From the base directory of the repository:
 cd sourcecode/python/
 conda create -n kungfauxpandas python=3.6
 conda activate kungfauxpandas
-conda install cython pandas numpy scipy jupyter matplotlib scikit-learn seaborn django
+conda install cython pandas numpy scipy jupyter matplotlib scikit-learn seaborn django sqlparse pytest
 pip install hug
 conda env export -n kungfauxpandas | grep -v "^prefix: " > environment.yml
 ```
@@ -84,7 +86,7 @@ From the base directory of the repository:
 cd sourcecode/python/
 virtualenv kungfauxpandas
 source kungfauxpandas/bin/activate
-pip install cython numpy scipy pandas matplotlib jupyter hug scikit-learn seaborn django
+pip install cython numpy scipy pandas matplotlib jupyter hug scikit-learn seaborn django sqlparse pytest
 pip freeze > requirements.txt
 ```
 
