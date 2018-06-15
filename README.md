@@ -58,7 +58,7 @@ python -m http.server 8080
 From the base directory of the repository:
 ```
 cd sourcecode/python
-hug -p 8000 -f web-service.py
+hug -p 8000 -f web_service.py
 ```
 
 ## For those interested in how we created the Conda or virtualenv files:
@@ -119,4 +119,15 @@ docker images
 # find image id and replace <imageid> with the actual id
 docker tag <imageid> blackspot/synthesis:latest
 docker push blackspot/synthesis:latest
+```
+
+## Unit Testing
+
+[pytest](http://pytest.org/) is used for the unit tests for the Python components of this software.
+
+To run unit tests, checkout the repository, install dependencies, and do the following from the base of the repo:
+
+```
+cd sourceode/python
+pytest
 ```

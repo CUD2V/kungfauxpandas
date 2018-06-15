@@ -6,6 +6,7 @@ import sys
 import warnings
 import datetime
 import sqlite3
+import contextlib
 
 library_location = '../../plugins/DataSynthesizer'
 sys.path.append(library_location)
@@ -58,11 +59,15 @@ class DataSynthesizerPlugin(PandaPlugin):
             epsilon = 0.1,
             degree_of_bayesian_network = 2,
             num_tuples_to_generate = None,
-            save_faux_data_to_file = False):
+            save_faux_data_to_file = False,
+            verbose = True):
 
         PandaPlugin.__init__(self)
 
+        # currently supported modes
+        self.synthesis_modes = ('correlated_attribute_mode', 'independent_attribute_mode')
         self.mode = mode
+        self.verbose = verbose
 
         # An attribute is categorical if its domain size is less than this threshold.
         #self.threshold_value = 20
@@ -138,12 +143,22 @@ class DataSynthesizerPlugin(PandaPlugin):
 
         # currently can't get correlated_attribute_mode to work, but leaving it here for now
         if self.mode == "correlated_attribute_mode":
-            describer.describe_dataset_in_correlated_attribute_mode(
-                 describer.input_dataset,
-                 epsilon = self.epsilon,
-                 k = self.degree_of_bayesian_network,
-                 attribute_to_is_categorical = self.categorical_attributes,
-                 attribute_to_is_candidate_key = self.candidate_keys)
+            # this block prints a lot to stdout, supress in non-verbose mode
+            if self.verbose:
+                describer.describe_dataset_in_correlated_attribute_mode(
+                     describer.input_dataset,
+                     epsilon = self.epsilon,
+                     k = self.degree_of_bayesian_network,
+                     attribute_to_is_categorical = self.categorical_attributes,
+                     attribute_to_is_candidate_key = self.candidate_keys)
+            else:
+                with nostdout():
+                     describer.describe_dataset_in_correlated_attribute_mode(
+                          describer.input_dataset,
+                          epsilon = self.epsilon,
+                          k = self.degree_of_bayesian_network,
+                          attribute_to_is_categorical = self.categorical_attributes,
+                          attribute_to_is_candidate_key = self.candidate_keys)
             describer.save_dataset_description_to_file(self.description_file)
             generator.generate_dataset_in_correlated_attribute_mode(self.num_tuples_to_generate, self.description_file)
         elif self.mode == "independent_attribute_mode":
@@ -351,6 +366,19 @@ class KFP_DataDescriber(DataDescriber):
             print('Skipping read from csv and returing the input data frame')
 
         self.input_dataset = self.df_in
+
+####################################################################################################################################
+####################################################################################################################################
+# code courtesy of https://stackoverflow.com/questions/2828953/silence-the-stdout-of-a-function-in-python-without-trashing-sys-stdout-and-resto?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+class DummyFile(object):
+    def write(self, x): pass
+
+@contextlib.contextmanager
+def nostdout():
+    save_stdout = sys.stdout
+    sys.stdout = DummyFile()
+    yield
+    sys.stdout = save_stdout
 
 ####################################################################################################################################
 ####################################################################################################################################
