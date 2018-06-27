@@ -90,16 +90,18 @@ pip install cython numpy scipy pandas matplotlib jupyter hug scikit-learn seabor
 pip freeze > requirements.txt
 ```
 
-## About the Docker image
+## Using the Docker image
 
 Use the provided docker image by executing the following:
 
 ```
 docker pull blackspot/synthesis
+docker run -p 8000:8000 -p 8080:8080 -it blackspot/synthesis
 ```
+Then point the browser to localhost:8080
 
-### How to (re)create the docker image
 
+### How to rebuilding the docker image
 Clone the git repo and from the base of the repo run the following:
 
 ```
