@@ -110,7 +110,7 @@ If you want to use the docker container with your own data, there are a couple o
 
     `docker cp <mysqlite.db> <container name or id>:/app/kungfauxpandas-master/data/sample_data.db`
 
-    Replace '<mysqlite.db>'' with your actual SQLite database file, and replace <container name or id> with the name or ID of your container (`docker ps -a` to see all your containers). Then start the container with `docker start <container name or id>`
+    Replace <mysqlite.db> with your actual SQLite database file, and replace <container name or id> with the name or ID of your container (`docker ps -a` to see all your containers). Then start the container with `docker start <container name or id>`
 
 1. Upload new data via the Web UI
 
