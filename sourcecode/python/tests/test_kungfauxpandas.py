@@ -54,7 +54,27 @@ def test_read_sql(sample_sql, sample_conn):
         assert(kfp.read_sql(sample_sql, sample_conn) is not None)
 
 def test_kfp_log(sample_sql, sample_conn):
+
     kfp = KungFauxPandas()
+
+    count_sql = "select count(1) from kfp_log"
+
+    kfp.logging_cur.execute(count_sql)
+    begin_rows = kfp.logging_cur.fetchone()
+
+    # by default KFP will use the "Trivial" plugin
+    assert(kfp.read_sql(sample_sql, sample_conn) is not None)
+
+    # now make sure there is at least 1 additional kfp_log record
+    kfp.logging_cur.execute(count_sql)
+    end_rows = kfp.logging_cur.fetchone()
+
+    assert(begin_rows < end_rows)
+
+
+def test_kfp_custom_log(sample_sql, sample_conn):
+
+    kfp = KungFauxPandas(db_file='../../data/kfp_log.db')
 
     count_sql = "select count(1) from kfp_log"
 

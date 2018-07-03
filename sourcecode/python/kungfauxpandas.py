@@ -274,6 +274,8 @@ class KungFauxPandas(object):
         self.synthesis_methods = ('Trivial', 'KDE', 'DataSynthesizer')
         if db_file is None:
             self.db_file = '../../data/kfp_log.db'
+        else:
+            self.db_file = db_file
         self.logging = logging
 
         if self.logging:
