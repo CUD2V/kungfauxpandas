@@ -21,7 +21,7 @@ def sample_df():
 def sample_conn():
     import sqlite3
     # use the sample database already provided
-    return sqlite3.connect("../../data/sepsis.db")
+    return sqlite3.connect("../../data/sample_data.db")
 
 @pytest.fixture
 def sample_sql():

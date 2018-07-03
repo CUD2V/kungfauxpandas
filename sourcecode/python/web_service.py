@@ -7,7 +7,7 @@ import sqlparse
 
 
 kfpd = KungFauxPandas()
-dbname = 'file:../../data/sepsis.db?mode=ro'
+dbname = 'file:../../data/sample_data.db?mode=ro'
 db_conn = sqlite3.connect(dbname, uri=True)
 cursor = db_conn.cursor()
 
