@@ -108,13 +108,13 @@ The provided docker container has a sample data set generated using [test_data_g
 If you want to use the docker container with your own data, there are a couple of options:
 1. Save your data into a SQLite database and copy into the container. To do this, first stop the running container (Ctrl-C if in the foreground in your terminal) then execute the following:
 
-  `docker cp <mysqlite.db> <container name or id>:/app/kungfauxpandas-master/data/sample_data.db`
+    `docker cp <mysqlite.db> <container name or id>:/app/kungfauxpandas-master/data/sample_data.db`
 
-  Replace '<mysqlite.db>'' with your actual SQLite database file, and replace <container name or id> with the name or ID of your container (`docker ps -a` to see all your containers). Then start the container with `docker start <container name or id>`
+    Replace '<mysqlite.db>'' with your actual SQLite database file, and replace <container name or id> with the name or ID of your container (`docker ps -a` to see all your containers). Then start the container with `docker start <container name or id>`
 
 1. Upload new data via the Web UI
 
-  *Not Yet Implemented*
+    *Not Yet Implemented*
 
 1. Adjust web_service.py and change the database connection from the provided sample SQLite database, or use the KFP Python API directly.
 
