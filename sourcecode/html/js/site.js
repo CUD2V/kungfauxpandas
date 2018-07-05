@@ -27,6 +27,75 @@ $('#metadata').on('shown.bs.collapse', function () {
   $('#m_indicator').addClass('fa-minus');
 })
 
+$('#csvfile').change(function() {
+  var file_name = $('#csvfile')[0].files[0].name;
+  $(this).siblings('label').text(file_name);
+  $('#upload_file').removeAttr('disabled');
+});
+
+$('#upload_file').click(function() {
+  console.log('clicked file upload');
+  if ($('#csvfile')[0].files[0] === undefined) {
+    console.log('No file selected');
+    return false;
+  }
+
+  var fd = new FormData();
+  var file = $('#csvfile')[0].files[0]
+  fd.append(file.name, file);
+
+  // need to show some sort of progress indicator
+  $('#upload_file').attr('disabled','disabled');
+  $('#upload_indicator').show();
+
+  //fd.append("CustomField", "This is some extra data");
+  $.ajax({
+    url: 'http://' + HOST + ':' + PORT + '/upload_data',
+    type: 'POST',
+    data: fd,
+    contentType: false,
+    processData: false
+  })
+  .done(function(data) {
+    if (data.message === 'success'){
+      if(DEBUG_MODE) {
+        console.log('success uploading csv');
+        console.log(data);
+      }
+
+      // clear form
+      $('#csvfile').siblings('label').text('Choose file');
+      $('#upload_file').attr('disabled','disabled');
+      document.getElementById('fileuploadform').reset();
+
+      // show success message
+      message = '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>File Uploaded</strong> - ' +
+                'Data now available in table <em>' + file.name +
+                '</em>. Uploaded ' + data.response.filesize + ' bytes.' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '<span aria-hidden="true">&times;</span></button></div>'
+      $('#fileuploadform').append(message)
+
+      // update database metadata view
+      updateMetadata();
+    }
+    else {
+      if(DEBUG_MODE) {
+        console.log('failed uploading csv');
+        console.log(data);
+      }
+      fileUploadFailed(file.name, data.response);
+    }
+  })
+  .fail(function(jqXHR, textStatus, errorThrown) {
+      fileUploadFailed(file.name, textStatus + errorThrown);
+  })
+  .always(function() {
+    // now hide upload indicator
+    $('#upload_indicator').hide();
+  });
+});
+
 $('#submit').click(function() {
   // check to make sure a query has been entered before submitting.
   var filtered_input = $.trim(editor.getValue().replace(/-- Type SQL Code here/g,''));
@@ -154,9 +223,13 @@ $( document ).ready(function() {
       console.log('error encountered attempting to get data synthesis methods');
       $('#errorModal').modal('show');
     });
+    updateMetadata();
+});
 
-  // populate Database Metadata field
-  // Get Synthesis Methods
+// populate Database Metadata field
+// Get Synthesis Methods
+function updateMetadata() {
+  console.log('called updateMetadata function');
   var jqxhr_metadata = $.ajax({
     dataType: 'json',
     url: 'http://' + HOST + ':' + PORT + '/metadata'})
@@ -177,4 +250,16 @@ $( document ).ready(function() {
       console.log('error encountered attempting to get metadata');
       $('#errorModal').modal('show');
     });
-});
+}
+
+function fileUploadFailed(filename, error) {
+  console.log('error encountered attempting to upload csv "' + filename + '" recieved error: ' + error);
+  // allow upload button to work
+  $('#upload_file').removeAttr('disabled');
+  // show error in modal
+  message = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Failed to upload' +
+            filename + '</strong>. ' + error +
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+            '<span aria-hidden="true">&times;</span></button></div>'
+  $('#fileuploadform').append(message)
+}

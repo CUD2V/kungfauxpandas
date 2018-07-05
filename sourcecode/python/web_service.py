@@ -4,16 +4,22 @@ import sqlite3
 import sys
 import re
 import sqlparse
-
+import pandas as pd
+import chardet
+from io import StringIO
 
 kfpd = KungFauxPandas()
 dbname = 'file:../../data/sample_data.db?mode=ro'
 db_conn = sqlite3.connect(dbname, uri=True)
 cursor = db_conn.cursor()
+# for allowing inserting new data
+writeable_dbname = 'file:../../data/sample_data.db'
+writable_db_conn = sqlite3.connect(writeable_dbname, uri=True)
 
 @hug.response_middleware()
 def process_data(request, response, resource):
       response.set_header('Access-Control-Allow-Origin', '*')
+      response.set_header('Access-Control-Allow-Methods', 'GET, POST')
 
 @hug.get(examples='query=select * from table&method=kde')
 @hug.local()
@@ -142,6 +148,41 @@ def metadata():
         'message': 'success',
         'response': response}
 
+@hug.post()
+@hug.local()
+def upload_data(body):
+    filename = list(body.keys())[0]
+    file = body[filename]
+    # attempt to automatically detect character encoding and read into dataframe
+    try:
+        chardet.detect(file)['encoding']
+        data = file.decode(chardet.detect(file)['encoding'])
+        df = pd.read_csv(StringIO(data))
+    except Exception as e:
+        print('web-service.upload_data() caught exception reading csv', str(e))
+        return {
+            'message': 'error',
+            'filename': filename,
+            'response': str(e)
+        }
+    # attempt to save file to database
+    try:
+        df.to_sql(filename, writable_db_conn, if_exists='replace', index=False)
+    except Exception as e:
+        print('web-service.upload_data() caught exception saving file to database', str(e))
+        return {
+            'message': 'error',
+            'filename': filename,
+            'response': str(e)
+        }
+
+    return {
+        'message': 'success',
+        'response' : {
+            'filename': list(body.keys()).pop(),
+            'filesize': len(list(body.values()).pop())
+        }
+    }
 
 def query_ok(input):
     input = input.strip()

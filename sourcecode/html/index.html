@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>KungFauxPandas</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 <link rel="stylesheet" href="css/style.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 </head>
@@ -30,9 +30,46 @@
     </div>
   </div>
 
+  <!-- Data load Modal -->
+  <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadModalTitle">Load Custom Data</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Select and upload a CSV (plain text with comma as separator) to create a new table in the Kung Faux Pandas database to be queried and synthesized.</p>
+          <form enctype="multipart/form-data" id='fileuploadform'>
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="csvfile">
+                <label class="custom-file-label" for="csvfile">Choose file</label>
+              </div>
+              <div class="input-group-append">
+                <button id="upload_file" class="btn btn-success" type="button" disabled>Upload</button>
+              </div>
+            </div>
+          </form>
+          <div id="upload_indicator" class="alert alert-info" role="alert" style="display: none;">
+            Uploading File
+            <i style='margin-top: 3px;' class="fas fa-spinner fa-pulse float-right"></i>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Body of page -->
   <div class="container-fluid">
     <h2>KungFauxPandas</h2>
+    <button type="button" class="btn btn-info btn-sm header-button" data-toggle="modal" data-target="#uploadModal">Import Data</button>
     <p>Enter a SELECT query into the text box below and hit submit to recieve a de-identified result. Optionally, select the data generation method.</p>
     <p><em>Note:</em> Currently DataSynthesizer doesn't work with timestamp columns.</p>
     <div class="container">
