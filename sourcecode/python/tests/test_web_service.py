@@ -113,3 +113,25 @@ def test_metadata():
 def test_query_ok(sample_basic_sql, sample_bad_sql):
     assert(web_service.query_ok(sample_basic_sql))
     assert(web_service.query_ok(sample_bad_sql) == False)
+
+def test_upload_data():
+    # test uploading nothing
+    response = hug.test.post(web_service, 'upload_data')
+    assert(response.data['message'] == 'error')
+
+    # test uploading something other than a csv
+    with open('kungfauxpandas.py', 'rb') as inputfile:
+        # because of the way hug.test passes files, pandas does its best to treat
+        # file like a csv and throws some warnings but eventually fails
+        import warnings
+        warnings.filterwarnings('ignore')
+
+        lines = inputfile.read()
+        response = hug.test.post(web_service, 'upload_data', {'kungfauxpandas.py': lines})
+        assert(response.data['message'] == 'error')
+
+    # test uploading a csv
+    with open('../../data/fake_sepsis_data/flowsheet.csv', 'rb') as inputfile:
+        lines = inputfile.read()
+        response = hug.test.post(web_service, 'upload_data', {'flowsheet.csv': lines})
+        assert(response.data['message'] == 'success')

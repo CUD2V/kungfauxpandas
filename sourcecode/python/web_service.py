@@ -21,6 +21,7 @@ def process_data(request, response, resource):
       response.set_header('Access-Control-Allow-Origin', '*')
       response.set_header('Access-Control-Allow-Methods', 'GET, POST')
 
+
 @hug.get(examples='query=select * from table&method=kde')
 @hug.local()
 def synthesize_data(query: hug.types.text, method: hug.types.text):
@@ -151,38 +152,48 @@ def metadata():
 @hug.post()
 @hug.local()
 def upload_data(body):
-    filename = list(body.keys())[0]
-    file = body[filename]
-    # attempt to automatically detect character encoding and read into dataframe
-    try:
-        chardet.detect(file)['encoding']
-        data = file.decode(chardet.detect(file)['encoding'])
-        df = pd.read_csv(StringIO(data))
-    except Exception as e:
-        print('web-service.upload_data() caught exception reading csv', str(e))
-        return {
-            'message': 'error',
-            'filename': filename,
-            'response': str(e)
-        }
-    # attempt to save file to database
-    try:
-        df.to_sql(filename, writable_db_conn, if_exists='replace', index=False)
-    except Exception as e:
-        print('web-service.upload_data() caught exception saving file to database', str(e))
-        return {
-            'message': 'error',
-            'filename': filename,
-            'response': str(e)
-        }
+    if body is not None and len(body) > 0:
+        filename = list(body.keys())[0]
+        file = body[filename]
+        
+        # attempt to automatically detect character encoding and read into dataframe
+        try:
+            if isinstance(file, str):
+                df = pd.read_csv(StringIO(file))
+            else:
+                chardet.detect(file)['encoding']
+                data = file.decode(chardet.detect(file)['encoding'])
+                df = pd.read_csv(StringIO(data))
+        except Exception as e:
+            print('web-service.upload_data() caught exception reading csv', str(e))
+            return {
+                'message': 'error',
+                'filename': filename,
+                'response': str(e)
+            }
+        # attempt to save file to database
+        try:
+            df.to_sql(filename, writable_db_conn, if_exists='replace', index=False)
+        except Exception as e:
+            print('web-service.upload_data() caught exception saving file to database', str(e))
+            return {
+                'message': 'error',
+                'filename': filename,
+                'response': str(e)
+            }
 
-    return {
-        'message': 'success',
-        'response' : {
-            'filename': list(body.keys()).pop(),
-            'filesize': len(list(body.values()).pop())
+        return {
+            'message': 'success',
+            'response' : {
+                'filename': list(body.keys()).pop(),
+                'filesize': len(list(body.values()).pop())
+            }
         }
-    }
+    else:
+        return {
+            'message': 'error',
+            'response': 'No file provided to upload'
+        }
 
 def query_ok(input):
     input = input.strip()
