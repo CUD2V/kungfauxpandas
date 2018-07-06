@@ -173,7 +173,11 @@ def upload_data(body):
             }
         # attempt to save file to database
         try:
+            # don't need to keep .csv for table name
+            if filename.endswith('.csv'):
+                filename = filename[:-len('.csv')]
             df.to_sql(filename, writable_db_conn, if_exists='replace', index=False)
+            writable_db_conn.commit()
         except Exception as e:
             print('web-service.upload_data() caught exception saving file to database', str(e))
             return {
