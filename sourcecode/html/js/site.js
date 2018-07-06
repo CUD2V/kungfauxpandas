@@ -7,6 +7,9 @@ var HOST = window.location.hostname;
 var PORT = '8000';
 var DEBUG_MODE = true;
 
+// since all ajax requests should get most current version from server, disable caching
+$.ajaxSetup({ cache: false });
+
 $('#query_results').on('hidden.bs.collapse', function () {
   $('#qr_indicator').removeClass('fa-minus');
   $('#qr_indicator').addClass('fa-plus');
