@@ -99,7 +99,7 @@ Use the provided docker image by executing the following:
 docker pull blackspot/synthesis
 docker run -p 8000:8000 -p 8080:8080 -it blackspot/synthesis
 ```
-Then point your browser to localhost:8080
+Then point your browser to http://localhost:8080
 
 ### User your own data with the docker image
 
