@@ -152,10 +152,12 @@ def metadata():
 @hug.post()
 @hug.local()
 def upload_data(body):
+    global db_conn
+    global cursor
     if body is not None and len(body) > 0:
         filename = list(body.keys())[0]
         file = body[filename]
-        
+
         # attempt to automatically detect character encoding and read into dataframe
         try:
             if isinstance(file, str):
@@ -178,6 +180,10 @@ def upload_data(body):
                 filename = filename[:-len('.csv')]
             df.to_sql(filename, writable_db_conn, if_exists='replace', index=False)
             writable_db_conn.commit()
+
+            db_conn.close()
+            db_conn = sqlite3.connect(dbname, uri=True)
+            cursor = db_conn.cursor()
         except Exception as e:
             print('web-service.upload_data() caught exception saving file to database', str(e))
             return {
