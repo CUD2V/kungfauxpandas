@@ -11,6 +11,7 @@
 \usepackage[super]{nth}     % JK: for 1st-ing and 2nd-ing
 \usepackage{graphicx}       % added by seth - image support
 \graphicspath{ {./images/} }
+\usepackage{footmisc}       % better footnote support
 
 \usepackage{hyperref}
 \hypersetup{
@@ -23,6 +24,8 @@
  
 \urlstyle{same}
 
+\renewcommand{\thefootnote}{\alph{footnote}}
+
 \begin{document}
 
 \title{%
@@ -31,7 +34,10 @@
   }
 
 \author{
-  James King MIDS$^{1}$, Seth Russell MS$^{1}$, Tellen D. Bennett, MD, MS$^{1,2}$,\\ Debashis Ghosh, PhD$^{1,3}$
+  James King MIDS$^{1}$\footnote{Authors JK and SR contributed equally to this work\label{contribution}},
+  Seth Russell MS$^{1}$\footref{contribution},
+  Tellen D. Bennett, MD, MS$^{1,2}$,\\
+  Debashis Ghosh, PhD$^{1,3}$
   }
   
 \institutes{
@@ -41,21 +47,6 @@
 }
 
 \maketitle
-
-
-% Advice from Tell:  articulate the problem with evidence (i.e. papers)
-%   Enable reproducibility - patient value, make process of replication easier
-%   Time saving
-%   legal risk (carrying data in laptops, etc)
-%   Multiple comparison?
-%   Educational data sets
-%  Definition of :reproducibility 
-%       reproducibilty - everything same - code, data, result
-%       replicability - code same, new data, same result find Peng & Leek reference (also look at blog)
-%   unit testing...
-%   Proof of privacy guarantees?
-
-
 
 \noindent{\bf Abstract}
 
@@ -107,9 +98,9 @@ Ideally a computational investigator should develop, test, and validate models u
   \label{fig:synthesis_process}
 \end{figure}
 
-Figure~\ref{fig:synthesis_process} shows the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, ML developers or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
+Figure~\ref{fig:synthesis_process} shows the automated faux-data request/response process. All queries submitted to the system are first pre-processed to remove clauses such as "ORDER BY" which are made ineffective by the synthesis process. All queries are logged for later analysis and results cached to optionally improve synthesis performance for repeated queries. Next the processed query is executed against the protected data set and results are passed into the modular synthesis process. While the current implementation only utilizes a couple of synthesis methods, data scientists or data warehouse owners can insert their own custom method or modify existing methods. Previously removed "ORDER BY" clauses are re-applied to the faux-data before results are returned to the user. Finally, although not implemented in this version of KFP, synthetic results could be held back until reviewed and approved for release by the data owner.
 
-KFP provides multiple methods by which a health data scientist can access on-demand faux-data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux-data according to the selected generation method. The SPA additionally allows for the upload of csv files (not shown) to allow for ease of evaluation and testing of the provided data synthesis methods. Faux-data can either be viewed directly in browser or downloaded in csv format for use in a ML process. Alternatively, a Hypertext Transfer Protocol (HTTP) Representational State Transfer (REST) service \cite{w3c_working_group_webservices}, utilized by the SPA, allows for cross language compatible requesting and receiving of faux-data, again via SQL query. In order to facilitate querying and understanding of the data model, the database metadata is presented to the user in a collapsible section. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
+KFP provides multiple methods by which a health data scientist can access on-demand faux-data. As shown in Figure~\ref{fig:ui}, a single page web application (SPA) allows for users to directly enter SQL queries, submit them to the connected database, and receive faux-data according to the selected generation method. The SPA additionally allows for the upload of csv files (not shown) to allow for ease of evaluation and testing of the provided data synthesis methods. Faux-data can either be viewed directly in browser or downloaded in csv format for use in a health data science process. Alternatively, a Hypertext Transfer Protocol (HTTP) Representational State Transfer (REST) service \cite{w3c_working_group_webservices}, utilized by the SPA, allows for cross language compatible requesting and receiving of faux-data, again via SQL query. In order to facilitate querying and understanding of the data model, the database metadata is presented to the user in a collapsible section. Lastly, for Python based software or languages with an interface to Python, the kungfauxpandas.py file and associated classes can be imported and called natively.
 
 \begin{figure}[ht]
   \centering
@@ -121,7 +112,7 @@ KFP provides multiple methods by which a health data scientist can access on-dem
 
 \subsection{Included Synthesis Methods}
 
-KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented two plugins that use different techniques for data synthesis. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. As a result of their methods, the DataSynthezier offers a unique contribution to the space: it can work with no configuration other than input data, or can be configured to provide more custom results. In DataSynthesizer, the authors show that the synthetic data generated preserves privacy while still being useful enough for actual data analysis (see also \cite{howe_synthetic_2017}).
+KFP provides a framework by which any number of methods for data privacy can be carried out. For demonstration purposes we have implemented two plugins that use different techniques for data synthesis. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles inter-related ordinal and ratio data yet runs quickly on standard consumer level hardware. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. As a result of their methods, the DataSynthezier offers a unique contribution to the synthetic data generation space: it can work with no configuration other than input data, or can be configured to provide more custom results. In DataSynthesizer, the authors show that the synthetic data generated preserves privacy while still being useful enough for actual data analysis (see also \cite{howe_synthetic_2017}).
 
 \section{Experiments}
 
@@ -166,7 +157,7 @@ Table~\ref{timing_results} documents results obtained from running the various p
 
 Figure~\ref{fig:sample_source_data} provides a few rows of the source data for the synthetic plugins. Figure~\ref{fig:sample_synthetic_data} provides a few rows of the synthetic data generated by DataSynthesizer in "Independent" mode.
 
-Fast generation of synthetic data is important in a self-service setting where researchers can generate their own data as needed. As shown in the results, some methods are significantly faster than others as dataset size increases. Additionally, the other key constraint is having synthetic data be as close as possible to real data without reducing privacy.  While the KDE plugin is a simple method, it quickly generates data that looks similar to the input data and works well for the range of data types used. DataSynthesizer in "Independent" mode is quick for the tested range of dataset sizes, but without additional configuration, it doesn't generate results that closely match the input dataset. As an example the "Code" column should contain valid International Statistical Classification of Diseases and Related Health Problems, Tenth Revision (ICD-10) codes, but instead has random strings that are similar in length to actual ICD-10 codes that do not line up with values in other columns. The DataSynthesizer "Correlated" attribute mode generates very realistic synthetic data, but has a significant computational burden when generating synthetic data from larger dataset sizes.
+Fast generation of synthetic data is important in a self-service setting where researchers can generate their own data as needed. As shown in the results, some methods are significantly faster than others as dataset size increases. Additionally, the other key constraint is having synthetic data be as close as possible to real data without reducing privacy.  While the KDE plugin is a simple method, it quickly generates data that looks similar to the input data and works well for the range of data types used. DataSynthesizer in "Independent" mode is quick for the tested range of dataset sizes, but without additional configuration, it doesn't generate results that closely match the input dataset. As an example the "Code" column should contain valid International Statistical Classification of Diseases and Related Health Problems, Tenth Revision (ICD-10) codes, but instead has random strings that are similar in length to actual ICD-10 codes that do not line up with values in other columns. The DataSynthesizer "Correlated" attribute mode generates very realistic synthetic data, but has a significant computational burden when generating synthetic data from larger input dataset sizes.
 
 In all cases, synthetic data generation is a CPU intensive task; no parallelization has been implemented by either KFP nor the plugins used. While memory usage does increase as data size increases, at the 100000 rows seen here, memory usage peaked at around 2GB for the Python process.
 
@@ -176,11 +167,9 @@ KFP provides a unique contribution to the space of reproducible computational re
 
 While we have provided software code and a description of our methods, we believe that computational reproducibility should go beyond just making source code available. Peng recommends making code available in any form as an excellent first step towards reproducible research; the next step is to make code available "in a durable non-proprietary format" \cite{peng_reproducible_2011}. This is a level of code sharing rarely achieved in computation based research. Currently there is no standard long term format that works for all computational environments. For the Python ecosystem however, the standard for sharing code is via a package on Python Package Index (PyPI). We intend to continue this research to make KFP available as a Python package.
 
-Another area that is open for further research is that of domain and institution specific data privacy needs. In the field of education, statistical methods for calculating sample size based on probability of detecting a specific effect size are commonly used \cite{naep_2009} as the key method for privacy protection. However, it is not clear that these methods are appropriate for use in ML in general or domains other than education. Thus, in this work, no attempt has been made to constrain data set sizes nor provide additional proofs of data protection. KFP could be modified to return no results if a minimum threshold is not met or, alternatively, data boosting techniques in combination with data synthesis could be used based on the risk profile of the data owner(s).
+Another area that is open for further research is that of domain and institution specific data privacy needs. In the field of education, statistical methods for calculating sample size based on probability of detecting a specific effect size are commonly used \cite{naep_2009} as the key method for privacy protection. However, it is not clear that these methods are appropriate for general use in ML or domains other than education. Thus, in this work, no attempt has been made to constrain data set sizes nor provide additional proofs of data protection. KFP could be modified to return no results if a minimum threshold is not met or, alternatively, data boosting techniques in combination with data synthesis could be used based on the risk profile of the data owner(s).
 
-The last area recommended for further research is to deploy and observe the use of KFP in an active health data science environment where researchers are working with sensitive datasets. A key limitation that may be identified is that of performance characteristics, particularly in a multi-user setting against a large relational database store. Additionally, as no private data was distributed via this system, actual review by security and compliance groups or institutional review boards may uncover additional requirements to reduce risk of data exposure that could require significant rework or further study.
-% include some of this? 
-% Lastly, the Synthetic dataset Generation Framework (SGF) by Bindschaedler et al. \cite{Bindschaedler2017} "generates differentially private synthetic data" using a novel criterion called plausible deniability that is applied to a dataset before it is deemed safe to release.  In the case of SGF, several models are built with both real and synthetic data and compared against a gold standard. Their author's analysis showed that the models from synthetic data are close to the same accuracy as models built with real data.
+The last area recommended for further research is to deploy and observe the use of KFP in an active health data environment where researchers are working with sensitive datasets. A key limitation that may be identified is that of performance characteristics, particularly in a multi-user setting against a large relational database store. Additionally, as no private data was distributed via this system, actual review by security and compliance groups or institutional review boards may uncover additional requirements to reduce risk of data exposure that could require significant rework or further study.
 
 \section{Conclusion}
 
