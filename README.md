@@ -16,6 +16,7 @@ cd sourcecode/python/
 conda env create -f environment.yml
 conda activate kungfauxpandas
 ```
+*Note:* Windows users may need to install Microsoft Visual C++ Build Tools/Build Tools for Visual Studio in order to sucessfully build and install all packages in the environment. Tools are available for free at https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
 ### Virtualenv users
 
