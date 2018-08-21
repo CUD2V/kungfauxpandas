@@ -4,16 +4,23 @@ import sqlite3
 import sys
 import re
 import sqlparse
-
+import pandas as pd
+import chardet
+from io import StringIO
 
 kfpd = KungFauxPandas()
 dbname = 'file:../../data/sample_data.db?mode=ro'
 db_conn = sqlite3.connect(dbname, uri=True)
 cursor = db_conn.cursor()
+# for allowing inserting new data
+writeable_dbname = 'file:../../data/sample_data.db'
+writable_db_conn = sqlite3.connect(writeable_dbname, uri=True)
 
 @hug.response_middleware()
 def process_data(request, response, resource):
       response.set_header('Access-Control-Allow-Origin', '*')
+      response.set_header('Access-Control-Allow-Methods', 'GET, POST')
+
 
 @hug.get(examples='query=select * from table&method=kde')
 @hug.local()
@@ -142,6 +149,61 @@ def metadata():
         'message': 'success',
         'response': response}
 
+@hug.post()
+@hug.local()
+def upload_data(body):
+    global db_conn
+    global cursor
+    if body is not None and len(body) > 0:
+        filename = list(body.keys())[0]
+        file = body[filename]
+
+        # attempt to automatically detect character encoding and read into dataframe
+        try:
+            if isinstance(file, str):
+                df = pd.read_csv(StringIO(file))
+            else:
+                chardet.detect(file)['encoding']
+                data = file.decode(chardet.detect(file)['encoding'])
+                df = pd.read_csv(StringIO(data))
+        except Exception as e:
+            print('web-service.upload_data() caught exception reading csv', str(e))
+            return {
+                'message': 'error',
+                'filename': filename,
+                'response': str(e)
+            }
+        # attempt to save file to database
+        try:
+            # don't need to keep .csv for table name
+            if filename.endswith('.csv'):
+                filename = filename[:-len('.csv')]
+            df.to_sql(filename, writable_db_conn, if_exists='replace', index=False)
+            writable_db_conn.commit()
+
+            db_conn.close()
+            db_conn = sqlite3.connect(dbname, uri=True)
+            cursor = db_conn.cursor()
+        except Exception as e:
+            print('web-service.upload_data() caught exception saving file to database', str(e))
+            return {
+                'message': 'error',
+                'filename': filename,
+                'response': str(e)
+            }
+
+        return {
+            'message': 'success',
+            'response' : {
+                'filename': list(body.keys()).pop(),
+                'filesize': len(list(body.values()).pop())
+            }
+        }
+    else:
+        return {
+            'message': 'error',
+            'response': 'No file provided to upload'
+        }
 
 def query_ok(input):
     input = input.strip()

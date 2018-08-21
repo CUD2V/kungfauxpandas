@@ -16,6 +16,7 @@ cd sourcecode/python/
 conda env create -f environment.yml
 conda activate kungfauxpandas
 ```
+*Note:* Windows users may need to install Microsoft Visual C++ Build Tools/Build Tools for Visual Studio in order to sucessfully build and install all packages in the environment. Tools are available for free at https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
 ### Virtualenv users
 
@@ -99,7 +100,7 @@ Use the provided docker image by executing the following:
 docker pull blackspot/synthesis
 docker run -p 8000:8000 -p 8080:8080 -it blackspot/synthesis
 ```
-Then point your browser to localhost:8080
+Then point your browser to http://localhost:8080
 
 ### User your own data with the docker image
 
@@ -112,9 +113,7 @@ If you want to use the docker container with your own data, there are a couple o
 
     Replace <mysqlite.db> with your actual SQLite database file, and replace <container name or id> with the name or ID of your container (`docker ps -a` to see all your containers). Then start the container with `docker start <container name or id>`
 
-1. Upload new data via the Web UI
-
-    *Not Yet Implemented*
+1. Upload new data via the Web UI. By clicking the "Import Data" button in the upper right of the screen, a dialog is presented by which you can upload CSV files to the database. The new table will be named the same as the file uploaded (minus .csv if the file ends in .csv).
 
 1. Adjust web_service.py and change the database connection from the provided sample SQLite database, or use the KFP Python API directly.
 

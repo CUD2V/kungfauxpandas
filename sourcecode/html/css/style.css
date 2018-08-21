@@ -40,3 +40,8 @@ body {
 #executed_query {
   margin-bottom: -0.5rem;
 }
+.header-button {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
