@@ -7,6 +7,8 @@ import warnings
 import datetime
 import sqlite3
 import contextlib
+import scipy.stats as stats
+from numpy.random import choice
 
 library_location = '../../plugins/DataSynthesizer'
 sys.path.append(library_location)
@@ -181,36 +183,48 @@ class DataSynthesizerPlugin(PandaPlugin):
 class KDEPlugin(PandaPlugin):
     """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
 
-    def __init__(self, verbose=True):
+    def __init__(self, capture_covariance = True, determine_factors=True, verbose=True):
+
+        self.capture_covariance = capture_covariance
+        self.determine_factors = determine_factors
         self.verbose = verbose
+        
         PandaPlugin.__init__(self)
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     def fauxify(self, df_in=None, *args, **kwargs):
+        
+        if df_in is None:
+            raise Exception('Input data frame not provided')
+        else:
+            self.df_in = df_in
+            #if self.verbose:
+            #    print(df_in.sample(10))
 
-        self.df_in = df_in
-
-        self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
-        self.determine_factors = True
-
+        self.preprocess = None
+        
         for key, value in kwargs.items():
 
             if key == "factor_threshold":
                 self.factor_threshold = value
 
-            elif key == "determine_factors":
-                self.determine_factors = True
-
             else:
-                if self.verbose:
-                    warnings.warn('Keyword argument', key, 'not used')
+                self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
+               
+            if key == "preprocess":
+                self.preprocess = value
 
-        # sets self.df_out
-        self.column_kde()
+        if self.verbose:
+            print('Preprocess', self.preprocess)
 
-        return self.df_out
+            
+        if self.capture_covariance:
+            return self.covar_kde(preprocess=self.preprocess)
 
+        else:
+            return self.self.column_kde()
+        
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     def column_kde(self):
 
@@ -227,7 +241,7 @@ class KDEPlugin(PandaPlugin):
 
             if thistype == 'int64':
                 if self.verbose:
-                    print('Processing column ' + col + ' as a ' + str(thistype))
+                    print('Processing column ' + col + ' as ' + str(thistype))
                 kd = stats.gaussian_kde(self.df_in[col], bw_method='silverman')
                 out_dict[col] = np.int64(kd.resample().ravel())
 
@@ -258,6 +272,50 @@ class KDEPlugin(PandaPlugin):
 
         return self.df_out
 
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        
+    def covar_kde(self, preprocess=None, use_factors=True, verbose = True):
+        '''Captures covariance between numerical columns'''
+
+        self.factor_threshold = 0.15        
+        df_in = self.df_in
+        if preprocess is not None:
+            df_in = preprocess(df_in)
+
+        out_df = pd.DataFrame()
+        factor_indices = dict()
+
+        for col in df_in.columns:
+            thistype = df_in[col].dtype
+
+            if thistype in ['int64','float64']:
+                out_df[col]=df_in[col]
+            else:
+                isfactor = len(set(df_in[col]))/len(df_in[col]) 
+                if use_factors and isfactor < self.factor_threshold:
+                    factors = pd.factorize(df_in[col])
+                    out_df[col]=factors[0]
+                    factor_indices[col] = factors[1]
+
+
+        df_num = pd.DataFrame(out_df).dropna()
+
+        # Build KDE & resample
+        if verbose:
+            print('Building KDE Model')
+
+
+        # For unobvious reasons, inputs to the gaussian_kde
+        # are assumed to have variables as rows and samples
+        # as columns, which is opposite to the DataFrame convention
+        # This is corrected with the transpose() methods
+        kd = stats.gaussian_kde(df_num.transpose(), bw_method=.01)
+        df_out = pd.DataFrame(kd.resample(df_in.shape[0]).transpose(),columns = df_num.columns)
+        self.df_out = df_out
+        self.factor_indices = factor_indices
+
+        return self.df_out
+    
 ####################################################################################################################################
 ####################################################################################################################################
 

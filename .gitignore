@@ -120,3 +120,8 @@ sourcecode/python/out/independent_attribute_mode/description.txt
 
 # Unit test
 .pytest_cache
+
+# Seth's notebook
+omop_gbq.ipynb
+
+
