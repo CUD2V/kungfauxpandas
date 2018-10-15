@@ -51,7 +51,11 @@ class TrivialPlugin(PandaPlugin):
 
 
 class DataSynthesizerPlugin(PandaPlugin):
-    """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
+    """ Constructs fake data using using DataSynthesizer based on input df. 
+        Can either create column-wise data (i.e. ignore covariances)  base
+        on individual variable histogram or table-wise data (bayesian covariance
+        of all columns)
+    """
 
     def __init__(self, df_in=None,
             mode = 'correlated_attribute_mode',
@@ -128,7 +132,7 @@ class DataSynthesizerPlugin(PandaPlugin):
             elif key == "num_tuples_to_generate":
                 self.num_tuples_to_generate = value
             elif key == "save_faux_data_to_file":
-                self.save_faux_data_to_file = vale
+                self.save_faux_data_to_file = value
             else:
                 if self.verbose:
                     warnings.warn('Keyword argument', key, 'not used')
@@ -181,15 +185,27 @@ class DataSynthesizerPlugin(PandaPlugin):
 ####################################################################################################################################
 
 class KDEPlugin(PandaPlugin):
-    """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
+    """ Constructs fake data using kernel density estimator based on input df. 
+        Can either create column-wise data (i.e. ignore covariances) or
+        table-wise data (take covariance of all columns into account)
+    """
 
-    def __init__(self, capture_covariance = True, determine_factors=True, verbose=True):
+    def __init__(self, mode='correlated_attribute_mode', determine_factors=True, verbose=True, *args, **kwargs):
 
-        self.capture_covariance = capture_covariance
+        self.mode = mode
         self.determine_factors = determine_factors
         self.verbose = verbose
+        self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
+
+        # switch to mode to make API consistent with DataSynthesizerPlugin
+        for key, value in kwargs.items():
+            if key == 'capture_covariance':
+                warnings.warn('capture_covariance has been deprecated in favor of mode')
         
         PandaPlugin.__init__(self)
+
+        # currently supported modes
+        self.synthesis_modes = ('correlated_attribute_mode', 'independent_attribute_mode')
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -208,10 +224,6 @@ class KDEPlugin(PandaPlugin):
 
             if key == "factor_threshold":
                 self.factor_threshold = value
-
-            else:
-                self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
-               
             if key == "preprocess":
                 self.preprocess = value
 
@@ -219,11 +231,11 @@ class KDEPlugin(PandaPlugin):
             print('Preprocess', self.preprocess)
 
             
-        if self.capture_covariance:
+        if self.mode == 'correlated_attribute_mode':
             return self.covar_kde(preprocess=self.preprocess)
 
         else:
-            return self.self.column_kde()
+            return self.column_kde()
         
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     def column_kde(self):
@@ -277,7 +289,6 @@ class KDEPlugin(PandaPlugin):
     def covar_kde(self, preprocess=None, use_factors=True, verbose = True):
         '''Captures covariance between numerical columns'''
 
-        self.factor_threshold = 0.15        
         df_in = self.df_in
         if preprocess is not None:
             df_in = preprocess(df_in)
@@ -315,6 +326,22 @@ class KDEPlugin(PandaPlugin):
         self.factor_indices = factor_indices
 
         return self.df_out
+
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @property
+    def capture_covariance(self):
+        return self.mode == 'correlated_attribute_mode'
+
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    
+    @capture_covariance.setter
+    def capture_covariance(self, value):
+        warnings.warn('capture_covariance has been deprecated in favor of mode')
+        if value:
+            self.mode = 'correlated_attribute_mode'
+        else:
+            self.mode = 'independent_attribute_mode'
     
 ####################################################################################################################################
 ####################################################################################################################################
@@ -423,7 +450,7 @@ class KFP_DataDescriber(DataDescriber):
     def link_loaded_dataset(self):
 
         if self.verbose:
-            print('Skipping read from csv and returing the input data frame')
+            print('Skipping read from csv and returning the input data frame')
 
         self.input_dataset = self.df_in
 

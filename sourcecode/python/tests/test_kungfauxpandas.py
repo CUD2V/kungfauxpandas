@@ -120,5 +120,18 @@ def test_DataSynthesizerPlugin(sample_df):
     assert(len(kfp.plugin.synthesis_modes) > 0)
 
     for mode in kfp.plugin.synthesis_modes:
+        print('++++testing DataSynthesizerPlugin mode: ', mode)
         kfp.plugin = DataSynthesizerPlugin(mode=mode)
+        assert(kfp.plugin.fauxify(sample_df) is not None)
+
+# KDE plugin method now has a few different synthesis methods - verify they work
+def test_KDEPlugin(sample_df):
+    kfp = KungFauxPandas()
+
+    kfp.plugin = KDEPlugin()
+    assert(len(kfp.plugin.synthesis_modes) > 0)
+
+    for mode in kfp.plugin.synthesis_modes:
+        print('++++testing KDEPlugin mode: ', mode)
+        kfp.plugin = KDEPlugin(mode=mode)
         assert(kfp.plugin.fauxify(sample_df) is not None)
