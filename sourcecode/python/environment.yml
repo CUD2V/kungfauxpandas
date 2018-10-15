@@ -3,7 +3,7 @@ channels:
   - defaults
 dependencies:
   - cython=0.28.2
-  - django=2.0.5
+  - django=2.0.*
   - jupyter=1.0.0
   - matplotlib=2.2.2
   - numpy=1.14.3
