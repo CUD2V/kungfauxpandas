@@ -50,10 +50,12 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
 
         # replace order by clauses with random()
         # as order by doesn't do anything once synthesis occurs
-        fixed_query = query
+        # remove all semicolons - should have at most 1...
+        semicolon_found = ';' in query
+        fixed_query = query.replace(';', '')
         if order_found:
             i = query.rfind(order_clauses[0])
-            fixed_query = fixed_query[:i] + "random()" + fixed_query[i + len(order_clauses[0]):]
+            fixed_query = fixed_query[:i] + 'random()' + fixed_query[i + len(order_clauses[0]):]
 
             for o in order_clauses[1:]:
                 i = fixed_query.rfind(o)
@@ -69,6 +71,9 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
                 fixed_query = fixed_query[:i] + "\norder by random()\n" + fixed_query[i:]
             else:
                 fixed_query += '\norder by random()'
+
+        if semicolon_found:
+            fixed_query += ';'
 
         try:
             if method is not None:
@@ -112,7 +117,7 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
 
             return {
               'message': 'success',
-              'query': '{0}'.format(query),
+              'query': query,
               'executed_query': fixed_query,
               'response': df_html,
               'csv': df.to_csv(index=False)}
@@ -120,12 +125,12 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
             print('web-service.synthesize_data() caught exception', str(e))
             return {
                 'message': 'error',
-                'query': '{0}'.format(query),
+                'query': query,
                 'response': str(e)}
     else:
         return {
             'message': 'error',
-            'query': '{0}'.format(query),
+            'query': query,
             'response': 'Invalid query provided.'}
 
 @hug.get()

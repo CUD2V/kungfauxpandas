@@ -20,6 +20,10 @@ def sample_basic_sql():
     """
 
 @pytest.fixture
+def sample_basic_sql2():
+    return "select * from admission;"
+
+@pytest.fixture
 def sample_bad_sql():
     return """
         delete from admission
@@ -46,7 +50,7 @@ def test_process_data():
             found_header = True
     assert(found_header)
 
-def test_synthesize_data(sample_basic_sql, sample_bad_sql, sample_method, sample_bad_method):
+def test_synthesize_data(sample_basic_sql, sample_basic_sql2, sample_bad_sql, sample_method, sample_bad_method):
     # pass nothing
     response = hug.test.get(web_service, 'synthesize_data')
     assert(response.status == '400 Bad Request')
@@ -71,6 +75,18 @@ def test_synthesize_data(sample_basic_sql, sample_bad_sql, sample_method, sample
     assert(response.data['message'] == 'success')
     assert(response.data['query'] == sample_basic_sql)
     assert(response.data['executed_query'] is not None)
+    assert(response.data['response'] is not None)
+
+    # pass both required parameters, test with semicolon
+    response = hug.test.get(web_service, 'synthesize_data', {
+        'method': sample_method,
+        'query' : sample_basic_sql2})
+    assert(response.status == '200 OK')
+    assert(response.data is not None)
+    assert(response.data['message'] == 'success')
+    assert(response.data['query'] == sample_basic_sql2)
+    s = sample_basic_sql2.replace(';', '')
+    assert(response.data['executed_query'] == s + '\norder by random();')
     assert(response.data['response'] is not None)
 
     # invalid query and invalid method
