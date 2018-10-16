@@ -8,7 +8,7 @@ chardet==3.0.4
 cycler==0.10.0
 Cython==0.28.2
 decorator==4.3.0
-Django==2.0.*
+Django>=2.0.8,<2.1
 entrypoints==0.2.3
 falcon==1.4.1
 html5lib==1.0.1
