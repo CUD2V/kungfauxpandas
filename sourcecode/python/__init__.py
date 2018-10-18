@@ -29,10 +29,10 @@
 #
 ###############################################################################
 
-
-import mysql.connector as mariadb
-mariadb_connection = mariadb.connect(user='python_user', password='some_pass', database='employees')
-cursor = mariadb_connection.cursor()
+# sample - not needed at this time
+#import mysql.connector as mariadb
+#mariadb_connection = mariadb.connect(user='python_user', password='some_pass', database='employees')
+#cursor = mariadb_connection.cursor()
 
 def __init__(self):
 

@@ -135,3 +135,13 @@ def test_KDEPlugin(sample_df):
         print('++++testing KDEPlugin mode: ', mode)
         kfp.plugin = KDEPlugin(mode=mode)
         assert(kfp.plugin.fauxify(sample_df) is not None)
+
+# If you have more variables than observation, correlated attribute mode can't create correlations
+# should actually throw a LinAlgError, but can't get pytest to catch that correctly
+# also throws warning to help explain potential source of problem to user
+def test_KDEPlugin_err(sample_df):
+    with pytest.warns(UserWarning):
+        with pytest.raises(Exception):
+            kfp = KungFauxPandas()
+            kfp.plugin = KDEPlugin(mode='correlated_attribute_mode')
+            kfp.plugin.fauxify(sample_df.head(2))

@@ -219,6 +219,7 @@ class KDEPlugin(PandaPlugin):
             #    print(df_in.sample(10))
 
         self.preprocess = None
+        self.refactorize = True
         
         for key, value in kwargs.items():
 
@@ -226,6 +227,8 @@ class KDEPlugin(PandaPlugin):
                 self.factor_threshold = value
             if key == "preprocess":
                 self.preprocess = value
+            if key == "refactorize":
+                self.refactorize = value
 
         if self.verbose:
             print('Preprocess', self.preprocess)
@@ -295,36 +298,66 @@ class KDEPlugin(PandaPlugin):
 
         out_df = pd.DataFrame()
         factor_indices = dict()
-
+        const_cols = dict()
+        const_pos = dict()
+        
         for col in df_in.columns:
             thistype = df_in[col].dtype
 
             if thistype in ['int64','float64']:
                 out_df[col]=df_in[col]
             else:
-                isfactor = len(set(df_in[col]))/len(df_in[col]) 
-                if use_factors and isfactor < self.factor_threshold:
+                # treat everything else as factor
+                if use_factors:
                     factors = pd.factorize(df_in[col])
                     out_df[col]=factors[0]
                     factor_indices[col] = factors[1]
+        
+        # stats.gaussian_kde cannot handle constant columns
+        # drop them and add back after synthetic generation
+        uniques = df_in.nunique()
+        for i, v in uniques.iteritems():
+            if v <= 1:
+                const_cols[i] = out_df[i].iloc[0]
+                const_pos[i] = out_df.columns.get_loc(i)
+        out_df.drop(const_cols.keys(), axis=1, inplace=True)
 
-
+        self.factor_indices = factor_indices
         df_num = pd.DataFrame(out_df).dropna()
 
         # Build KDE & resample
         if verbose:
-            print('Building KDE Model')
-
+            print('Building KDE Covariate Model')
 
         # For unobvious reasons, inputs to the gaussian_kde
         # are assumed to have variables as rows and samples
         # as columns, which is opposite to the DataFrame convention
         # This is corrected with the transpose() methods
-        kd = stats.gaussian_kde(df_num.transpose(), bw_method=.01)
-        df_out = pd.DataFrame(kd.resample(df_in.shape[0]).transpose(),columns = df_num.columns)
+        df_out = pd.DataFrame()
+        try:
+            kd = stats.gaussian_kde(df_num.transpose(), bw_method=.01)
+            df_out = pd.DataFrame(kd.resample(df_in.shape[0]).transpose(),columns = df_num.columns)
+            
+            # add back constants in original position
+            # and convert factors back to original values
+            for k in factor_indices.keys():
+                if k in const_cols.keys():
+                    df_out.insert(df_in.columns.get_loc(k), k, 0)
+                if self.refactorize:
+                    # first change to int so can convert back to original factor values
+                    df_out[k] = df_out[k].round().abs().astype('int64')
+                    # now need to apply factor to each of these columns
+                    lookupdict = dict(zip(np.arange(len(factor_indices[k])), factor_indices[k]))
+                    df_out[k].replace(lookupdict, inplace=True)
+            # need to round variables that originally were integers back to integers
+            if self.refactorize:
+                orig_int_cols = list(df_in.select_dtypes(include=[np.int]).columns.values)
+                df_out[orig_int_cols] = df_out[orig_int_cols].round().astype('int64')
+        except np.linalg.LinAlgError as e:
+            warnings.warn('Caught np.linalg.LinAlgError - Likely cause is that input dataframe too small for number of variables.')
+            raise
+                    
         self.df_out = df_out
-        self.factor_indices = factor_indices
-
         return self.df_out
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
