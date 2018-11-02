@@ -3,7 +3,6 @@ channels:
   - defaults
 dependencies:
   - cython=0.28.2
-  - django=2.0.5
   - jupyter=1.0.0
   - matplotlib=2.2.2
   - numpy=1.14.3
@@ -26,3 +25,4 @@ dependencies:
     - python-mimeparse==1.6.0
     - requests==2.18.4
     - urllib3==1.22
+    - django>=2.0.8,<2.1

@@ -7,6 +7,8 @@ import warnings
 import datetime
 import sqlite3
 import contextlib
+import scipy.stats as stats
+from numpy.random import choice
 
 library_location = '../../plugins/DataSynthesizer'
 sys.path.append(library_location)
@@ -49,7 +51,11 @@ class TrivialPlugin(PandaPlugin):
 
 
 class DataSynthesizerPlugin(PandaPlugin):
-    """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
+    """ Constructs fake data using using DataSynthesizer based on input df. 
+        Can either create column-wise data (i.e. ignore covariances)  base
+        on individual variable histogram or table-wise data (bayesian covariance
+        of all columns)
+    """
 
     def __init__(self, df_in=None,
             mode = 'correlated_attribute_mode',
@@ -126,7 +132,7 @@ class DataSynthesizerPlugin(PandaPlugin):
             elif key == "num_tuples_to_generate":
                 self.num_tuples_to_generate = value
             elif key == "save_faux_data_to_file":
-                self.save_faux_data_to_file = vale
+                self.save_faux_data_to_file = value
             else:
                 if self.verbose:
                     warnings.warn('Keyword argument', key, 'not used')
@@ -179,38 +185,61 @@ class DataSynthesizerPlugin(PandaPlugin):
 ####################################################################################################################################
 
 class KDEPlugin(PandaPlugin):
-    """ Constructs column-wise (i.e. ignore covariances) fake data based on input df. """
+    """ Constructs fake data using kernel density estimator based on input df. 
+        Can either create column-wise data (i.e. ignore covariances) or
+        table-wise data (take covariance of all columns into account)
+    """
 
-    def __init__(self, verbose=True):
+    def __init__(self, mode='correlated_attribute_mode', determine_factors=True, verbose=True, *args, **kwargs):
+
+        self.mode = mode
+        self.determine_factors = determine_factors
         self.verbose = verbose
+        self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
+
+        # switch to mode to make API consistent with DataSynthesizerPlugin
+        for key, value in kwargs.items():
+            if key == 'capture_covariance':
+                warnings.warn('capture_covariance has been deprecated in favor of mode')
+        
         PandaPlugin.__init__(self)
+
+        # currently supported modes
+        self.synthesis_modes = ('correlated_attribute_mode', 'independent_attribute_mode')
 
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     def fauxify(self, df_in=None, *args, **kwargs):
+        
+        if df_in is None:
+            raise Exception('Input data frame not provided')
+        else:
+            self.df_in = df_in
+            #if self.verbose:
+            #    print(df_in.sample(10))
 
-        self.df_in = df_in
-
-        self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
-        self.determine_factors = True
-
+        self.preprocess = None
+        self.refactorize = True
+        
         for key, value in kwargs.items():
 
             if key == "factor_threshold":
                 self.factor_threshold = value
+            if key == "preprocess":
+                self.preprocess = value
+            if key == "refactorize":
+                self.refactorize = value
 
-            elif key == "determine_factors":
-                self.determine_factors = True
+        if self.verbose:
+            print('Preprocess', self.preprocess)
 
-            else:
-                if self.verbose:
-                    warnings.warn('Keyword argument', key, 'not used')
+            
+        if self.mode == 'correlated_attribute_mode':
+            return self.covar_kde(preprocess=self.preprocess)
 
-        # sets self.df_out
-        self.column_kde()
-
-        return self.df_out
-
+        else:
+            return self.column_kde()
+        
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     def column_kde(self):
 
@@ -227,7 +256,7 @@ class KDEPlugin(PandaPlugin):
 
             if thistype == 'int64':
                 if self.verbose:
-                    print('Processing column ' + col + ' as a ' + str(thistype))
+                    print('Processing column ' + col + ' as ' + str(thistype))
                 kd = stats.gaussian_kde(self.df_in[col], bw_method='silverman')
                 out_dict[col] = np.int64(kd.resample().ravel())
 
@@ -258,6 +287,95 @@ class KDEPlugin(PandaPlugin):
 
         return self.df_out
 
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        
+    def covar_kde(self, preprocess=None, use_factors=True, verbose = True):
+        '''Captures covariance between numerical columns'''
+
+        df_in = self.df_in
+        if preprocess is not None:
+            df_in = preprocess(df_in)
+
+        out_df = pd.DataFrame()
+        factor_indices = dict()
+        const_cols = dict()
+        const_pos = dict()
+        
+        for col in df_in.columns:
+            thistype = df_in[col].dtype
+
+            if thistype in ['int64','float64']:
+                out_df[col]=df_in[col]
+            else:
+                # treat everything else as factor
+                if use_factors:
+                    factors = pd.factorize(df_in[col])
+                    out_df[col]=factors[0]
+                    factor_indices[col] = factors[1]
+        
+        # stats.gaussian_kde cannot handle constant columns
+        # drop them and add back after synthetic generation
+        uniques = df_in.nunique()
+        for i, v in uniques.iteritems():
+            if v <= 1:
+                const_cols[i] = out_df[i].iloc[0]
+                const_pos[i] = out_df.columns.get_loc(i)
+        out_df.drop(const_cols.keys(), axis=1, inplace=True)
+
+        self.factor_indices = factor_indices
+        df_num = pd.DataFrame(out_df).dropna()
+
+        # Build KDE & resample
+        if verbose:
+            print('Building KDE Covariate Model')
+
+        # For unobvious reasons, inputs to the gaussian_kde
+        # are assumed to have variables as rows and samples
+        # as columns, which is opposite to the DataFrame convention
+        # This is corrected with the transpose() methods
+        df_out = pd.DataFrame()
+        try:
+            kd = stats.gaussian_kde(df_num.transpose(), bw_method=.01)
+            df_out = pd.DataFrame(kd.resample(df_in.shape[0]).transpose(),columns = df_num.columns)
+            
+            # add back constants in original position
+            # and convert factors back to original values
+            for k in factor_indices.keys():
+                if k in const_cols.keys():
+                    df_out.insert(df_in.columns.get_loc(k), k, 0)
+                if self.refactorize:
+                    # first change to int so can convert back to original factor values
+                    df_out[k] = df_out[k].round().abs().astype('int64')
+                    # now need to apply factor to each of these columns
+                    lookupdict = dict(zip(np.arange(len(factor_indices[k])), factor_indices[k]))
+                    df_out[k].replace(lookupdict, inplace=True)
+            # need to round variables that originally were integers back to integers
+            if self.refactorize:
+                orig_int_cols = list(df_in.select_dtypes(include=[np.int]).columns.values)
+                df_out[orig_int_cols] = df_out[orig_int_cols].round().astype('int64')
+        except np.linalg.LinAlgError as e:
+            warnings.warn('Caught np.linalg.LinAlgError - Likely cause is that input dataframe too small for number of variables.')
+            raise
+                    
+        self.df_out = df_out
+        return self.df_out
+
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @property
+    def capture_covariance(self):
+        return self.mode == 'correlated_attribute_mode'
+
+    #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    
+    @capture_covariance.setter
+    def capture_covariance(self, value):
+        warnings.warn('capture_covariance has been deprecated in favor of mode')
+        if value:
+            self.mode = 'correlated_attribute_mode'
+        else:
+            self.mode = 'independent_attribute_mode'
+    
 ####################################################################################################################################
 ####################################################################################################################################
 
@@ -365,7 +483,7 @@ class KFP_DataDescriber(DataDescriber):
     def link_loaded_dataset(self):
 
         if self.verbose:
-            print('Skipping read from csv and returing the input data frame')
+            print('Skipping read from csv and returning the input data frame')
 
         self.input_dataset = self.df_in
 
