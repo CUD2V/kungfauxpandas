@@ -116,15 +116,37 @@ KFP provides a framework by which any number of methods for data privacy can be 
 some text \\ and some more text \\ test
 
 \begin{table}
-   \caption{Included Data Synthesis Methods}
+   \caption{Summary of Included Data Synthesis Methods}
    \label{included-methods}
    \centering
    \begin{tabular}{p{12em} l p{20em}}
      \toprule
      Method                                 & Source                    & Notes \\
      \midrule
-     Kernel Density Estimator               & scipy.stats.gaussian\_kde & Inter-related ordinal and ratio data\\
-     DataSynthesizer                        & Ping et al.               & Bayesian modeling of column relationships\\
+     %row 1 column 1
+     Kernel Density Estimator; independent attribute mode
+     %row 1 column 2
+     & scipy.stats.gaussian\_kde
+     %row 1 column 3
+     & Creates a Gaussian Kernel Density Estimator using the Silverman method; fast but doesn’t maintain correlation between variables of the same observation.\\
+     %row 2 column 1
+     Kernel Density Estimator; corelated attribute mode
+     %row 2 column 2
+     & scipy.stats.gaussian\_kde
+     %row 2 column 3
+     & Creates a Gaussian Kernel Density Estimator across all variables per observation using a kde.factor of 0.01\\
+     %row 3 column 1
+     DataSynthesizer; independent attribute mode
+     %row 3 column 2
+     & Ping et al.
+     %row 3 column 3
+     & A histogram is derived for each attribute, noise is added to the histogram to achieve differential privacy, and then samples are drawn for each attribute; fast but doesn’t maintain correlation between variables of the same observation.\\
+     %row 4 column 1
+     DataSynthesizer; correlated attribute mode
+     %row 4 column 2
+     & Ping et al.
+     %row 4 column 3
+     & Data is generated through a differentially private Bayesian network capturing the correlation between attributes. Computationally expensive and requires larger input dataset compared to independent attribute mode.\\
      \bottomrule
    \end{tabular}
  \end{table}
@@ -174,7 +196,7 @@ Figure~\ref{fig:sample_source_data} provides a few rows of the source data for t
 
 Fast generation of synthetic data is important in a self-service setting where researchers can generate their own data as needed. As shown in the results, some methods are significantly faster than others as dataset size increases. Another key desire is to have synthetic data be as close as possible to real data without compromising individual privacy. While the KDE plugin is a simple method, it quickly generates data that looks similar to the input data and works well for the range of data types used. DataSynthesizer in "Independent" mode is quick for the tested range of dataset sizes, but without additional configuration, it doesn't generate results that closely match the input dataset. As an example the "Code" column should contain valid International Statistical Classification of Diseases and Related Health Problems, Tenth Revision (ICD-10) codes, but instead has random strings that are similar in length to actual ICD-10 codes that do not line up with values in other columns. The DataSynthesizer "Correlated" attribute mode generates more realistic synthetic data than the "Independent" mode as variables in a single observation that are correlated are modeled together. The "Correlated" method does have a significant larger computational burden when generating synthetic data from larger input dataset sizes.
 
-In all cases, synthetic data generation is a CPU intensive task; no parallelization has been implemented by either KFP nor the plugins used. While memory usage does increase as data size increases, at the 100000 rows seen here, memory usage peaked at around 2GB for the Python process.
+In all cases, synthetic data generation is a CPU intensive task; no parallelization has been implemented by either KFP nor the plugins used. While memory usage does increase as data size increases, at the 100000 rows seen here, memory usage peaked at around 4.7GB for the Python process.
 
 \section{Discussion}
 
