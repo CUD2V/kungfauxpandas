@@ -130,11 +130,11 @@ some text \\ and some more text \\ test
      %row 1 column 3
      & Creates a Gaussian Kernel Density Estimator using the Silverman method; fast but doesn’t maintain correlation between variables of the same observation.\\
      %row 2 column 1
-     Kernel Density Estimator; corelated attribute mode
+     Kernel Density Estimator; correlated attribute mode &
      %row 2 column 2
-     & scipy.stats.gaussian\_kde
+     scipy.stats.gaussian\_kde &
      %row 2 column 3
-     & Creates a Gaussian Kernel Density Estimator across all variables per observation using a kde.factor of 0.01\\
+     Creates a Gaussian Kernel Density Estimator across all variables per observation using a kde.factor of 0.01 \\
      %row 3 column 1
      DataSynthesizer; independent attribute mode
      %row 3 column 2
@@ -157,7 +157,7 @@ In this section we evaluate the performance of the KFP plugins to see how closel
 
 \subsection{Timing Method}
 
-Table~\ref{timing_results} documents results obtained from running the various plugins. Source code for running these performance tests are available in the Jupyter notebook performance\_tests.ipynb. The "Trivial" method provides a baseline comparison for evaluating the overhead of Pandas and correct input/output of the plugin class and function overloading mechanism; it returns the input data frame unmodified. The KDE method is the custom method that acts as an example of how to create plugins. A couple of DataSynthesizer (abbreviated DS in the table) modes are used to demonstrate performance differences as well as generated synthetic data differences. "Independent" mode generates synthetic data with each attribute being modeled independently from the others. "Correlated" attribute mode finds inter-column relationships to more accurately generate synthetic data. Both DataSynthesizer modes are run with no configuration and again "w/Config" by passing in some column-wise dataset specific configuration.
+Table~\ref{timing_results} documents results obtained from running the various plugins. Source code for running these performance tests are available in the Jupyter notebook performance\_tests.ipynb. The "Trivial" method provides a baseline comparison for evaluating the overhead of Pandas and correct input/output of the plugin class and function overloading mechanism; it returns the input data frame unmodified. The KDE methods leveraging scipy.stats.gaussian\_kde act as an example of how to create plugins. A couple of DataSynthesizer (abbreviated DS in the table) modes are used to demonstrate performance differences as well as generated synthetic data differences. "Independent" mode generates synthetic data with each attribute being modeled independently from the others. "Correlated" attribute mode finds inter-column relationships to more accurately generate synthetic data. Both DataSynthesizer modes are run with no configuration and again "w/Config" by passing in some column-wise dataset specific configuration.
 
 \begin{table}
 	\caption{Kung Faux Pandas data synthesis plugin timings (mean seconds)}
