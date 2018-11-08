@@ -326,7 +326,7 @@ class KDEPlugin(PandaPlugin):
         df_num = pd.DataFrame(out_df).dropna()
 
         # Build KDE & resample
-        if verbose:
+        if self.verbose:
             print('Building KDE Covariate Model')
 
         # For unobvious reasons, inputs to the gaussian_kde
