@@ -113,8 +113,6 @@ KFP provides multiple methods by which a health data scientist can access on-dem
 
 KFP provides a framework by which any number of methods for data privacy can be carried out. This framework is comprised of a some base classes and methods that can be extended or overridden, several examples of plugins, and unit tests for validation purposes. As of this writing we have implemented two plugins that use different techniques for data synthesis: a kernel density estimator and DataSynthesizer. The kernel density estimator from scipy.stats.gaussian\_kde uses the method developed by Silverman \cite{silverman_density_1986} which handles ordinal and ratio data yet runs quickly on standard consumer level hardware. Two methods for this plugin are provided: an independent attribute mode where each variable is considered in isolation, and a correlated attribute mode where all variables are evaluated and synthesized together on an observation by observation basis. The DataSynthesizer method, created by Ping et al. \cite{ping17datasynthesizer} is built on differential privacy mechanisms and has multiple internal methods for data generation ranging from random generation based on data type to Bayesian modeling of inter-relationships among columns of data. As a result of their methods, the DataSynthesizer offers a unique contribution to the synthetic data generation space: it can work with no configuration other than input data, or can be configured to provide more custom results. In DataSynthesizer, the authors show that the synthetic data generated preserves privacy while still being useful enough for actual data analysis (see also \cite{howe_synthetic_2017}).
 
-some text \\ and some more text \\ test
-
 \begin{table}
    \caption{Summary of Included Data Synthesis Methods}
    \label{included-methods}
@@ -149,6 +147,7 @@ some text \\ and some more text \\ test
      & Data is generated through a differentially private Bayesian network capturing the correlation between attributes. Computationally expensive and requires larger input dataset compared to independent attribute mode.\\
      \bottomrule
    \end{tabular}
+   \vspace{+3mm}
  \end{table}
 
 \section{Experiments}
@@ -157,7 +156,7 @@ In this section we evaluate the performance of the KFP plugins to see how closel
 
 \subsection{Timing Method}
 
-Table~\ref{timing_results} documents results obtained from running the various plugins. Source code for running these performance tests are available in the Jupyter notebook performance\_tests.ipynb. The "Trivial" method provides a baseline comparison for evaluating the overhead of Pandas and correct input/output of the plugin class and function overloading mechanism; it returns the input data frame unmodified. The KDE methods leveraging scipy.stats.gaussian\_kde act as an example of how to create plugins. A couple of DataSynthesizer (abbreviated DS in the table) modes are used to demonstrate performance differences as well as generated synthetic data differences. "Independent" mode generates synthetic data with each attribute being modeled independently from the others. "Correlated" attribute mode finds inter-column relationships to more accurately generate synthetic data. Both DataSynthesizer modes are run with no configuration and again "w/Config" by passing in some column-wise dataset specific configuration.
+Table~\ref{timing_results} documents results obtained from running the various plugins. Source code for running these performance tests are available in the Jupyter notebook performance\_tests.ipynb. The "Trivial" method provides a baseline comparison for evaluating the overhead of Pandas and correct input/output of the plugin class and function overloading mechanism; it returns the input data frame unmodified. The KDE methods leveraging scipy.stats.gaussian\_kde act as an example of how to create plugins. Additionally the independent vs correlated KDE methods offer different accommodations for performance with correlated vs non-correlated source data. A couple of DataSynthesizer (abbreviated DS in the table) modes are used to demonstrate performance differences as well as generated synthetic data differences. "Independent" mode generates synthetic data with each attribute being modeled independently from the others. "Correlated" attribute mode finds inter-column relationships to more accurately generate synthetic data. Both DataSynthesizer modes are run with no configuration and again "w/Config" by passing in some column-wise dataset specific configuration.
 
 \begin{table}
 	\caption{Kung Faux Pandas data synthesis plugin timings (mean seconds)}
@@ -165,16 +164,18 @@ Table~\ref{timing_results} documents results obtained from running the various p
 	\centering
 	\begin{tabular}{l c c c c c}
 		\toprule 
-		Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\ 
+		Method & 10 rows & 100 rows & 1000 rows & 10000 rows & 100000 rows\\
 		\midrule 
-		Trivial & 2.5e-06 & 2.3e-06 & 2.3e-06 & 2.2e-06 & 2.2e-06 \\ 
-		KDE & 0.086 & 0.079 & 0.074 & 0.074 & 0.122 \\ 
-		DS Independent & 0.044 & 0.050 & 0.103 & 0.268 & 2.608 \\ 
+		Trivial & 2.5e-06 & 2.3e-06 & 2.3e-06 & 2.2e-06 & 2.2e-06 \\
+		KDE Independent & 0.086 & 0.079 & 0.074 & 0.074 & 0.122 \\
+		KDE Correlated & 0.017 & 0.021 & 0.027 & 2.43 & 120.8 \\
+		DS Independent & 0.044 & 0.050 & 0.103 & 0.268 & 2.608 \\
 		DS Independent w/Config & 0.045 & 0.040 & 0.064 & 0.120 & 0.799 \\
-		DS Correlated & 0.188 & 1.419 & 3.460 & 16.66 & 159.9 \\ 
-		DS Correlated w/Config & 0.172 & 0.627 & 1.393 & 342.7 & 2124 \\ 
+		DS Correlated & 0.188 & 1.419 & 3.460 & 16.66 & 159.9 \\
+		DS Correlated w/Config & 0.172 & 0.627 & 1.393 & 342.7 & 2124 \\
 		\midrule
 	\end{tabular}
+	\vspace{-4mm}
 \end{table}
 
 \begin{figure}[ht]
