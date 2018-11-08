@@ -51,7 +51,7 @@ python-mimeparse==1.6.0
 pytz==2018.4
 pyzmq==17.0.0
 qtconsole==4.3.1
-requests==2.18.4
+requests>=2.20.0
 scikit-learn==0.19.1
 scipy==1.1.0
 seaborn==0.8.1
