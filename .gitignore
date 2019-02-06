@@ -115,8 +115,10 @@ plugins/*
 *.html
 
 # ignore plugin temp files
-sourcecode/python/out/correlated_attribute_mode/description.txt
-sourcecode/python/out/independent_attribute_mode/description.txt
+!sourcecode/python/out/correlated_attribute_mode/empty.txt
+sourcecode/python/out/correlated_attribute_mode/*
+!sourcecode/python/out/independent_attribute_mode/empty.txt
+sourcecode/python/out/independent_attribute_mode/*
 
 # Unit test
 .pytest_cache
