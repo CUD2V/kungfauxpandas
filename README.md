@@ -154,3 +154,13 @@ To run unit tests, checkout the repository, install dependencies, and do the fol
 cd sourceode/python
 pytest
 ```
+
+## OS Specific Requirements
+
+All OSes require a compiler to be installed first - if you already can build and install Python libraries you are already setup.
+
+On Ubunut 18.04 LTS, some system libraries must be installed before you can install and build the required Python libraries.
+
+```bash
+sudo apt-get install libatlas-base-dev
+```
