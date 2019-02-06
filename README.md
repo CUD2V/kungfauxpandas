@@ -78,6 +78,7 @@ conda install cython pandas numpy scipy jupyter matplotlib scikit-learn seaborn 
 pip install hug
 conda env export -n kungfauxpandas | grep -v "^prefix: " > environment.yml
 ```
+Note, the resulting environment.yml file will include files specified above as well as all dependencies, so will include much more than just the package list above.
 
 ### Steps to create the virtualenv
 
@@ -90,6 +91,8 @@ source kungfauxpandas/bin/activate
 pip install cython numpy scipy pandas matplotlib jupyter hug scikit-learn seaborn django sqlparse pytest statsmodels
 pip freeze > requirements.txt
 ```
+
+Note, the resulting requirements.txt file will include files specified above as well as all dependencies, so will include much more than just the package list above.
 
 ## Docker Notes:
 
