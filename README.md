@@ -36,12 +36,25 @@ For macOS users, you may see errors with a message like *"Python is not installe
 This software provides a method for adding new plugins for data synthesis. The only method fully included with this repository is a kernel density estimation method based on scipy's gaussian KDE (see
   [scipy.stats.gaussian_kde](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gaussian_kde.html)). We have developed plugins for [DataSynthesis](https://github.com/DataResponsibly/DataSynthesizer) and are currently working on one for [Synthetic dataset Generation Framework](https://vbinds.ch/projects/sgf/index.html). In order to use a plugin, you must download additional software.
 
-#### DataSynthesis
-From the base directory of the repository:
+#### DataSynthesizer
+To make sure you get the version compatible and teseted with Kung Faux Pandas, you can either download a zip at the specific commit, or use git and checkout the correct commit. For both steps, start from the base directory of the repository:
+
+**Download zip file**
 
 ```
 cd plugins/
+wget https://github.com/DataResponsibly/DataSynthesizer/archive/b3caedf2cd4a4bde118720e60413b8df08e96eea.zip
+unzip b3caedf2cd4a4bde118720e60413b8df08e96eea.zip
+mv DataSynthesizer-b3caedf2cd4a4bde118720e60413b8df08e96eea/ DataSynthesizer/
+```
+
+**Git clone with specific commit**
+
+```bash
+cd plugins/
 git clone https://github.com/DataResponsibly/DataSynthesizer.git
+cd DataSynthesizer
+git checkout b3caedf
 ```
 
 ## Running the software
