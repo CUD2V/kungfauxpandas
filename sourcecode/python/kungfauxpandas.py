@@ -12,6 +12,8 @@ from numpy.random import choice
 
 library_location = '../../plugins/DataSynthesizer'
 sys.path.append(library_location)
+library_location = '../../plugins/DataSynthesizer/DataSynthesizer/'
+sys.path.append(library_location)
 
 from DataSynthesizer.DataDescriber import DataDescriber
 
@@ -144,7 +146,7 @@ class DataSynthesizerPlugin(PandaPlugin):
         self.description_file = './out/{}/description.txt'.format(self.mode)
         self.synthetic_data = './out/{}/sythetic_data.csv'.format(self.mode)
 
-        describer = KFP_DataDescriber(df_in=self.df_in, threshold_of_categorical_variable=self.threshold_value)
+        describer = KFP_DataDescriber(df_in=self.df_in, category_threshold=self.threshold_value)
         generator = DataGenerator()
 
         # currently can't get correlated_attribute_mode to work, but leaving it here for now
@@ -152,7 +154,7 @@ class DataSynthesizerPlugin(PandaPlugin):
             # this block prints a lot to stdout, supress in non-verbose mode
             if self.verbose:
                 describer.describe_dataset_in_correlated_attribute_mode(
-                     describer.input_dataset,
+                     describer.df_input,
                      epsilon = self.epsilon,
                      k = self.degree_of_bayesian_network,
                      attribute_to_is_categorical = self.categorical_attributes,
@@ -160,7 +162,7 @@ class DataSynthesizerPlugin(PandaPlugin):
             else:
                 with nostdout():
                      describer.describe_dataset_in_correlated_attribute_mode(
-                          describer.input_dataset,
+                          describer.df_input,
                           epsilon = self.epsilon,
                           k = self.degree_of_bayesian_network,
                           attribute_to_is_categorical = self.categorical_attributes,
@@ -169,7 +171,7 @@ class DataSynthesizerPlugin(PandaPlugin):
             generator.generate_dataset_in_correlated_attribute_mode(self.num_tuples_to_generate, self.description_file)
         elif self.mode == "independent_attribute_mode":
             describer.describe_dataset_in_independent_attribute_mode(
-                    describer.input_dataset,
+                    describer.df_input,
                     attribute_to_is_categorical = self.categorical_attributes,
                     attribute_to_is_candidate_key = self.candidate_keys)
             describer.save_dataset_description_to_file(self.description_file)
@@ -468,14 +470,14 @@ class KFP_DataDescriber(DataDescriber):
 
 
     def read_dataset_from_csv(self, file_name=None):
-        """Redirect this method to just populate self.input_dataset
+        """Redirect this method to just populate self.df_input
         with the already-read data frame"""
 
         if self.df_in is not None:
             self.link_loaded_dataset()
         else:
             # This will call the parent-class read_dataset_from_csv
-            # function wich populates self.input_dataset with a pandas
+            # function wich populates self.df_input with a pandas
             # dataframe
 
             super(KFP_DataDescriber, self).read_dataset_from_csv(file_name)
@@ -485,7 +487,7 @@ class KFP_DataDescriber(DataDescriber):
         if self.verbose:
             print('Skipping read from csv and returning the input data frame')
 
-        self.input_dataset = self.df_in
+        self.df_input = self.df_in
 
 ####################################################################################################################################
 ####################################################################################################################################

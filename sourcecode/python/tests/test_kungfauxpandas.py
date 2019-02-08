@@ -106,10 +106,10 @@ def test_KFP_DataDescriber(sample_df):
     assert(dd.read_dataset_from_csv() is None)
 
     dd = KFP_DataDescriber()
-    assert(dd.input_dataset is None)
+    assert(dd.df_input is None)
     dd.df_in = sample_df
     dd.link_loaded_dataset()
-    assert(dd.input_dataset.equals(sample_df))
+    assert(dd.df_input.equals(sample_df))
 
 
 # this synthesis method has a few different synthesis methods - verify they work
