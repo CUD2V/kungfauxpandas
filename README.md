@@ -50,7 +50,7 @@ mv DataSynthesizer-b3caedf2cd4a4bde118720e60413b8df08e96eea/ DataSynthesizer/
 
 **Git clone with specific commit**
 
-```bash
+```
 cd plugins/
 git clone https://github.com/DataResponsibly/DataSynthesizer.git
 cd DataSynthesizer
