@@ -13,8 +13,7 @@ def sample_df():
                          'alpha_numeric_code': ['A4152', 'A414', 'A400', 'A392', 'A4151', 'A392', 'A4181', 'P369', 'B377', 'R6521'],
                          'constant': ['constant_value', 'constant_value', 'constant_value', 'constant_value', 'constant_value', 'constant_value', 'constant_value', 'constant_value', 'constant_value', 'constant_value'],
                          'categorical' : ['category1', 'category2', 'category1', 'category1', 'category2', 'category1', 'category2', 'category1', 'category2', 'category3'],
-                         # DataSynthesizer doesnt always work with floating point values, so not using these for now
-                         #'float_score': [30.80887770115334, 31.647178703213896, 33.23121156661242, 33.64713140102367, 33.07404123596502, 34.206309535666364, 34.90974444556692, 39.06948372169004, 35.94952085309618, 29.5140595543271],
+                         'float_score': [30.80887770115334, 31.647178703213896, 33.23121156661242, 33.64713140102367, 33.07404123596502, 34.206309535666364, 34.90974444556692, 39.06948372169004, 35.94952085309618, 29.5140595543271],
                          'int_score': [294, 286, 278, 272, 256, 242, 216, 210, 208, 190]})
 
 @pytest.fixture

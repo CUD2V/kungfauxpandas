@@ -260,13 +260,17 @@ class KDEPlugin(PandaPlugin):
                 if self.verbose:
                     print('Processing column ' + col + ' as ' + str(thistype))
                 kd = stats.gaussian_kde(self.df_in[col], bw_method='silverman')
-                out_dict[col] = np.int64(kd.resample().ravel())
+                # by default resample() should get correct size based on input, but for some reason
+                # need to manually specify size
+                out_dict[col] = np.int64(kd.resample(size=len(self.df_in[col])).ravel())
 
             elif thistype =='float64':
                 if self.verbose:
                     print('Processing column ' + col + ' as a ' + str(thistype))
                 kd = stats.gaussian_kde(self.df_in[col], bw_method='silverman')
-                out_dict[col] = kd.resample().ravel()
+                # by default resample() should get correct size based on input, but for some reason
+                # need to manually specify size
+                out_dict[col] = kd.resample(size=len(self.df_in[col])).ravel()
 
             else:
                 if self.verbose:
@@ -353,7 +357,7 @@ class KDEPlugin(PandaPlugin):
                     df_out[k].replace(lookupdict, inplace=True)
             # need to round variables that originally were integers back to integers
             if self.refactorize:
-                orig_int_cols = list(df_in.select_dtypes(include=[np.int]).columns.values)
+                orig_int_cols = list(df_in.select_dtypes(include=[int]).columns.values)
                 df_out[orig_int_cols] = df_out[orig_int_cols].round().astype('int64')
         except np.linalg.LinAlgError as e:
             warnings.warn('Caught np.linalg.LinAlgError - Likely cause is that input dataframe too small for number of variables.')

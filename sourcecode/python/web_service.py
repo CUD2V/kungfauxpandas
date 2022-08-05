@@ -105,10 +105,10 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
 
             df_html = (
                 df.style
-                .hide_index()
+                .hide(axis='index')
                 .set_table_attributes("class='table table-hover'")
                 .set_uuid('_')
-                .render()
+                .to_html()
             )
             # pandas generated html has a lot of stuff we don't want returned
             # chuck it!
