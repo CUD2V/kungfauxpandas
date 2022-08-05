@@ -460,7 +460,7 @@ class KungFauxPandas(object):
 
 class KFP_DataDescriber(DataDescriber):
     """An extension of DataDescriber which bypasses reading the csv file and uses a
-    Pandas data frame derived from any source (typically a RDMS)
+    Pandas data frame derived from any source (typically a RDBMS)
 
     To use an already-loaded data set, set the df_in attribute on instantiation
       OR set df_in=theDataFrame after."""
