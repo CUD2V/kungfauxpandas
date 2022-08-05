@@ -5,6 +5,7 @@ There are many barriers to data access and data sharing, especially in the domai
 This data synthesis process was created using Python. In order to make it easier for others to replicate the environment, a range of environments are supported: Conda environment export, virtualenv requirements file, and a docker image with the latest code.
 
 ## Python Setup
+
 To run the software, download/clone this repository and then run the appropriate command below based on your Python distribution:
 
 ### Conda users
@@ -16,6 +17,7 @@ cd sourcecode/python/
 conda env create -f environment.yml
 conda activate kungfauxpandas
 ```
+
 *Note:* Windows users may need to install Microsoft Visual C++ Build Tools/Build Tools for Visual Studio in order to sucessfully build and install all packages in the environment. Tools are available for free at https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
 ### Virtualenv users
@@ -43,9 +45,9 @@ To make sure you get the version compatible and teseted with Kung Faux Pandas, y
 
 ```
 cd plugins/
-wget https://github.com/DataResponsibly/DataSynthesizer/archive/b3caedf2cd4a4bde118720e60413b8df08e96eea.zip
-unzip b3caedf2cd4a4bde118720e60413b8df08e96eea.zip
-mv DataSynthesizer-b3caedf2cd4a4bde118720e60413b8df08e96eea/ DataSynthesizer/
+wget https://github.com/DataResponsibly/DataSynthesizer/archive/0bae2c18a3d6998e2f370fbf2fb816bebb8b0abc.zip
+unzip 0bae2c18a3d6998e2f370fbf2fb816bebb8b0abc.zip
+mv DataSynthesizer-0bae2c18a3d6998e2f370fbf2fb816bebb8b0abc/ DataSynthesizer/
 ```
 
 **Git clone with specific commit**
@@ -54,7 +56,7 @@ mv DataSynthesizer-b3caedf2cd4a4bde118720e60413b8df08e96eea/ DataSynthesizer/
 cd plugins/
 git clone https://github.com/DataResponsibly/DataSynthesizer.git
 cd DataSynthesizer
-git checkout b3caedf
+git checkout 0bae2c1
 ```
 
 ## Running the software
@@ -64,14 +66,18 @@ Currently two methods are provided - a web interface (utilizing a REST API) or P
 ### Web UI/API
 
 #### Start a web server:
+
 From the base directory of the repository:
+
 ```
 cd sourcecode/html
 python -m http.server 8080
 ```
 
-#### Start the Hug REST API server:
+#### Start the Hug REST API server
+
 From the base directory of the repository:
+
 ```
 cd sourcecode/python
 hug -p 8000 -f web_service.py
@@ -85,12 +91,13 @@ From the base directory of the repository:
 
 ```
 cd sourcecode/python/
-conda create -n kungfauxpandas python=3.6
+conda create -n kungfauxpandas python=3.9
 conda activate kungfauxpandas
-conda install cython pandas numpy scipy jupyter matplotlib scikit-learn seaborn django sqlparse pytest statsmodels
+conda install chardet cython django jupyter matplotlib numpy pandas psycopg2 pytest scikit-learn scipy seaborn sqlparse statsmodels
 pip install hug
 conda env export -n kungfauxpandas | grep -v "^prefix: " > environment.yml
 ```
+
 Note, the resulting environment.yml file will include files specified above as well as all dependencies, so will include much more than just the package list above.
 
 ### Steps to create the virtualenv
@@ -101,15 +108,16 @@ From the base directory of the repository:
 cd sourcecode/python/
 virtualenv kungfauxpandas
 source kungfauxpandas/bin/activate
-pip install cython numpy scipy pandas matplotlib jupyter hug scikit-learn seaborn django sqlparse pytest statsmodels
+pip install chardet cython django hug jupyter matplotlib numpy pandas psycopg2 pytest scikit-learn scipy seaborn sqlparse statsmodels
 pip freeze > requirements.txt
 ```
 
 Note, the resulting requirements.txt file will include files specified above as well as all dependencies, so will include much more than just the package list above.
 
-## Docker Notes:
+## Docker Notes
 
 ### Using the provided docker image
+
 Use the provided docker image by executing the following:
 
 ```
@@ -134,6 +142,7 @@ If you want to use the docker container with your own data, there are a couple o
 1. Adjust web_service.py and change the database connection from the provided sample SQLite database, or use the KFP Python API directly.
 
 ### How to rebuild the docker image
+
 Clone the git repo and from the base of the repo run the following:
 
 ```
