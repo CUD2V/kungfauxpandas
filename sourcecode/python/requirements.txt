@@ -1,6 +1,5 @@
 chardet==4.0.0
 Cython==0.29.30
-Django==3.2.5
 hug==2.6.1
 jupyter==1.0.0
 matplotlib==3.5.1

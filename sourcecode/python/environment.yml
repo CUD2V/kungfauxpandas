@@ -4,7 +4,6 @@ channels:
 dependencies:
   - chardet=4.0.0
   - cython=0.29.30
-  - django=3.2.5
   - jupyter=1.0.0
   - matplotlib=3.5.1
   - numpy=1.23.1

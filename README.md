@@ -39,7 +39,8 @@ This software provides a method for adding new plugins for data synthesis. The o
   [scipy.stats.gaussian_kde](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gaussian_kde.html)). We have developed plugins for [DataSynthesis](https://github.com/DataResponsibly/DataSynthesizer) and are currently working on one for [Synthetic dataset Generation Framework](https://vbinds.ch/projects/sgf/index.html). In order to use a plugin, you must download additional software.
 
 #### DataSynthesizer
-To make sure you get the version compatible and teseted with Kung Faux Pandas, you can either download a zip at the specific commit, or use git and checkout the correct commit. For both steps, start from the base directory of the repository:
+
+To make sure you get the version compatible and tested with Kung Faux Pandas, you can either download a zip at the specific commit, or use git and checkout the correct commit. For both steps, start from the base directory of the repository:
 
 **Download zip file**
 
@@ -58,6 +59,16 @@ git clone https://github.com/DataResponsibly/DataSynthesizer.git
 cd DataSynthesizer
 git checkout 0bae2c1
 ```
+
+Some of the DataSynthesizer examples may require installation of additional software or Python libraries.
+
+For example, Django is required for some of the webUI items. Install with:
+
+`conda install django`
+
+or
+
+`pip install django`
 
 ## Running the software
 
@@ -93,7 +104,7 @@ From the base directory of the repository:
 cd sourcecode/python/
 conda create -n kungfauxpandas python=3.9
 conda activate kungfauxpandas
-conda install chardet cython django jupyter matplotlib numpy pandas psycopg2 pytest scikit-learn scipy seaborn sqlparse statsmodels
+conda install chardet cython jupyter matplotlib numpy pandas psycopg2 pytest scikit-learn scipy seaborn sqlparse statsmodels
 pip install hug
 conda env export -n kungfauxpandas | grep -v "^prefix: " > environment.yml
 ```
@@ -108,8 +119,8 @@ From the base directory of the repository:
 cd sourcecode/python/
 virtualenv kungfauxpandas
 source kungfauxpandas/bin/activate
-pip install chardet cython django hug jupyter matplotlib numpy pandas psycopg2 pytest scikit-learn scipy seaborn sqlparse statsmodels
-pip freeze > requirements.txt
+pip install chardet cython hug jupyter matplotlib numpy pandas psycopg2 pytest scikit-learn scipy seaborn sqlparse statsmodels
+pip list --format=freeze > requirements.txt
 ```
 
 Note, the resulting requirements.txt file will include files specified above as well as all dependencies, so will include much more than just the package list above.
