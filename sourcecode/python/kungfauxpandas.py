@@ -139,8 +139,9 @@ class DataSynthesizerPlugin(PandaPlugin):
                 if self.verbose:
                     warnings.warn('Keyword argument', key, 'not used')
 
-        # for now, override tuples generated to be same as input dataframe
-        self.num_tuples_to_generate = len(self.df_in)
+        # override tuples generated to be same as input dataframe if no value provided
+        if self.num_tuples_to_generate is None or self.num_tuples_to_generate == 0:
+          self.num_tuples_to_generate = len(self.df_in)
 
         # Below copied from example file
         self.description_file = './out/{}/description.txt'.format(self.mode)
@@ -153,6 +154,7 @@ class DataSynthesizerPlugin(PandaPlugin):
         if self.mode == "correlated_attribute_mode":
             # this block prints a lot to stdout, supress in non-verbose mode
             if self.verbose:
+                print('using correlated_attribute_mode')
                 describer.describe_dataset_in_correlated_attribute_mode(
                      describer.df_input,
                      epsilon = self.epsilon,
@@ -170,6 +172,7 @@ class DataSynthesizerPlugin(PandaPlugin):
             describer.save_dataset_description_to_file(self.description_file)
             generator.generate_dataset_in_correlated_attribute_mode(self.num_tuples_to_generate, self.description_file)
         elif self.mode == "independent_attribute_mode":
+            print('using independent_attribute_mode')
             describer.describe_dataset_in_independent_attribute_mode(
                     describer.df_input,
                     attribute_to_is_categorical = self.categorical_attributes,
