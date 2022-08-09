@@ -195,12 +195,21 @@ class KDEPlugin(PandaPlugin):
         table-wise data (take covariance of all columns into account)
     """
 
-    def __init__(self, mode='correlated_attribute_mode', determine_factors=True, verbose=True, *args, **kwargs):
+    def __init__(
+            self,
+            mode='correlated_attribute_mode',
+            determine_factors=True,
+            verbose=True,
+            factor_threshold = 0.15,
+            num_tuples_to_generate = None,
+            *args,
+            **kwargs):
 
         self.mode = mode
         self.determine_factors = determine_factors
         self.verbose = verbose
-        self.factor_threshold = 0.15 # if > this % are unique, assume it's NOT a factor
+        self.factor_threshold = factor_threshold # if > this % are unique, assume it's NOT a factor
+        self.num_tuples_to_generate = num_tuples_to_generate
 
         # switch to mode to make API consistent with DataSynthesizerPlugin
         for key, value in kwargs.items():
@@ -227,17 +236,25 @@ class KDEPlugin(PandaPlugin):
         self.refactorize = True
         
         for key, value in kwargs.items():
-
             if key == "factor_threshold":
                 self.factor_threshold = value
+            elif key == "num_tuples_to_generate":
+                self.num_tuples_to_generate = value
             if key == "preprocess":
                 self.preprocess = value
             if key == "refactorize":
                 self.refactorize = value
+            else:
+                if self.verbose:
+                    warnings.warn('Keyword argument', key, 'not used')
 
         if self.verbose:
             print('Preprocess', self.preprocess)
 
+        # number of tuples generated same as input dataframe size if no value provided
+        if self.num_tuples_to_generate is None or self.num_tuples_to_generate == 0:
+            self.num_tuples_to_generate = len(self.df_in)
+        print('num_tuples_to_generate:', self.num_tuples_to_generate)
             
         if self.mode == 'correlated_attribute_mode':
             return self.covar_kde(preprocess=self.preprocess)
@@ -265,7 +282,7 @@ class KDEPlugin(PandaPlugin):
                 kd = stats.gaussian_kde(self.df_in[col], bw_method='silverman')
                 # by default resample() should get correct size based on input, but for some reason
                 # need to manually specify size
-                out_dict[col] = np.int64(kd.resample(size=len(self.df_in[col])).ravel())
+                out_dict[col] = np.int64(kd.resample(size=self.num_tuples_to_generate).ravel())
 
             elif thistype =='float64':
                 if self.verbose:
@@ -273,7 +290,7 @@ class KDEPlugin(PandaPlugin):
                 kd = stats.gaussian_kde(self.df_in[col], bw_method='silverman')
                 # by default resample() should get correct size based on input, but for some reason
                 # need to manually specify size
-                out_dict[col] = kd.resample(size=len(self.df_in[col])).ravel()
+                out_dict[col] = kd.resample(size=self.num_tuples_to_generate).ravel()
 
             else:
                 if self.verbose:
@@ -288,7 +305,7 @@ class KDEPlugin(PandaPlugin):
 
                 elements = list(cc.keys())
                 weights = list(cc.values())
-                fakes = choice(elements,p=weights, replace=True, size=len(self.df_in))
+                fakes = choice(elements,p=weights, replace=True, size=self.num_tuples_to_generate)
                 out_dict[col] = [colfact[1][xx] for xx in fakes]
 
         self.out_dict = out_dict
@@ -345,7 +362,7 @@ class KDEPlugin(PandaPlugin):
         df_out = pd.DataFrame()
         try:
             kd = stats.gaussian_kde(df_num.transpose(), bw_method=.01)
-            df_out = pd.DataFrame(kd.resample(df_in.shape[0]).transpose(),columns = df_num.columns)
+            df_out = pd.DataFrame(kd.resample(size=self.num_tuples_to_generate).transpose(),columns = df_num.columns)
             
             # add back constants in original position
             # and convert factors back to original values
