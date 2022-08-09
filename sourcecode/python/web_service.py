@@ -62,8 +62,8 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
                 fixed_query = fixed_query[:i] + fixed_query[i + len(o):]
 
             # some cleanup
-            fixed_query = re.sub('random\(\),', 'random()', fixed_query, flags=re.M)
-            fixed_query = re.sub('^\s+,', '', fixed_query, flags=re.M)
+            fixed_query = re.sub(r'random\(\),', 'random()', fixed_query, flags=re.M)
+            fixed_query = re.sub(r'^\s+,', '', fixed_query, flags=re.M)
         # if no order by statement present, add it
         else:
             if limit_found:
@@ -98,7 +98,7 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
                             asc_flags.append(False)
                         else:
                             asc_flags.append(True)
-                        sort_by.append(re.sub('\s+asc|\s+desc', '', s, flags=re.IGNORECASE).strip().lower())
+                        sort_by.append(re.sub(r'\s+asc|\s+desc', '', s, flags=re.IGNORECASE).strip().lower())
 
                 df.sort_values(sort_by, ascending=asc_flags, inplace=True)
                 df.columns = orig_columns
@@ -112,8 +112,8 @@ def synthesize_data(query: hug.types.text, method: hug.types.text):
             )
             # pandas generated html has a lot of stuff we don't want returned
             # chuck it!
-            df_html = re.sub(' id="T__row\d+_col\d+"', '', df_html)
-            df_html = re.sub(' class="data row\d+ col\d+" ', '', df_html)
+            df_html = re.sub(r' id="T__row\d+_col\d+"', '', df_html)
+            df_html = re.sub(r' class="data row\d+ col\d+" ', '', df_html)
 
             return {
               'message': 'success',
