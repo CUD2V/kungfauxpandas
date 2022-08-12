@@ -92,7 +92,7 @@ class DataSynthesizerPlugin(PandaPlugin):
 
         if mode == "correlated_attribute_mode":
             # A parameter in differential privacy.
-            # It roughtly means that removing one tuple will change the probability of any output by  at most exp(epsilon).
+            # It roughly means that removing one tuple will change the probability of any output by  at most exp(epsilon).
             # Set epsilon=0 to turn off differential privacy.
             self.epsilon = epsilon
 
@@ -152,7 +152,7 @@ class DataSynthesizerPlugin(PandaPlugin):
 
         # currently can't get correlated_attribute_mode to work, but leaving it here for now
         if self.mode == "correlated_attribute_mode":
-            # this block prints a lot to stdout, supress in non-verbose mode
+            # this block prints a lot to stdout, suppress in non-verbose mode
             if self.verbose:
                 print('using correlated_attribute_mode')
                 describer.describe_dataset_in_correlated_attribute_mode(
@@ -501,7 +501,7 @@ class KFP_DataDescriber(DataDescriber):
             self.link_loaded_dataset()
         else:
             # This will call the parent-class read_dataset_from_csv
-            # function wich populates self.df_input with a pandas
+            # function which populates self.df_input with a pandas
             # dataframe
 
             super(KFP_DataDescriber, self).read_dataset_from_csv(file_name)
